@@ -16,4 +16,7 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static class HopperConstants {
+    public static final int kBeamBreakPort = 9; // Robo rio DIO port 9 
+  }
 }
