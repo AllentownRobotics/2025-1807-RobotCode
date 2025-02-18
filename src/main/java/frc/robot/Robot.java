@@ -5,10 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.putLimelight;
-import frc.robot.subsystems.limelight;
+import frc.robot.subsystems.LimeLight;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -75,15 +75,22 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     
+    frontLimeLight.setX(0.0041);
+    frontLimeLight.setY(0.158166);
+    frontLimeLight.setZ(0.2579);
+    frontLimeLight.setPitch(20);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
   }
-  
+
   /** This function is called periodically during operator control. */
+  LimeLight frontLimeLight = new LimeLight("front");
   @Override
   public void teleopPeriodic() {
-   
+    SmartDashboard.putNumber("x pos", frontLimeLight.getAprilTagX());
+    SmartDashboard.putNumber("y pos", frontLimeLight.getAprilTagY());
+    
   }
 
   @Override
