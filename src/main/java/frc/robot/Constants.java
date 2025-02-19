@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -13,7 +15,64 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+
+  // Controllers
+  public static class ControllerConstants {
+    public static final int driverControllerPort = 0;
+    public static final int operatorControllerPort = 1;
   }
+
+  public static class GlobalConstants {
+    // power distribution hub
+    public static final int pdhID = 13;
+    // Gyro ID
+    public static final int pigeonID = 14;
+  }
+
+  // Auto Constants
+  public static class AutoConstants { // ADJUST ALL
+    public static final double AUTO_MAX_SPEED_MPS = 5;
+
+    public static final double driveTrainRadius = Units.inchesToMeters(Math.sqrt(Math.pow(12, 2) + Math.pow(12, 2))); // in meters
+
+    public static final double PX_CONTROLLER = 5;
+    public static final double P_THETA_CONTROLLER = 1;
+  }
+
+  // Elevator Constants
+  public static class ElevatorConstants {
+    public static final int leftMotorID = 15;
+    public static final int rightMotorID = 16;
+
+  // elevator motor PID
+    public static final double ELEVATOR_P = 0.04; // ADJUST ALL
+    public static final double ELEVATOR_I = 0.001;
+    public static final double ELEVATOR_D = 0;
+    public static final double ELEVATOR_SFF = 0; // static feedforward
+    public static final double ELEVATOR_VFF = 0; // velocity feedforward
+    public static final double ELEVATOR_AFF = 0; // acceleration feedforward
+    public static final double ELEVATOR_MIN_OUTPUT = -1;
+    public static final double ELEVATOR_MAX_OUTPUT = 1;
+  }
+
+  // Placer Constants
+  public static class PlacerConstants {
+    public static final int backMotorID = 17;
+    public static final int frontMotorID = 18;
+  }
+
+  // Climb Constants
+  public static class ClimbConstants {
+    public static final int climbMotorID = 19;
+  }
+
+  // Blinkin Constants
+  public static class BlinkinConstants {
+    public static final int blinkinID = 20;
+
+  // light codes
+    public static final double DARK_RED = 0.59; // temporary default
+    public static final double OCEAN_PALETTE_WAVES = -0.41; // temporary climbing
+  }
+
 }
