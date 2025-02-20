@@ -11,17 +11,22 @@ import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
 
-  Kraken elevatorMotor;
+  Kraken leftMotor, rightMotor;
   TalonSRX magEncoder;
+  double motorAngle;
 
   /** Creates a new Elevator. */
   public Elevator() {
-    elevatorMotor = new Kraken(ElevatorConstants.elevatorMotorID);
+    leftMotor = new Kraken(ElevatorConstants.leftMotorID);
+    rightMotor = new Kraken(ElevatorConstants.rightMotorID);
     magEncoder = new TalonSRX(0);
 
-    elevatorMotor.restoreFactoryDefaults();
     
-    elevatorMotor.setPIDValues(ElevatorConstants.ELEVATOR_P, ElevatorConstants.ELEVATOR_I,
+
+    rightMotor.follow(ElevatorConstants.leftMotorID, false);
+    leftMotor.restoreFactoryDefaults();
+    
+    leftMotor.setPIDValues(ElevatorConstants.ELEVATOR_P, ElevatorConstants.ELEVATOR_I,
                               ElevatorConstants.ELEVATOR_D, ElevatorConstants.ELEVATOR_SFF,
                               ElevatorConstants.ELEVATOR_VFF, ElevatorConstants.ELEVATOR_AFF);
     

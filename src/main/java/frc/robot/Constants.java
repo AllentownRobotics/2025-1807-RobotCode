@@ -41,7 +41,8 @@ public final class Constants {
 
   // Elevator Constants
   public static class ElevatorConstants {
-    public static final int elevatorMotorID = 15;
+    public static final int leftMotorID = 15;
+    public static final int rightMotorID = 15;
 
   // elevator motor PID
     public static final double ELEVATOR_P = 0.01; // ADJUST ALL

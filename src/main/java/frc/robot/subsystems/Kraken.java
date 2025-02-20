@@ -81,7 +81,7 @@ public class Kraken extends SubsystemBase {
   }
 
   /** Allows a motor to follow another motor. */
-  public void setFollowerMotor(double leaderCANID, boolean inverted) {
+  public void follow(double leaderCANID, boolean inverted) {
     kraken.setControl(new Follower(krakenID, inverted));
   }
 
