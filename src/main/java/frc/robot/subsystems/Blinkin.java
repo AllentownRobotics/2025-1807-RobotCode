@@ -4,17 +4,15 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.BlinkinConstants;
 
 public class Blinkin extends SubsystemBase {
-  SparkMax blinkin;
+  Spark blinkin;
   /** Creates a new Blinkin. */
   public Blinkin() {
-    blinkin = new SparkMax(BlinkinConstants.blinkinID, MotorType.kBrushless);
+    blinkin = new Spark(BlinkinConstants.blinkinID);
   }
 
   public void setColor(double color) {

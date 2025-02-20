@@ -41,11 +41,10 @@ public final class Constants {
 
   // Elevator Constants
   public static class ElevatorConstants {
-    public static final int leftMotorID = 15;
-    public static final int rightMotorID = 16;
+    public static final int elevatorMotorID = 15;
 
   // elevator motor PID
-    public static final double ELEVATOR_P = 0.04; // ADJUST ALL
+    public static final double ELEVATOR_P = 0.01; // ADJUST ALL
     public static final double ELEVATOR_I = 0.001;
     public static final double ELEVATOR_D = 0;
     public static final double ELEVATOR_SFF = 0; // static feedforward
@@ -57,18 +56,28 @@ public final class Constants {
 
   // Placer Constants
   public static class PlacerConstants {
-    public static final int backMotorID = 17;
-    public static final int frontMotorID = 18;
+    public static final int backMotorID = 16;
+    public static final int frontMotorID = 17;
   }
 
   // Climb Constants
   public static class ClimbConstants {
-    public static final int climbMotorID = 19;
+    public static final int climbMotorID = 18;
+
+  // climb motor PID
+    public static final double CLIMB_P = 0.01; // ADJUST ALL
+    public static final double CLIMB_I = 0.001;
+    public static final double CLIMB_D = 0;
+    public static final double CLIMB_SFF = 0; // static feedforward
+    public static final double CLIMB_VFF = 0; // velocity feedforward
+    public static final double CLIMB_AFF = 0; // acceleration feedforward
+    public static final double CLIMB_MIN_OUTPUT = -1;
+    public static final double CLIMB_MAX_OUTPUT = 1;
   }
 
   // Blinkin Constants
   public static class BlinkinConstants {
-    public static final int blinkinID = 20;
+    public static final int blinkinID = 19;
 
   // light codes
     public static final double DARK_RED = 0.59; // temporary default

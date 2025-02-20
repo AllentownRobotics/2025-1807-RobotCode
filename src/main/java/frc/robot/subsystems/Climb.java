@@ -4,14 +4,23 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climb extends SubsystemBase {
+
+  DigitalInput outerClimbLimitSwitch, innerClimbLimitSwitch;
+  Kraken climbMotor;
+
   /** Creates a new Climb. */
-  public Climb() {}
+  public Climb() {
+
+  }
 
   @Override
   public void periodic() {
+    
     // This method will be called once per scheduler run
   }
 }
