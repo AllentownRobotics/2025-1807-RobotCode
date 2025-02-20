@@ -17,7 +17,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
   // Controllers
-  public static class ControllerConstants {
+  public static class OIConstants {
     public static final int driverControllerPort = 0;
     public static final int operatorControllerPort = 1;
   }
@@ -42,7 +42,9 @@ public final class Constants {
   // Elevator Constants
   public static class ElevatorConstants {
     public static final int leftMotorID = 15;
-    public static final int rightMotorID = 15;
+    public static final int rightMotorID = 0;
+
+    public static final int elevatorCANCoderID = 0;
 
   // elevator motor PID
     public static final double ELEVATOR_P = 0.01; // ADJUST ALL

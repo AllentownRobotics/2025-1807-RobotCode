@@ -7,20 +7,25 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.configs.VoltageConfigs;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorOutputStatusValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SoftLimitConfig;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.ElevatorConstants;
 
+/** An abstract motor object that contains all necessary configurations for the motors. */
 public class Kraken extends SubsystemBase {
 
   // https://pro.docs.ctr-electronics.com/en/2023-pro/docs/api-reference/api-usage/configuration.html
@@ -80,12 +85,17 @@ public class Kraken extends SubsystemBase {
     kraken.getConfigurator().apply(krakenConfiguration.MotorOutput.withNeutralMode(NeutralModeValue.Coast));
   }
 
+  /** Sets the current limits on the motor. */
+  public void setMotorCurrentLimits() {
+    kraken.getConfigurator().apply(krakenConfiguration.CurrentLimits.withStatorCurrentLimit(null));
+  }
+
   /** Allows a motor to follow another motor. */
   public void follow(double leaderCANID, boolean inverted) {
     kraken.setControl(new Follower(krakenID, inverted));
   }
 
-  // use for srx mag encoders
+  // use for cancoders
   public double getEncoderPosition() {
     return 0;
   }
@@ -102,7 +112,7 @@ public class Kraken extends SubsystemBase {
 
   // motion magic takes a lot of guesswork out of PID loops.
   // documentation: https://v6.docs.ctr-electronics.com/en/stable/docs/api-reference/device-specific/talonfx/motion-magic.html
-
+  
   public void setMotionMagicParameters(double maxVelocity, double maxAccel, double maxJerk) {
     krakenConfiguration.MotionMagic.MotionMagicCruiseVelocity = maxVelocity;
     krakenConfiguration.MotionMagic.MotionMagicAcceleration = maxAccel;
@@ -111,6 +121,7 @@ public class Kraken extends SubsystemBase {
     kraken.getConfigurator().apply(krakenConfiguration);
   }
 
+  //** Allows preset PID values to be passed to the motor. */
   public void setPIDValues(double kP, double kI, double kD, double kS, double kV, double kA) {
     krakenConfiguration.Slot0.kP = kP;
     krakenConfiguration.Slot0.kI = kI;
@@ -120,6 +131,12 @@ public class Kraken extends SubsystemBase {
     krakenConfiguration.Slot0.kA = kA;
 
     kraken.getConfigurator().apply(krakenConfiguration);
+  }
+
+  /** PID soft limits: built in limit switches for the motor */
+  public void setSoftLimits(double reverseLimit, double forwardLimit) {
+    kraken.getConfigurator().apply(krakenConfiguration.SoftwareLimitSwitch.withReverseSoftLimitThreshold(reverseLimit));
+    kraken.getConfigurator().apply(krakenConfiguration.SoftwareLimitSwitch.withForwardSoftLimitThreshold(forwardLimit));
   }
 
   @Override

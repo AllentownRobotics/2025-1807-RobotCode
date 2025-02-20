@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix6.hardware.CANcoder;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
@@ -12,19 +13,18 @@ import frc.robot.Constants.ElevatorConstants;
 public class Elevator extends SubsystemBase {
 
   Kraken leftMotor, rightMotor;
-  TalonSRX magEncoder;
-  double motorAngle;
+  CANcoder encoder;
 
   /** Creates a new Elevator. */
   public Elevator() {
     leftMotor = new Kraken(ElevatorConstants.leftMotorID);
     rightMotor = new Kraken(ElevatorConstants.rightMotorID);
-    magEncoder = new TalonSRX(0);
-
-    
+    encoder = new CANcoder(ElevatorConstants.elevatorCANCoderID);
 
     rightMotor.follow(ElevatorConstants.leftMotorID, false);
     leftMotor.restoreFactoryDefaults();
+
+    
     
     leftMotor.setPIDValues(ElevatorConstants.ELEVATOR_P, ElevatorConstants.ELEVATOR_I,
                               ElevatorConstants.ELEVATOR_D, ElevatorConstants.ELEVATOR_SFF,
