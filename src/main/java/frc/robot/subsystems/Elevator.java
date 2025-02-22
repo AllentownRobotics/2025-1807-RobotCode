@@ -7,13 +7,16 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.hardware.CANcoder;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
 
   Kraken leftMotor, rightMotor;
   CANcoder elevatorEncoder;
+  DigitalInput lowerLimitSwitch, upperLimitSwitch;
   double desiredSetpoint; // desired setpoint of the encoder
 
   /** Creates a new Elevator. */
@@ -39,10 +42,6 @@ public class Elevator extends SubsystemBase {
     desiredSetpoint = ElevatorConstants.homePosition;
     elevatorEncoder.setPosition(desiredSetpoint);
   }
-  /** Brings elevator back to default (pre-match) position. */
-  public void toHomePosition() {
-    desiredSetpoint = ElevatorConstants.homePosition;
-  }
 
   /** Sets elevator position based off setpoint value. */
   public void setElevatorPosition(double setpoint) {
@@ -53,6 +52,8 @@ public class Elevator extends SubsystemBase {
   public void adjustPositionIncrementally(double increment) {
     desiredSetpoint += increment;
   }
+
+  private final SysIdRoutine elevatorIDRoutine = new SysIdRoutine(null, null);
 
   @Override
   public void periodic() {

@@ -62,6 +62,7 @@ public final class Constants {
     public static final double L2Position = 0;
     public static final double L3Position = 0;
     public static final double L4Position = 0;
+    public static final double incrementMeasurement = 0;
   }
 
   // Placer Constants
