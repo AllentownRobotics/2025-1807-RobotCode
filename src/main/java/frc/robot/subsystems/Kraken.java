@@ -5,7 +5,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -15,24 +17,23 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.hardware.core.CoreCANcoder;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorOutputStatusValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SoftLimitConfig;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ClimbConstants;
-import frc.robot.Constants.ElevatorConstants;
 
 /** An abstract motor object that contains all necessary configurations for the motors. */
 public class Kraken extends SubsystemBase {
 
   // https://pro.docs.ctr-electronics.com/en/2023-pro/docs/api-reference/api-usage/configuration.html
   // https://github.com/PeddieRobotics/2024Itsumade/blob/dev/2024-I/src/main/java/frc/robot/utils/Kraken.java
+  // https://v6.docs.ctr-electronics.com/en/stable/docs/migration/migration-guide/index.html 
 
   TalonFX kraken;
   TalonFXConfiguration krakenConfiguration;
+  CANcoderConfiguration encoderConfiguration;
   int krakenID;
   Slot0Configs slot0Configs;
   Orchestra music;
@@ -55,7 +56,7 @@ public class Kraken extends SubsystemBase {
     kraken.getConfigurator().apply(new TalonFXConfiguration());
   }
 
-  /** Resets encoder position. */
+  /** Resets built-in encoder position. */
   public void resetEncoder() {
     kraken.getConfigurator().setPosition(0);
   }
@@ -85,14 +86,22 @@ public class Kraken extends SubsystemBase {
     kraken.getConfigurator().apply(krakenConfiguration.MotorOutput.withNeutralMode(NeutralModeValue.Coast));
   }
 
-  /** Sets the current limits on the motor. */
-  public void setMotorCurrentLimits() {
-    kraken.getConfigurator().apply(krakenConfiguration.CurrentLimits.withStatorCurrentLimit(null));
+  /** Sets the current limits (in amps) on the motor. */
+  public void setMotorCurrentLimits(double amps) {
+    kraken.getConfigurator().apply(krakenConfiguration.CurrentLimits.withSupplyCurrentLimit(amps));
+  }
+
+  public void setMotorSpeed(double speed) {
+    kraken.set(speed);
   }
 
   /** Allows a motor to follow another motor. */
   public void follow(double leaderCANID, boolean inverted) {
     kraken.setControl(new Follower(krakenID, inverted));
+  }
+
+  public void addEncoder(CoreCANcoder encoder) {
+    kraken.getConfigurator().apply(krakenConfiguration.Feedback.withRemoteCANcoder(encoder));
   }
 
   // use for cancoders
@@ -137,6 +146,11 @@ public class Kraken extends SubsystemBase {
   public void setSoftLimits(double reverseLimit, double forwardLimit) {
     kraken.getConfigurator().apply(krakenConfiguration.SoftwareLimitSwitch.withReverseSoftLimitThreshold(reverseLimit));
     kraken.getConfigurator().apply(krakenConfiguration.SoftwareLimitSwitch.withForwardSoftLimitThreshold(forwardLimit));
+  }
+
+  /** Plays loaded music soundtrack. */
+  public void playMusic() {
+    music.play();
   }
 
   @Override

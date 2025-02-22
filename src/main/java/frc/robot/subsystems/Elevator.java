@@ -13,23 +13,45 @@ import frc.robot.Constants.ElevatorConstants;
 public class Elevator extends SubsystemBase {
 
   Kraken leftMotor, rightMotor;
-  CANcoder encoder;
+  CANcoder elevatorEncoder;
+  double desiredSetpoint; // desired setpoint of the encoder
 
   /** Creates a new Elevator. */
   public Elevator() {
     leftMotor = new Kraken(ElevatorConstants.leftMotorID);
     rightMotor = new Kraken(ElevatorConstants.rightMotorID);
-    encoder = new CANcoder(ElevatorConstants.elevatorCANCoderID);
+    elevatorEncoder = new CANcoder(ElevatorConstants.elevatorCANCoderID);
 
     rightMotor.follow(ElevatorConstants.leftMotorID, false);
     leftMotor.restoreFactoryDefaults();
 
-    
-    
+    leftMotor.addEncoder(elevatorEncoder);
+
     leftMotor.setPIDValues(ElevatorConstants.ELEVATOR_P, ElevatorConstants.ELEVATOR_I,
                               ElevatorConstants.ELEVATOR_D, ElevatorConstants.ELEVATOR_SFF,
                               ElevatorConstants.ELEVATOR_VFF, ElevatorConstants.ELEVATOR_AFF);
+
+    leftMotor.setBrakeMode();
+
+    leftMotor.setMotorCurrentLimits(120);
+    leftMotor.setSoftLimits(ElevatorConstants.homePosition, ElevatorConstants.L4Position); // prevent us from overdriving the motor
     
+    desiredSetpoint = ElevatorConstants.homePosition;
+    elevatorEncoder.setPosition(desiredSetpoint);
+  }
+  /** Brings elevator back to default (pre-match) position. */
+  public void toHomePosition() {
+    desiredSetpoint = ElevatorConstants.homePosition;
+  }
+
+  /** Sets elevator position based off setpoint value. */
+  public void setElevatorPosition(double setpoint) {
+    desiredSetpoint = setpoint;
+  }
+
+  /** Adjust the position of the elevator by a set increment. */
+  public void adjustPositionIncrementally(double increment) {
+    desiredSetpoint += increment;
   }
 
   @Override

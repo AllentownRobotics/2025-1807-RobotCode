@@ -55,6 +55,13 @@ public final class Constants {
     public static final double ELEVATOR_AFF = 0; // acceleration feedforward
     public static final double ELEVATOR_MIN_OUTPUT = -1;
     public static final double ELEVATOR_MAX_OUTPUT = 1;
+
+  // elevator setpoints
+    public static final double homePosition = 0;
+    public static final double L1Position = 0;
+    public static final double L2Position = 0;
+    public static final double L3Position = 0;
+    public static final double L4Position = 0;
   }
 
   // Placer Constants

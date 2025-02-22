@@ -13,9 +13,7 @@ public class Climb extends SubsystemBase {
   Kraken climbMotor;
 
   /** Creates a new Climb. */
-  public Climb() {
-    
-  }
+  public Climb() {}
 
   @Override
   public void periodic() {
