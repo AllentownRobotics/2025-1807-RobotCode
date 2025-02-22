@@ -16,6 +16,8 @@ public final class Constants {
   
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+
+    public static final int operatorControllerPort = 1;
   }
 
   public static class PlacerConstants {
