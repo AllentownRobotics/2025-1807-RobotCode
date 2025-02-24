@@ -38,13 +38,35 @@ public final class Constants {
     public static final double PX_CONTROLLER = 5;
     public static final double P_THETA_CONTROLLER = 1;
   }
+  
+  // Climb Constants
+  public static class ClimbConstants {
+    public static final int leftClimbMotorID = 15;
+    public static final int rightClimbMotorID = 16;
+    public static final int climbCANCoderID = 0;
+
+    public static final int outerLimitSwitchID = 0;
+    public static final int innerLimitSwitchID = 0;
+
+  // climb motor PID
+    public static final double CLIMB_P = 0.01; // ADJUST ALL
+    public static final double CLIMB_I = 0.001;
+    public static final double CLIMB_D = 0;
+    public static final double CLIMB_SFF = 0; // static feedforward
+    public static final double CLIMB_VFF = 0; // velocity feedforward
+    public static final double CLIMB_AFF = 0; // acceleration feedforward
+    public static final double CLIMB_MIN_OUTPUT = -1;
+    public static final double CLIMB_MAX_OUTPUT = 1;
+  }
 
   // Elevator Constants
   public static class ElevatorConstants {
-    public static final int leftMotorID = 15;
-    public static final int rightMotorID = 0;
-
+    public static final int leftMotorID = 17;
+    public static final int rightMotorID = 18;
     public static final int elevatorCANCoderID = 0;
+
+    public static final int lowerLimitSwitchPort = 0;
+    public static final int upperLimitSwitchPort = 0;
 
   // elevator motor PID
     public static final double ELEVATOR_P = 0.01; // ADJUST ALL
@@ -71,24 +93,9 @@ public final class Constants {
     public static final int frontMotorID = 17;
   }
 
-  // Climb Constants
-  public static class ClimbConstants {
-    public static final int climbMotorID = 18;
-
-  // climb motor PID
-    public static final double CLIMB_P = 0.01; // ADJUST ALL
-    public static final double CLIMB_I = 0.001;
-    public static final double CLIMB_D = 0;
-    public static final double CLIMB_SFF = 0; // static feedforward
-    public static final double CLIMB_VFF = 0; // velocity feedforward
-    public static final double CLIMB_AFF = 0; // acceleration feedforward
-    public static final double CLIMB_MIN_OUTPUT = -1;
-    public static final double CLIMB_MAX_OUTPUT = 1;
-  }
-
   // Blinkin Constants
   public static class BlinkinConstants {
-    public static final int blinkinID = 19;
+    public static final int blinkinID = 20;
 
   // light codes
     public static final double DARK_RED = 0.59; // temporary default

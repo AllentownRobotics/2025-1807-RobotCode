@@ -15,12 +15,21 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCMD;
+import frc.robot.subsystems.Blinkin;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Placer;
 import frc.robot.subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drivetrain.Telemetry;
 
 public class RobotContainer {
     private final Elevator elevatorSubsystem = new Elevator();
+    private final Placer placerSubsystem = new Placer();
+    private final Climb climbSubsystem = new Climb();
+    private final Limelight limelightSubsystem = new Limelight();
+    private final Blinkin blinkinSubsystem = new Blinkin();
+
 
     //private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     //private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity

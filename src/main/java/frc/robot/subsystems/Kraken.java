@@ -32,7 +32,7 @@ public class Kraken extends SubsystemBase {
 
   /** Creates a new Kraken. */
   public Kraken(int krakenID) {
-    // default motor configs are here. Additional motor configs can be applied with the methods listed below.
+    // Default motor configs are here. Additional motor configs can be applied with the methods listed below.
     this.kraken = new TalonFX(krakenID);
     this.krakenID = krakenID;
     krakenConfiguration = new TalonFXConfiguration();
@@ -78,11 +78,12 @@ public class Kraken extends SubsystemBase {
     kraken.getConfigurator().apply(krakenConfiguration.MotorOutput.withNeutralMode(NeutralModeValue.Coast));
   }
 
-  /** Sets the current limits (in amps) on the motor. */
+  /** Sets the current limits (in amps) on the motor. Takes in values from -1.0 to 1.0. */
   public void setMotorCurrentLimits(double amps) {
     kraken.getConfigurator().apply(krakenConfiguration.CurrentLimits.withSupplyCurrentLimit(amps));
   }
 
+  /** Sets the motor's speed. Takes in values from -1.0 to 1.0. */
   public void setMotorSpeed(double speed) {
     kraken.set(speed);
   }
@@ -92,11 +93,12 @@ public class Kraken extends SubsystemBase {
     kraken.setControl(new Follower(krakenID, inverted));
   }
 
+  /** Connects a CANCoder to the specified motor. */
   public void addEncoder(CoreCANcoder encoder) {
     kraken.getConfigurator().apply(krakenConfiguration.Feedback.withRemoteCANcoder(encoder));
   }
 
-  // use for cancoders
+  /** Returns the position of the encoder in rotations. */
   public void getEncoderPosition(CoreCANcoder encoder) {
     encoder.getPosition();
   }
@@ -110,9 +112,6 @@ public class Kraken extends SubsystemBase {
   public double getVelocity() {
     return kraken.get();
   }
-
-  // motion magic takes a lot of guesswork out of PID loops.
-  // documentation: https://v6.docs.ctr-electronics.com/en/stable/docs/api-reference/device-specific/talonfx/motion-magic.html
   
   public void setMotionMagicParameters(double maxVelocity, double maxAccel, double maxJerk) {
     krakenConfiguration.MotionMagic.MotionMagicCruiseVelocity = maxVelocity;
@@ -134,7 +133,7 @@ public class Kraken extends SubsystemBase {
     kraken.getConfigurator().apply(krakenConfiguration);
   }
 
-  /** PID soft limits: built in limit switches for the motor */
+  /** PID soft limits are built in limit switches for the motor. */
   public void setSoftLimits(double reverseLimit, double forwardLimit) {
     kraken.getConfigurator().apply(krakenConfiguration.SoftwareLimitSwitch.withReverseSoftLimitThreshold(reverseLimit));
     kraken.getConfigurator().apply(krakenConfiguration.SoftwareLimitSwitch.withForwardSoftLimitThreshold(forwardLimit));
