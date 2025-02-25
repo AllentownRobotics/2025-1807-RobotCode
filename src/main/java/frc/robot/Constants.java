@@ -85,7 +85,7 @@ public final class Constants {
     public static final double ClimbOutangle = 0;
     public static final double ClimbInangle = 0;
     public static final double ClimbLock = 0;
-
+    public static final double ClimbDesiredAngle = 0;
   }
 
   // Blinkin Constants

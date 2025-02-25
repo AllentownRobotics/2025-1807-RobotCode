@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 
@@ -50,7 +51,7 @@ public class Climb extends SubsystemBase {
     rightClimbMotor.setBrakeMode();
     leftClimbMotor.setBrakeMode();
 
-    desiredAngle = 90;
+    desiredAngle = ClimbConstants.ClimbDesiredAngle;
     climbCANcoder.setPosition(desiredAngle);
   }
 
@@ -67,29 +68,18 @@ public class Climb extends SubsystemBase {
     desiredAngle += increment;
   }
   
-  public void climbRightMotorSpeed(double speed) {
-    rightClimbMotor.setMotorSpeed(speed);
-  }
-
   public void climbLeftMotorSpeed(double speed) {
      leftClimbMotor.setMotorSpeed(speed);
+     rightClimbMotor.setMotorSpeed(speed);
   }
 
-  public boolean rightClimbExtended() {
+  public boolean ClimbExtended() {
      return rightClimbMotor.getPosition() > ClimbConstants.rightClimbExtended;
-  }
-
-  public boolean leftClimbExtended() {
-    return leftClimbMotor.getPosition() > ClimbConstants.leftClimbExtended;
-  }
-
-  public void climbSetSpeed(double speed) {
-    motor.set(speed);
   }
 
   @Override
   public void periodic() {
-    
+    SmartDashboard.putBoolean("Climb at desired point", outerClimbLimitSwitch.get());
     // This method will be called once per scheduler run
   }
 }
