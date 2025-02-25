@@ -4,35 +4,35 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PlacerConstants;
 
 public class Placer extends SubsystemBase {
 
-  TalonFX frontMotor;
-  TalonFX rearMotor;
+  Kraken frontMotor;
+  Kraken rearMotor;
   DigitalInput beamBreak;
 
   /** Creates a new Placer. */
   public Placer() {
 
     // instantiating hardware
-    frontMotor = new TalonFX(PlacerConstants.placerFrontMotorID);
-    rearMotor = new TalonFX(PlacerConstants.placerRearMotorID);
+    frontMotor = new Kraken(PlacerConstants.placerFrontMotorID);
+    rearMotor = new Kraken(PlacerConstants.placerRearMotorID);
     beamBreak = new DigitalInput(PlacerConstants.placerBeamBreakID);
 
     // configuring motors
-    frontMotor.setNeutralMode(NeutralModeValue.Brake);
-    rearMotor.setNeutralMode(NeutralModeValue.Brake);
+    frontMotor.setBrakeMode();
+    rearMotor.setBrakeMode();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Beam Break State", getBeamBreakState());
+    // adds beam break state to smart dashboard
   }
 
   /** Stops the rear motor. */
@@ -56,7 +56,7 @@ public class Placer extends SubsystemBase {
    *  Use positive numbers for the speed variable only.
    */
   public void setFrontMotorPlus(double speed) {
-    frontMotor.set(speed);
+    frontMotor.setMotorSpeed(speed);
   }
 
   /** Sets the speed of the rear motor. <p> 
@@ -64,7 +64,7 @@ public class Placer extends SubsystemBase {
    *  Use positive numbers for the speed variable only.
    */
   public void setRearMotorPlus(double speed) {
-    rearMotor.set(speed);
+    rearMotor.setMotorSpeed(speed);
   }
 
   /** Sets the speed of the front motor. <p> 
@@ -72,7 +72,7 @@ public class Placer extends SubsystemBase {
    *  Use positive numbers for the speed variable only.
    */
   public void setFrontMotorMinus(double speed) {
-    frontMotor.set(-speed);
+    frontMotor.setMotorSpeed(-speed);
   }
 
   /** Sets the speed of the rear motor. <p> 
@@ -80,12 +80,13 @@ public class Placer extends SubsystemBase {
    *  Use positive numbers for the speed variable only.
    */
   public void setRearMotorMinus(double speed) {
-    rearMotor.set(-speed);
+    rearMotor.setMotorSpeed(-speed);
   }
 
   /** Gets the state of the beam break sensor. <p>
    *  This sensor is used in the scoring pipeline to determine when the coral is prepared
-   *  to be scored and the elevator is safe to move.
+   *  to be scored and the elevator is safe to move. <p>
+   *  Returns false when beam is obstructed and true when beam is unobstructed
    */
   public boolean getBeamBreakState() {
     return beamBreak.get();
