@@ -58,6 +58,11 @@ public class Kraken extends SubsystemBase {
     kraken.getConfigurator().setPosition(position);
   }
 
+  /** Sets motor speed to zero. */
+  public void stopMotor() {
+    kraken.set(0);
+  }
+
   /** Sets default motor config inverted. */
   public void setInverted() {  
     kraken.getConfigurator().apply(krakenConfiguration.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive));

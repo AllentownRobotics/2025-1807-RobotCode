@@ -75,7 +75,7 @@ public class Elevator extends SubsystemBase {
     new Mechanism(
       null,
       null,
-      null));
+      this));
 
   @Override
   public void periodic() {
