@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.blinkin;
 
@@ -15,7 +14,6 @@ public class blinkinClimbLavaCMD extends Command {
   public blinkinClimbLavaCMD() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
-  private boolean flashing = false;
 
   // Called when the command is initially scheduled.
   @Override
@@ -23,6 +21,7 @@ public class blinkinClimbLavaCMD extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
+    //sets the color when the robot is climbing(lava pallete)
   public void execute() {
     blinkin.color(OperatorConstants.climbLava);
 

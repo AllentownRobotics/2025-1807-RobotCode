@@ -14,7 +14,8 @@ public class blinkin extends SubsystemBase {
     public blinkin() {
       blinkin = new Spark(0);
   
-    } 
+    }
+    //creates a general statement for making a color 
       public static void color(double color){
         blinkin.set(color);
     }
