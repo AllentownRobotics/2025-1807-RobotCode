@@ -13,14 +13,14 @@ import frc.robot.TunerConstants;
 import frc.robot.subsystems.Drivetrain.CommandSwerveDrivetrain;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class DriveCMD extends Command {
+public class SlowDriveCMD extends Command {
 
   SwerveRequest.FieldCentric drive;
   CommandSwerveDrivetrain drivetrain;
   CommandXboxController controller;
-
-  /** Creates a new DriveCMD. */
-  public DriveCMD(CommandSwerveDrivetrain drivetrain, CommandXboxController controller) {
+  
+  /** Creates a new SlowDriveCMD. */
+  public SlowDriveCMD(CommandSwerveDrivetrain drivetrain, CommandXboxController controller) {
     this.drivetrain = drivetrain;
     this.controller = controller;
 
@@ -39,9 +39,9 @@ public class DriveCMD extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drive.withVelocityX(controller.getLeftX() * TunerConstants.MaxSpeed)
-    .withVelocityY(controller.getLeftY() * TunerConstants.MaxSpeed)
-    .withRotationalRate(controller.getRightX() * TunerConstants.MaxAngularRate);
+    drive.withVelocityX(controller.getLeftX() * TunerConstants.slowDriveSpeed)
+    .withVelocityY(controller.getLeftY() * TunerConstants.slowDriveSpeed)
+    .withRotationalRate(controller.getRightX() * TunerConstants.slowAngularRate);
   }
 
   // Called once the command ends or is interrupted.

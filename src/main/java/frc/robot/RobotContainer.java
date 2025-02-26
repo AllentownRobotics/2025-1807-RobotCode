@@ -61,7 +61,7 @@ public class RobotContainer {
                     .withVelocityY(-joystick.getLeftX() * TunerConstants.MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-joystick.getRightX() * TunerConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
             )*/
-        new DriveCMD()
+        new DriveCMD(drivetrain, driverController)
         );
 
         driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));

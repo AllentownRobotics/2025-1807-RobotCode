@@ -6,16 +6,22 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Volts;
 
+import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
 
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants.ElevatorConstants;
+import frc.utils.Kraken;
 
 public class Elevator extends SubsystemBase {
 
@@ -23,6 +29,19 @@ public class Elevator extends SubsystemBase {
   private CANcoder elevatorEncoder;
   private DigitalInput lowerLimitSwitch, upperLimitSwitch;
   private double desiredSetpoint; // desired setpoint of the encoder
+
+  
+  private final SysIdRoutine elevatorSysIDRoutine = new SysIdRoutine(
+    new Config(
+      null,
+      Voltage.ofBaseUnits(4, Volts),
+      null),
+    new Mechanism(
+      state -> SignalLogger.writeString("sysID State", state.toString()),
+      null,
+      this));
+
+  private SysIdRoutine appliedRoutine = elevatorSysIDRoutine;
 
   /** Creates a new Elevator. */
   public Elevator() {
@@ -33,6 +52,7 @@ public class Elevator extends SubsystemBase {
     lowerLimitSwitch = new DigitalInput(ElevatorConstants.lowerLimitSwitchPort);
     upperLimitSwitch = new DigitalInput(ElevatorConstants.upperLimitSwitchPort);
 
+    rightMotor.setInverted();
     rightMotor.follow(ElevatorConstants.leftMotorID, false);
     leftMotor.restoreFactoryDefaults();
 
@@ -62,24 +82,29 @@ public class Elevator extends SubsystemBase {
     desiredSetpoint += increment;
   }
 
-  public void limitSwitchStatus() {
-    lowerLimitSwitch.get();
-    upperLimitSwitch.get();
+  /** Scales the elevator encoder position by a factor of 2(pi)(r), converting rotations to inches. */
+  public double elevatorPositionInches() {
+    return elevatorEncoder.getAbsolutePosition().getValueAsDouble()*2*Math.PI*1.037;
   }
 
-  private final SysIdRoutine elevatorSysIDRoutine = new SysIdRoutine(
-    new Config(
-      null,
-      Voltage.ofBaseUnits(4, Volts),
-      null),
-    new Mechanism(
-      null,
-      null,
-      this));
+  public boolean lowerLimitSwitchStatus() {
+    return lowerLimitSwitch.get();
+  }
+
+  public boolean upperLimitSwitchStatus() {
+    return upperLimitSwitch.get();
+  }
 
   @Override
   public void periodic() {
+
+    leftMotor.getMotorTemperature();
+    rightMotor.getMotorTemperature();
+
     // This method will be called once per scheduler run
-    Shuffleboard.getTab("Elevator").add("encoder position", 0);
+    Shuffleboard.getTab("Elevator").add("encoder position", desiredSetpoint);
+    Shuffleboard.getTab("Elevator").add("lower limit switch", lowerLimitSwitchStatus());
+    Shuffleboard.getTab("Elevator").add("upper limit switch", upperLimitSwitchStatus());
+    
   }
 }

@@ -21,15 +21,19 @@ import frc.robot.subsystems.Drivetrain.CommandSwerveDrivetrain;
 
 public class TunerConstants {
 
-    // auto stuff
-    public static final PIDConstants translationConstants = new PIDConstants(5.0, 0.0, 0.0);
-    public static final PIDConstants rotationConstants = new PIDConstants(5.0, 0.0, 0.0);
+    // auto pid values (should be same as steer and drive gains)
+    public static final PIDConstants translationConstants = new PIDConstants(0.05, 0.0, 0.0);
+    public static final PIDConstants rotationConstants = new PIDConstants(0.05, 0.0, 0.0);
 
     // maximum motor outputs
     public static double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     public static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-    // Both sets of gains need to be tuned to your individual robot.
 
+    // slow drive motor outputs
+    public static double slowDriveSpeed = 0.25 * MaxSpeed;
+    public static double slowAngularRate = 0.25 * MaxAngularRate;
+
+    // Both sets of gains need to be tuned to your individual robot.
     // The steer motor uses any SwerveModule.SteerRequestType control request with the
     // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
     private static final Slot0Configs steerGains = new Slot0Configs()
@@ -75,7 +79,13 @@ public class TunerConstants {
         );
     private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
     // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
-    private static final Pigeon2Configuration pigeonConfigs = null;
+    private static final Pigeon2Configuration pigeonConfigs = new Pigeon2Configuration()
+        .withMountPose(
+            new MountPoseConfigs()
+            .withMountPosePitch(null)
+            .withMountPoseYaw(null)
+            .withMountPoseRoll(null)
+    );
 
     // CAN bus that the devices are located on;
     // All swerve devices must share the same CAN bus

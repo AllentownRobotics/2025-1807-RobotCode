@@ -43,7 +43,7 @@ public final class Constants {
   public static class ClimbConstants {
     public static final int leftClimbMotorID = 15;
     public static final int rightClimbMotorID = 16;
-    public static final int climbCANCoderID = 0;
+    public static final int climbCANCoderID = 17;
 
     public static final int outerLimitSwitchID = 0;
     public static final int innerLimitSwitchID = 0;
@@ -61,9 +61,9 @@ public final class Constants {
 
   // Elevator Constants
   public static class ElevatorConstants {
-    public static final int leftMotorID = 17;
-    public static final int rightMotorID = 18;
-    public static final int elevatorCANCoderID = 0;
+    public static final int leftMotorID = 18;
+    public static final int rightMotorID = 19;
+    public static final int elevatorCANCoderID = 20;
 
     public static final int lowerLimitSwitchPort = 0;
     public static final int upperLimitSwitchPort = 0;
@@ -89,13 +89,13 @@ public final class Constants {
 
   // Placer Constants
   public static class PlacerConstants {
-    public static final int backMotorID = 16;
-    public static final int frontMotorID = 17;
+    public static final int backMotorID = 21;
+    public static final int frontMotorID = 22;
   }
 
   // Blinkin Constants
   public static class BlinkinConstants {
-    public static final int blinkinID = 20;
+    public static final int blinkinID = 23;
 
   // light codes
     public static final double DARK_RED = 0.59; // temporary default
