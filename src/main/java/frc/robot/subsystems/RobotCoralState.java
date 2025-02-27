@@ -5,22 +5,27 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotCoralState extends SubsystemBase {
-  /** Creates a new RobotCoralState. */
+  
   Placer placer = new Placer();
   HopperSubsystem hopperSubsystem = new HopperSubsystem();
   boolean robotContainsCoral = true;
   int coralState = 0;
+  /** Creates a new RobotCoralState. */
   public RobotCoralState() {}
 
   public boolean robotContainsCoral(){
+    // returns whether the robot contains coral or not
     return robotContainsCoral;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // sets the boolean robot contains coral by checking if the hoper had the coral, and the robot had no other coral, if the placer beam is broken then it sets the state to 2
+    // and if the placer beam is not broken and the placer beam has been broken before that, it seta the robot to not contain coral.
     if(hopperSubsystem.isCoralCollected()&&coralState==0){
       coralState=1;
     }
@@ -31,5 +36,6 @@ public class RobotCoralState extends SubsystemBase {
       coralState=0;
       robotContainsCoral = true;
     }
+    SmartDashboard.putBoolean("Has Coral", robotContainsCoral);
   }
 }
