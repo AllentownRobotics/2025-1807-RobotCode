@@ -9,15 +9,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.BlinkinConstants;
 
 public class Blinkin extends SubsystemBase {
-  Spark blinkin;
-  /** Creates a new Blinkin. */
-  public Blinkin() {
-    blinkin = new Spark(BlinkinConstants.blinkinID);
-  }
+  /** Creates a new blinkin. */
+   Spark blinkin;
+  
+    public Blinkin() {
+      blinkin = new Spark(BlinkinConstants.blinkinID);
+    }
 
-  public void setColor(double color) {
-    blinkin.set(color);
-  }
+    //creates a general statement for making a color 
+      public void color(double color){
+        blinkin.set(color);
+    }
 
   @Override
   public void periodic() {

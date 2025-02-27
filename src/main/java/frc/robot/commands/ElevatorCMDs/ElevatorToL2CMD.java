@@ -11,9 +11,9 @@ import frc.robot.subsystems.Elevator;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ElevatorToHome extends InstantCommand {
+public class ElevatorToL2CMD extends InstantCommand {
   Elevator elevator;
-  public ElevatorToHome(Elevator elevator) {
+  public ElevatorToL2CMD(Elevator elevator) {
     this.elevator = elevator;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator);
@@ -22,6 +22,6 @@ public class ElevatorToHome extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevator.setElevatorPosition(ElevatorConstants.homePosition);
+    elevator.setElevatorPosition(ElevatorConstants.L2Position);
   }
 }

@@ -94,7 +94,7 @@ public class Kraken extends SubsystemBase {
     kraken.set(speed);
   }
 
-  /** Allows a motor to follow another motor. */
+  /** Allows a motor to follow another motor. Setting the inverted boolean to true allows motor to turn opposite the leader. */
   public void follow(double leaderCANID, boolean inverted) {
     kraken.setControl(new Follower(krakenID, inverted));
   }

@@ -14,19 +14,28 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.DriveCMD;
+import frc.robot.commands.ClimbCMDs.ClimbInCMD;
+import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
+import frc.robot.commands.ClimbCMDs.testSpin;
+import frc.robot.commands.DrivetrainCMDs.DriveCMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorIncrementDownCMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorIncrementUpCMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorToHomeCMD;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Placer;
 import frc.robot.subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drivetrain.Telemetry;
 
 public class RobotContainer {
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final Elevator elevatorSubsystem = new Elevator();
     private final Placer placerSubsystem = new Placer();
     private final Climb climbSubsystem = new Climb();
+    private final Hopper hopperSubsystem = new Hopper();
     private final Limelight limelightSubsystem = new Limelight();
     private final Blinkin blinkinSubsystem = new Blinkin();
 
@@ -44,14 +53,17 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(TunerConstants.MaxSpeed);
 
     private final CommandXboxController driverController = new CommandXboxController(OIConstants.driverControllerPort);
-
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    private final CommandXboxController operatorController = new CommandXboxController(OIConstants.operatorControllerPort);
 
     public RobotContainer() {
         configureBindings();
     }
 
     private void configureBindings() {
+    /*
+    * __________________________________ DRIVER CONTROLLER __________________________________
+    */
+    
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
@@ -76,10 +88,22 @@ public class RobotContainer {
         driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        // reset the field-centric heading on left bumper press
-        driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        // reset the field-centric heading on right bumper press
+        driverController.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+
+/*
+* __________________________________ OPERATOR CONTROLLER __________________________________
+*/
+
+        /*operatorController.y().whileTrue(new ElevatorToHomeCMD(elevatorSubsystem));
+        operatorController.x().whileTrue(new ElevatorIncrementDownCMD(elevatorSubsystem));
+        operatorController.b().whileTrue(new ElevatorIncrementUpCMD(elevatorSubsystem));
+        operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
+        operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));*/
+
+        operatorController.a().whileTrue(new testSpin(climbSubsystem));
     }
 
     public Command getAutonomousCommand() {

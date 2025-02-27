@@ -57,6 +57,11 @@ public final class Constants {
     public static final double CLIMB_AFF = 0; // acceleration feedforward
     public static final double CLIMB_MIN_OUTPUT = -1;
     public static final double CLIMB_MAX_OUTPUT = 1;
+
+  // climb setpoints
+    public static final double climbOuterAngle = 180; // 90 degree angle outward
+    public static final double climbInnerAngle = 0; // 90 degree angle inward
+    public static final double climbLockAngle = 0; 
   }
 
   // Elevator Constants
@@ -89,8 +94,14 @@ public final class Constants {
 
   // Placer Constants
   public static class PlacerConstants {
-    public static final int backMotorID = 21;
-    public static final int frontMotorID = 22;
+    public static final int frontMotorID = 21;
+    public static final int backMotorID = 22;
+    public static final int placerBeamBreakID = 0;
+  }
+
+  // Hopper Constants
+  public static class HopperConstants {
+    public static final int hopperBeamBreakID = 0;
   }
 
   // Blinkin Constants
@@ -98,8 +109,11 @@ public final class Constants {
     public static final int blinkinID = 23;
 
   // light codes
-    public static final double DARK_RED = 0.59; // temporary default
-    public static final double OCEAN_PALETTE_WAVES = -0.41; // temporary climbing
+  public static final double defaultColor = 0.59; // dark red
+  public static final double humanPlayerStation = -0.05; // strobe white (flashing)
+  public static final double climbOcean = -0.95; // rainbow ocean palette
+  public static final double climbLava = -0.93; // rainbow lava palette
+  public static final double alignedWithReef = 0.35; // strobe color 2 (green)
   }
 
 }

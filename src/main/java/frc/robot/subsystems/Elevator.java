@@ -7,15 +7,12 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
 
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
@@ -29,7 +26,6 @@ public class Elevator extends SubsystemBase {
   private CANcoder elevatorEncoder;
   private DigitalInput lowerLimitSwitch, upperLimitSwitch;
   private double desiredSetpoint; // desired setpoint of the encoder
-
   
   private final SysIdRoutine elevatorSysIDRoutine = new SysIdRoutine(
     new Config(
@@ -45,6 +41,11 @@ public class Elevator extends SubsystemBase {
 
   /** Creates a new Elevator. */
   public Elevator() {
+    
+    /*super(leftMotor, rightMotor, elevatorEncoder);
+    if(Utils.isSimulation()) {
+      startSimThread();
+    } */
     leftMotor = new Kraken(ElevatorConstants.leftMotorID);
     rightMotor = new Kraken(ElevatorConstants.rightMotorID);
     elevatorEncoder = new CANcoder(ElevatorConstants.elevatorCANCoderID);
@@ -52,8 +53,7 @@ public class Elevator extends SubsystemBase {
     lowerLimitSwitch = new DigitalInput(ElevatorConstants.lowerLimitSwitchPort);
     upperLimitSwitch = new DigitalInput(ElevatorConstants.upperLimitSwitchPort);
 
-    rightMotor.setInverted();
-    rightMotor.follow(ElevatorConstants.leftMotorID, false);
+    rightMotor.follow(ElevatorConstants.leftMotorID, true);
     leftMotor.restoreFactoryDefaults();
 
     leftMotor.addEncoder(elevatorEncoder);
@@ -63,13 +63,27 @@ public class Elevator extends SubsystemBase {
                               ElevatorConstants.ELEVATOR_VFF, ElevatorConstants.ELEVATOR_AFF);
 
     leftMotor.setBrakeMode();
+    leftMotor.setNotInverted();
 
-    leftMotor.setMotorCurrentLimits(120);
-    leftMotor.setSoftLimits(ElevatorConstants.homePosition, ElevatorConstants.L4Position); // prevent us from overdriving the motor
+    leftMotor.setMotorCurrentLimits(40);
+    leftMotor.setSoftLimits(ElevatorConstants.homePosition, ElevatorConstants.L4Position);
+                            // prevent us from overdriving the motor
     
     desiredSetpoint = ElevatorConstants.homePosition;
     elevatorEncoder.setPosition(desiredSetpoint);
+  }
 
+  public Command SysIDQuasistatic(SysIdRoutine.Direction direction) {
+    return appliedRoutine.quasistatic(direction);
+  }
+
+  public Command SysIDDynamic(SysIdRoutine.Direction direction) {
+    return appliedRoutine.dynamic(direction);
+  }
+
+  /** Stop elevator (emergency feature). */
+  public void stopElevator() {
+    leftMotor.stopMotor();
   }
 
   /** Sets elevator position based off setpoint value. */
@@ -97,14 +111,14 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // This method will be called once per scheduler run
 
     leftMotor.getMotorTemperature();
     rightMotor.getMotorTemperature();
 
-    // This method will be called once per scheduler run
     Shuffleboard.getTab("Elevator").add("encoder position", desiredSetpoint);
-    Shuffleboard.getTab("Elevator").add("lower limit switch", lowerLimitSwitchStatus());
-    Shuffleboard.getTab("Elevator").add("upper limit switch", upperLimitSwitchStatus());
+    Shuffleboard.getTab("Elevator").add("at min height", lowerLimitSwitchStatus());
+    Shuffleboard.getTab("Elevator").add("at max height", upperLimitSwitchStatus());
     
   }
 }
