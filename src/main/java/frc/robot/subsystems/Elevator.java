@@ -53,8 +53,10 @@ public class Elevator extends SubsystemBase {
     lowerLimitSwitch = new DigitalInput(ElevatorConstants.lowerLimitSwitchPort);
     upperLimitSwitch = new DigitalInput(ElevatorConstants.upperLimitSwitchPort);
 
-    rightMotor.follow(ElevatorConstants.leftMotorID, true);
     leftMotor.restoreFactoryDefaults();
+    rightMotor.restoreFactoryDefaults();
+
+    rightMotor.follow(ElevatorConstants.leftMotorID, true);
 
     leftMotor.addEncoder(elevatorEncoder);
 
@@ -66,8 +68,8 @@ public class Elevator extends SubsystemBase {
     leftMotor.setNotInverted();
 
     leftMotor.setMotorCurrentLimits(40);
-    leftMotor.setSoftLimits(ElevatorConstants.homePosition, ElevatorConstants.L4Position);
-                            // prevent us from overdriving the motor
+    leftMotor.setSoftLimits(ElevatorConstants.softLimitMinPosition, // prevent us from overdriving the motor
+                            ElevatorConstants.softLimitMaxPosition); 
     
     desiredSetpoint = ElevatorConstants.homePosition;
     elevatorEncoder.setPosition(desiredSetpoint);
@@ -89,23 +91,25 @@ public class Elevator extends SubsystemBase {
   /** Sets elevator position based off setpoint value. */
   public void setElevatorPosition(double setpoint) {
     desiredSetpoint = setpoint;
+    elevatorEncoder.setPosition(desiredSetpoint);
   }
 
   /** Adjust the position of the elevator by a set increment. */
   public void adjustPositionIncrementally(double increment) {
     desiredSetpoint += increment;
+    elevatorEncoder.setPosition(desiredSetpoint);
   }
 
   /** Scales the elevator encoder position by a factor of 2(pi)(r), converting rotations to inches. */
-  public double elevatorPositionInches() {
-    return elevatorEncoder.getAbsolutePosition().getValueAsDouble()*2*Math.PI*1.037;
+  public double getElevatorPositionInInches() {
+    return elevatorEncoder.getAbsolutePosition().getValueAsDouble()*2*Math.PI*1.037; // 1.037 is the sprocket radius
   }
 
-  public boolean lowerLimitSwitchStatus() {
+  public boolean isLowerLimitReached() {
     return lowerLimitSwitch.get();
   }
 
-  public boolean upperLimitSwitchStatus() {
+  public boolean isUpperLimitReached() {
     return upperLimitSwitch.get();
   }
 
@@ -116,9 +120,11 @@ public class Elevator extends SubsystemBase {
     leftMotor.getMotorTemperature();
     rightMotor.getMotorTemperature();
 
+    // change state only when state changes
     Shuffleboard.getTab("Elevator").add("encoder position", desiredSetpoint);
-    Shuffleboard.getTab("Elevator").add("at min height", lowerLimitSwitchStatus());
-    Shuffleboard.getTab("Elevator").add("at max height", upperLimitSwitchStatus());
+    Shuffleboard.getTab("Elevator").add("at min height", isLowerLimitReached());
+    Shuffleboard.getTab("Elevator").add("at max height", isUpperLimitReached());
+    Shuffleboard.getTab("Elevator").add("elevator position in inches", getElevatorPositionInInches());
     
   }
 }

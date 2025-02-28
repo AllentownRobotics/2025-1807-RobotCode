@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
-import frc.robot.commands.ClimbCMDs.testSpin;
 import frc.robot.commands.DrivetrainCMDs.DriveCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementDownCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementUpCMD;
@@ -25,7 +24,6 @@ import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Hopper;
-import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Placer;
 import frc.robot.subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drivetrain.Telemetry;
@@ -36,8 +34,8 @@ public class RobotContainer {
     private final Placer placerSubsystem = new Placer();
     private final Climb climbSubsystem = new Climb();
     private final Hopper hopperSubsystem = new Hopper();
-    private final Limelight limelightSubsystem = new Limelight();
-    private final Blinkin blinkinSubsystem = new Blinkin();
+    //private final Vision limelightSubsystem = new Vision(drivetrain, placerSubsystem);
+    //private final Blinkin blinkinSubsystem = new Blinkin();
 
 
     //private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -45,12 +43,12 @@ public class RobotContainer {
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(TunerConstants.MaxSpeed * 0.1).withRotationalDeadband(TunerConstants.MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDeadband(TunerConstants.maxDriveSpeed * 0.1).withRotationalDeadband(TunerConstants.maxDriveAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-    private final Telemetry logger = new Telemetry(TunerConstants.MaxSpeed);
+    private final Telemetry logger = new Telemetry(TunerConstants.maxDriveSpeed);
 
     private final CommandXboxController driverController = new CommandXboxController(OIConstants.driverControllerPort);
     private final CommandXboxController operatorController = new CommandXboxController(OIConstants.operatorControllerPort);
@@ -91,19 +89,20 @@ public class RobotContainer {
         // reset the field-centric heading on right bumper press
         driverController.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
+        driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.enableSlowMode()));
+        driverController.leftBumper().onFalse(drivetrain.runOnce(() -> drivetrain.disableSlowMode()));
+
         drivetrain.registerTelemetry(logger::telemeterize);
 
 /*
 * __________________________________ OPERATOR CONTROLLER __________________________________
 */
 
-        /*operatorController.y().whileTrue(new ElevatorToHomeCMD(elevatorSubsystem));
+        operatorController.y().whileTrue(new ElevatorToHomeCMD(elevatorSubsystem));
         operatorController.x().whileTrue(new ElevatorIncrementDownCMD(elevatorSubsystem));
         operatorController.b().whileTrue(new ElevatorIncrementUpCMD(elevatorSubsystem));
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
-        operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));*/
-
-        operatorController.a().whileTrue(new testSpin(climbSubsystem));
+        operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));
     }
 
     public Command getAutonomousCommand() {

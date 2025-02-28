@@ -26,12 +26,12 @@ public class TunerConstants {
     public static final PIDConstants rotationConstants = new PIDConstants(0.05, 0.0, 0.0);
 
     // maximum motor outputs
-    public static double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    public static double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    public static double maxDriveSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    public static double maxDriveAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     // slow drive motor outputs
-    public static double slowDriveSpeed = 0.25 * MaxSpeed;
-    public static double slowAngularRate = 0.25 * MaxAngularRate;
+    public static double slowDriveSpeed = 0.25 * maxDriveSpeed;
+    public static double slowDriveAngularRate = 0.25 * maxDriveAngularRate;
 
     // Both sets of gains need to be tuned to your individual robot.
     // The steer motor uses any SwerveModule.SteerRequestType control request with the

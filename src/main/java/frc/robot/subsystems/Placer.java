@@ -13,7 +13,7 @@ import frc.utils.Kraken;
 public class Placer extends SubsystemBase {
 
   Kraken frontMotor, rearMotor;
-  DigitalInput beamBreak;
+  DigitalInput placerBeamBreak;
 
   /** Creates a new Placer. */
   public Placer() {
@@ -21,7 +21,7 @@ public class Placer extends SubsystemBase {
     // instantiating hardware
     frontMotor = new Kraken(PlacerConstants.frontMotorID);
     rearMotor = new Kraken(PlacerConstants.backMotorID);
-    beamBreak = new DigitalInput(PlacerConstants.placerBeamBreakID);
+    placerBeamBreak = new DigitalInput(PlacerConstants.placerBeamBreakID);
 
     // configuring motors
     frontMotor.setBrakeMode();
@@ -80,16 +80,16 @@ public class Placer extends SubsystemBase {
   /** Gets the state of the beam break sensor. <p>
    *  This sensor is used in the scoring pipeline to determine when the coral is prepared
    *  to be scored and the elevator is safe to move. <p>
-   *  Returns false when beam is obstructed and true when beam is unobstructed
+   *  Returns false when beam is obstructed and true when beam is unobstructed.
    */
-  public boolean getBeamBreakState() {
-    return beamBreak.get();
+  public boolean getBeamBreakState() { // change to isCoralInPlacer
+    return placerBeamBreak.get();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("Beam Break State", getBeamBreakState());
+    SmartDashboard.putBoolean("Placer Beam Break State", getBeamBreakState());
     // adds beam break state to smart dashboard
   }
 

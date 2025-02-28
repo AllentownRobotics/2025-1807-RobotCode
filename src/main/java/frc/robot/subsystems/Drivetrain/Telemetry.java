@@ -81,7 +81,7 @@ public class Telemetry {
             .append(new MechanismLigament2d("Direction", 0.1, 0, 0, new Color8Bit(Color.kWhite))),
     };
 
-    public final double[] m_poseArray = new double[3]; // made public for limelight
+    public double[] m_poseArray = new double[3]; // made public for limelight
     private final double[] m_moduleStatesArray = new double[8];
     private final double[] m_moduleTargetsArray = new double[8];
 

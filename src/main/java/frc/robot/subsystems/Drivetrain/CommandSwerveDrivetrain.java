@@ -35,6 +35,8 @@ import frc.robot.TunerConstants.TunerSwerveDrivetrain;
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
+    public static boolean inSlowMode = false; // make if then to check if in slow mode
+
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
@@ -197,6 +199,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
     
+    public boolean isSlowModeEnabled() {
+        return inSlowMode;
+    }
+
+    public void enableSlowMode() {
+        inSlowMode = true;
+    }
+
+    public void disableSlowMode() {
+        inSlowMode = false;
+    }
 /* __________________________________              __________________________________
  * __________________________________ AUTO BUILDER __________________________________
  * __________________________________              __________________________________

@@ -47,9 +47,10 @@ public class Climb extends SubsystemBase {
     rightClimbMotor = new Kraken(ClimbConstants.rightClimbMotorID);
     climbEncoder = new CANcoder(ClimbConstants.climbCANCoderID);
 
-    rightClimbMotor.follow(ClimbConstants.leftClimbMotorID, true);
-
     leftClimbMotor.restoreFactoryDefaults();
+    rightClimbMotor.restoreFactoryDefaults();
+
+    rightClimbMotor.follow(ClimbConstants.leftClimbMotorID, true);
 
     leftClimbMotor.addEncoder(climbEncoder);
 
@@ -76,24 +77,22 @@ public class Climb extends SubsystemBase {
     return appliedRoutine.dynamic(direction);
   }
 
-  public void testSetSpeed(double speed) {
-    leftClimbMotor.setMotorSpeed(speed);
-  }
-
   public void stopClimb() {
     leftClimbMotor.stopMotor();
   }
 
   public void setDesiredAngle(double angle){
     desiredAngle = angle;
+    climbEncoder.setPosition(desiredAngle);
   }
 
-  public void ClimbIncrement(double increment) {
+  public void incrementDesiredAngle(double increment) {
     desiredAngle += increment;
+    climbEncoder.setPosition(desiredAngle);
   }
 
-  // why???????
-  public boolean ClimbExtended() {
+  // look at new repo
+  public boolean isClimbExtended() {
      return rightClimbMotor.getPosition() > ClimbConstants.climbInnerAngle;
   }
 
@@ -110,8 +109,13 @@ public class Climb extends SubsystemBase {
     // This method will be called once per scheduler run
 
     // Tells you when the climb is at setpoint
-    if(outerLimitSwitchStatus() == true) {
+    if(outerLimitSwitchStatus() != true) { //change true to a boolean set to false
+      leftClimbMotor.stopMotor(); // change stop to check direction condition
       SmartDashboard.putBoolean("Climb at setpoint", outerLimitSwitchStatus());
+    }
+
+    if(innerLimitSwitchStatus() == true) {
+      leftClimbMotor.stopMotor(); // change stop to check direction condition
     }
 
   }

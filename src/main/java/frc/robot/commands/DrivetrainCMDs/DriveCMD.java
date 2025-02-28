@@ -25,8 +25,8 @@ public class DriveCMD extends Command {
     this.controller = controller;
 
     drive = new SwerveRequest.FieldCentric()
-    .withDeadband(TunerConstants.MaxSpeed * 0.1).withRotationalDeadband(TunerConstants.MaxAngularRate * 0.1) // Add a 10% deadband
-    .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+    .withDeadband(TunerConstants.maxDriveSpeed * 0.1).withRotationalDeadband(TunerConstants.maxDriveAngularRate * 0.1) // Add a 10% deadband
+    .withDriveRequestType(DriveRequestType.Velocity); // Use closed-loop control for drive motors
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
@@ -39,9 +39,17 @@ public class DriveCMD extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drive.withVelocityX(controller.getLeftX() * TunerConstants.MaxSpeed)
-    .withVelocityY(controller.getLeftY() * TunerConstants.MaxSpeed)
-    .withRotationalRate(controller.getRightX() * TunerConstants.MaxAngularRate);
+    if (drivetrain.isSlowModeEnabled())
+    {
+      drive.withVelocityX(controller.getLeftX() * TunerConstants.slowDriveSpeed)
+      .withVelocityY(controller.getLeftY() * TunerConstants.slowDriveSpeed)
+      .withRotationalRate(controller.getRightX() * TunerConstants.slowDriveAngularRate);
+    } else {
+      drive.withVelocityX(controller.getLeftX() * TunerConstants.maxDriveSpeed)
+      .withVelocityY(controller.getLeftY() * TunerConstants.maxDriveSpeed)
+      .withRotationalRate(controller.getRightX() * TunerConstants.maxDriveAngularRate);
+    }
+
   }
 
   // Called once the command ends or is interrupted.
