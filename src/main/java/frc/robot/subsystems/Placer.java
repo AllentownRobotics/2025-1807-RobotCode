@@ -8,28 +8,46 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PlacerConstants;
-import frc.utils.Kraken;
 
 public class Placer extends SubsystemBase {
 
-  Kraken frontMotor, rearMotor;
-  DigitalInput placerBeamBreak;
+  private Kraken frontMotor;
+  private Kraken rearMotor;
+  private DigitalInput beamBreak;
+  private boolean previousPlacerCoralState;
 
-  boolean beamBreakTriggered;
   /** Creates a new Placer. */
   public Placer() {
 
     // instantiating hardware
-    frontMotor = new Kraken(PlacerConstants.frontMotorID);
-    rearMotor = new Kraken(PlacerConstants.backMotorID);
-    placerBeamBreak = new DigitalInput(PlacerConstants.placerBeamBreakID);
+    frontMotor = new Kraken(PlacerConstants.placerFrontMotorID);
+    rearMotor = new Kraken(PlacerConstants.placerRearMotorID);
+    beamBreak = new DigitalInput(PlacerConstants.placerBeamBreakID);
 
     // configuring motors
     frontMotor.setBrakeMode();
     rearMotor.setBrakeMode();
 
-    /*beamBreakTriggered = false;
-    SmartDashboard.putBoolean("placer beam break", beamBreakTriggered);*/
+    // sets up coral states to update on first scheduler tick
+    previousPlacerCoralState = isCoralInPlacer();
+
+    // sends inital coral state into smart dash
+    SmartDashboard.putBoolean("Beam Break State", previousPlacerCoralState);
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+
+    // adds beam break state to smart dashboard
+    // only if it changes states to reduce smartdash load
+    boolean placerCoralState = isCoralInPlacer();
+    if (placerCoralState != previousPlacerCoralState) {
+
+      SmartDashboard.putBoolean("Beam Break State", placerCoralState);
+      previousPlacerCoralState = placerCoralState;
+    }
+    
   }
 
   /** Stops the rear motor. */
@@ -52,7 +70,7 @@ public class Placer extends SubsystemBase {
    *  Only used for moving forwards. <p>
    *  Use positive numbers for the speed variable only.
    */
-  public void setFrontMotorPlus(double speed) {
+  public void setFrontMotorForwards(double speed) {
     frontMotor.setMotorSpeed(speed);
   }
 
@@ -60,45 +78,32 @@ public class Placer extends SubsystemBase {
    *  Only used for moving forwards. <p>
    *  Use positive numbers for the speed variable only.
    */
-  public void setRearMotorPlus(double speed) {
+  public void setRearMotorForwards(double speed) {
     rearMotor.setMotorSpeed(speed);
   }
 
   /** Sets the speed of the front motor. <p> 
-   *  Only used for moving backwards. <p>
+   *  Only used for moving in reverse. <p>
    *  Use positive numbers for the speed variable only.
    */
-  public void setFrontMotorMinus(double speed) {
+  public void setFrontMotorReverse(double speed) {
     frontMotor.setMotorSpeed(-speed);
   }
 
   /** Sets the speed of the rear motor. <p> 
-   *  Only used for moving backwards. <p>
+   *  Only used for moving in reverse. <p>
    *  Use positive numbers for the speed variable only.
    */
-  public void setRearMotorMinus(double speed) {
+  public void setRearMotorReverse(double speed) {
     rearMotor.setMotorSpeed(-speed);
   }
 
   /** Gets the state of the beam break sensor. <p>
    *  This sensor is used in the scoring pipeline to determine when the coral is prepared
    *  to be scored and the elevator is safe to move. <p>
-   *  Returns false when beam is obstructed and true when beam is unobstructed.
+   *  Returns false when beam is obstructed and true when beam is unobstructed
    */
-  public boolean getBeamBreakState() { // change to isCoralInPlacer
-    return placerBeamBreak.get();
+  public boolean isCoralInPlacer() {
+    return beamBreak.get();
   }
-
-  /*public boolean isBeamBreakEnabled() {
-    return beamBreakTriggered;
-  }*/
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-
-    SmartDashboard.putBoolean("Placer Beam Break State", getBeamBreakState());
-    // adds beam break state to smart dashboard
-  }
-
 }

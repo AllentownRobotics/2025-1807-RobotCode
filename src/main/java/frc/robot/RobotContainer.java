@@ -23,6 +23,7 @@ import frc.robot.commands.DrivetrainCMDs.DriveCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementDownCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementUpCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToHomeCMD;
+import frc.robot.commands.PlacerCMDs.PlacerSetFrontForwardCMD;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Elevator;
@@ -63,6 +64,8 @@ public class RobotContainer {
         //need to populate auto chooser still!!!
 
         configureBindings();
+
+	Placer.setDefaultCommand(new PlacerSetFrontForwardCMD(Placer, operatorController.getRightY()));
     }
 
     private void configureBindings() {

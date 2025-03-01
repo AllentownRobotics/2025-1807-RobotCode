@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.PlacerCMDs;
+package frc.robot.commands.PlacerCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Placer;
@@ -15,9 +15,9 @@ public class PlacerSetRearReverseCMD extends Command {
 
   /** Sets the speed of the front placer motor. */
   public PlacerSetRearReverseCMD(Placer placer, double speed) {
+
     this.placer = placer;
     this.speed = speed;
-
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(placer);
   }
@@ -25,7 +25,7 @@ public class PlacerSetRearReverseCMD extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    placer.setRearMotorMinus(speed);
+    placer.setRearMotorReverse(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
