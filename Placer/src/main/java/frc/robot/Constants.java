@@ -15,11 +15,29 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+<<<<<<< HEAD:src/main/java/frc/robot/Constants.java
 
   // Controllers
   public static class OIConstants {
     public static final int driverControllerPort = 0;
     public static final int operatorControllerPort = 1;
+=======
+  
+  public static class OperatorConstants {
+    public static final int kDriverControllerPort = 0;
+
+    public static final int operatorControllerPort = 1;
+  }
+
+  public static class PlacerConstants {
+    public static final int placerRearMotorID = 0;
+
+    public static final int placerFrontMotorID = 0;
+
+    public static final int placerBeamBreakID = 0;
+
+    public static final double placerMotorSpeed = .4;
+>>>>>>> remy_placer:Placer/src/main/java/frc/robot/Constants.java
   }
 
   public static class GlobalConstants {
