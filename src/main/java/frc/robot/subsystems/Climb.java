@@ -50,9 +50,9 @@ public class Climb extends SubsystemBase {
   public Climb() {
     //Instantiates objects
     motor = new TalonFX(1);
-    rightClimbMotor = new Kraken(ClimbConstants.rightclimbMotorID);
+    rightClimbMotor = new Kraken(ClimbConstants.rightClimbMotorID);
     leftClimbMotor = new Kraken(ClimbConstants.leftClimbMotorID);
-    climbCANcoder = new CANcoder(ClimbConstants.climbCANcoderID);
+    climbCANcoder = new CANcoder(ClimbConstants.climbCANCoderID);
     cageContactLimitSwitch = new DigitalInput(ClimbConstants.climbCageSwitchID);
     fullyRetractedLimitSwitch = new DigitalInput(ClimbConstants.fullyRetractedLimitSwitchID);
 
