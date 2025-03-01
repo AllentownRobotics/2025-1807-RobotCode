@@ -120,6 +120,14 @@ public class Elevator extends SubsystemBase {
     leftMotor.getMotorTemperature();
     rightMotor.getMotorTemperature();
 
+    if (isLowerLimitReached() == true) {
+      leftMotor.setMotorSpeed(.2); //replace these numbers to spin the motors away from the limit switch
+    }
+
+    if (isUpperLimitReached() == true) {
+      leftMotor.setMotorSpeed(-.2); //replace these numbers to spin the motors away from the limit switch
+    }
+
     // change state only when state changes
     Shuffleboard.getTab("Elevator").add("encoder position", desiredSetpoint);
     Shuffleboard.getTab("Elevator").add("at min height", isLowerLimitReached());

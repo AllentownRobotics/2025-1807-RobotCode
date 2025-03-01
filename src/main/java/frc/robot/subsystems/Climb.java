@@ -110,12 +110,12 @@ public class Climb extends SubsystemBase {
 
     // Tells you when the climb is at setpoint
     if(outerLimitSwitchStatus() != true) { //change true to a boolean set to false
-      leftClimbMotor.stopMotor(); // change stop to check direction condition
+      leftClimbMotor.setMotorSpeed(-.2); //replace these numbers to spin the motors away from the limit switch
       SmartDashboard.putBoolean("Climb at setpoint", outerLimitSwitchStatus());
     }
 
     if(innerLimitSwitchStatus() == true) {
-      leftClimbMotor.stopMotor(); // change stop to check direction condition
+      leftClimbMotor.setMotorSpeed(.2); //replace these numbers to spin the motors away from the limit switch
     }
 
   }
