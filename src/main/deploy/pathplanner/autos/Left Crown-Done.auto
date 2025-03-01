@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Starter Down"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bottom Down 3 B"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bottom Down 2 A"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bottom Down 2 B"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bottom Down 1 A"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Reefscape",
+  "choreoAuto": false
+}
