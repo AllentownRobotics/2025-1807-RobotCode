@@ -23,6 +23,10 @@ public class Hopper extends SubsystemBase {
     SmartDashboard.putBoolean("beam break", CoralCollected);
   }
 
+  public boolean isCoralCollected() {
+    return CoralCollected;
+  }
+
   @Override
   // This method will be called once per scheduler run
   public void periodic() {
@@ -42,8 +46,6 @@ public class Hopper extends SubsystemBase {
    * Has game piece been collected
    * @return true, false
    */
-  public boolean isCoralCollected() {
-    return CoralCollected;
-  }
+
   
 }

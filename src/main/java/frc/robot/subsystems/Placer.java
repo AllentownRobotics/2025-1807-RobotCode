@@ -15,6 +15,7 @@ public class Placer extends SubsystemBase {
   Kraken frontMotor, rearMotor;
   DigitalInput placerBeamBreak;
 
+  boolean beamBreakTriggered;
   /** Creates a new Placer. */
   public Placer() {
 
@@ -26,8 +27,10 @@ public class Placer extends SubsystemBase {
     // configuring motors
     frontMotor.setBrakeMode();
     rearMotor.setBrakeMode();
-  }
 
+    /*beamBreakTriggered = false;
+    SmartDashboard.putBoolean("placer beam break", beamBreakTriggered);*/
+  }
 
   /** Stops the rear motor. */
   public void stopRearMotor() {
@@ -86,9 +89,14 @@ public class Placer extends SubsystemBase {
     return placerBeamBreak.get();
   }
 
+  /*public boolean isBeamBreakEnabled() {
+    return beamBreakTriggered;
+  }*/
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
     SmartDashboard.putBoolean("Placer Beam Break State", getBeamBreakState());
     // adds beam break state to smart dashboard
   }

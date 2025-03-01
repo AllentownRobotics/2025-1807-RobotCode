@@ -10,7 +10,6 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
@@ -58,6 +57,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     // generating log files for sysid
     // https://docs.wpilib.org/en/stable/docs/software/advanced-controls/system-identification/loading-data.html
+    // https://docs.wpilib.org/en/stable/docs/software/telemetry/datalog-download.html
+    // https://github.com/wpilibsuite/frc-docs/blob/main/source/docs/software/advanced-controls/system-identification/loading-data.rst
 
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
