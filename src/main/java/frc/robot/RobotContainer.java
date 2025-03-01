@@ -7,6 +7,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,6 +24,7 @@ import frc.robot.commands.DrivetrainCMDs.DriveCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementDownCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementUpCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToHomeCMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorToL1CMD;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Elevator;
@@ -30,6 +32,7 @@ import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Placer;
 import frc.robot.subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drivetrain.Telemetry;
+import frc.robot.TunerConstants;
 
 public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -58,9 +61,12 @@ public class RobotContainer {
     private final CommandXboxController operatorController = new CommandXboxController(OIConstants.operatorControllerPort);
 
     public RobotContainer() {
+        NamedCommands.registerCommand("L1 Place", new ElevatorToL1CMD(elevatorSubsystem));
+
         autoChooser = AutoBuilder.buildAutoChooser("Name selected auto here");
         SmartDashboard.putData("Auto chooser", autoChooser);
         //need to populate auto chooser still!!!
+
 
         configureBindings();
 
@@ -88,12 +94,18 @@ public class RobotContainer {
             point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
         ));
 
-        // Run SysId routines when holding back/start and X/Y.
+        // Run SysId routines for the drivetrain when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
         driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+
+        driverController.back().and(driverController.a()).whileTrue(elevatorSubsystem.SysIDDynamic(Direction.kForward));
+        driverController.back().and(driverController.a()).whileTrue(elevatorSubsystem.SysIDDynamic(Direction.kReverse));
+        driverController.start().and(driverController.b()).whileTrue(elevatorSubsystem.SysIDDynamic(Direction.kForward));
+        driverController.start().and(driverController.b()).whileTrue(elevatorSubsystem.SysIDDynamic(Direction.kReverse));
+
 
         // reset the field-centric heading on right bumper press
         driverController.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
