@@ -17,7 +17,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
   // Controllers
-  public static class ControllerConstants {
+  public static class OIConstants {
     public static final int driverControllerPort = 0;
     public static final int operatorControllerPort = 1;
   }
@@ -38,34 +38,12 @@ public final class Constants {
     public static final double PX_CONTROLLER = 5;
     public static final double P_THETA_CONTROLLER = 1;
   }
-
-  // Elevator Constants
-  public static class ElevatorConstants {
-    public static final int leftMotorID = 15;
-    public static final int rightMotorID = 15;
-
-  // elevator motor PID
-    public static final double ELEVATOR_P = 0.01; // ADJUST ALL
-    public static final double ELEVATOR_I = 0.001;
-    public static final double ELEVATOR_D = 0;
-    public static final double ELEVATOR_SFF = 0; // static feedforward
-    public static final double ELEVATOR_VFF = 0; // velocity feedforward
-    public static final double ELEVATOR_AFF = 0; // acceleration feedforward
-    public static final double ELEVATOR_MIN_OUTPUT = -1;
-    public static final double ELEVATOR_MAX_OUTPUT = 1;
-  }
-
-  // Placer Constants
-  public static class PlacerConstants {
-    public static final int backMotorID = 16;
-    public static final int frontMotorID = 17;
-  }
-
+  
   // Climb Constants
   public static class ClimbConstants {
-    public static final int rightclimbMotorID = 18;
-    public static final int leftClimbMotorID = 19;
-    public static final int climbCANcoderID = 20;
+    public static final int leftClimbMotorID = 15;
+    public static final int rightClimbMotorID = 16;
+    public static final int climbCANCoderID = 17;
     public static final int climbCageSwitchID = 21;
     public static final int fullyRetractedLimitSwitchID = 22;
 
@@ -80,14 +58,56 @@ public final class Constants {
     public static final double CLIMB_SFF = 0; // static feedforward
     public static final double CLIMB_VFF = 0; // velocity feedforward
     public static final double CLIMB_AFF = 0; // acceleration feedforward
-    
     public static final double CLIMB_MIN_OUTPUT = -1;
     public static final double CLIMB_MAX_OUTPUT = 1;
 
-    public static final double ClimbOutangle = 0;
-    public static final double ClimbInangle = 0;
-    public static final double ClimbLock = 0;
+  // climb setpoints
+    public static final double climbOuterAngle = 180; // 90 degree angle outward
+    public static final double climbInnerAngle = 0; // 90 degree angle inward
+    public static final double climbLockAngle = 0; 
     public static final double ClimbDesiredAngle = 0;
+  }
+
+  // Elevator Constants
+  public static class ElevatorConstants {
+    public static final int leftMotorID = 18;
+    public static final int rightMotorID = 19;
+    public static final int elevatorCANCoderID = 20;
+
+    public static final int lowerLimitSwitchPort = 0;
+    public static final int upperLimitSwitchPort = 0;
+
+  // elevator motor PID
+    public static final double ELEVATOR_P = 0.01; // ADJUST ALL
+    public static final double ELEVATOR_I = 0.001;
+    public static final double ELEVATOR_D = 0;
+    public static final double ELEVATOR_SFF = 0; // static feedforward
+    public static final double ELEVATOR_VFF = 0; // velocity feedforward
+    public static final double ELEVATOR_AFF = 0; // acceleration feedforward
+    public static final double ELEVATOR_MIN_OUTPUT = -1;
+    public static final double ELEVATOR_MAX_OUTPUT = 1;
+
+  // elevator setpoints
+    public static final double homePosition = 0;
+    public static final double L1Position = 0;
+    public static final double L2Position = 0;
+    public static final double L3Position = 0;
+    public static final double L4Position = 0;
+    public static final double softLimitMinPosition = 0;
+    public static final double softLimitMaxPosition = 0;
+    public static final double incrementMeasurement = 0;
+  }
+
+  // Placer Constants
+  public static class PlacerConstants {
+    public static final int frontMotorID = 21;
+    public static final int backMotorID = 22;
+    public static final int placerBeamBreakID = 0;
+  }
+
+  // Hopper Constants
+  public static class HopperConstants {
+    public static final int hopperBeamBreakID = 0;
   }
 
   // Blinkin Constants
@@ -95,8 +115,11 @@ public final class Constants {
     public static final int blinkinID = 23;
 
   // light codes
-    public static final double DARK_RED = 0.59; // temporary default
-    public static final double OCEAN_PALETTE_WAVES = -0.41; // temporary climbing
+  public static final double defaultColor = 0.59; // dark red
+  public static final double humanPlayerStation = -0.05; // strobe white (flashing)
+  public static final double climbOcean = -0.95; // rainbow ocean palette
+  public static final double climbLava = -0.93; // rainbow lava palette
+  public static final double alignedWithReef = 0.35; // strobe color 2 (green)
   }
 
 }
