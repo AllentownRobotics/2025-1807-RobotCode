@@ -4,117 +4,84 @@
 
 package frc.robot;
 
-
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.ctre.phoenix6.swerve.SwerveRequest;
-
-import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Autos;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ClimbCMDs.ClimbInCMD;
-import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
-import frc.robot.commands.DrivetrainCMDs.DriveCMD;
-import frc.robot.commands.ElevatorCMDs.ElevatorIncrementDownCMD;
-import frc.robot.commands.ElevatorCMDs.ElevatorIncrementUpCMD;
-import frc.robot.commands.ElevatorCMDs.ElevatorToHomeCMD;
-import frc.robot.subsystems.Blinkin;
-import frc.robot.subsystems.Climb;
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Hopper;
-import frc.robot.subsystems.Placer;
-import frc.robot.subsystems.Drivetrain.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Drivetrain.Telemetry;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
+/**
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * subsystems, commands, and trigger mappings) should be declared here.
+ */
 public class RobotContainer {
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    private final Elevator elevatorSubsystem = new Elevator();
-    private final Placer placerSubsystem = new Placer();
-    private final Climb climbSubsystem = new Climb();
-    private final Hopper hopperSubsystem = new Hopper();
-    private final Blinkin lightSubsystem = new Blinkin();
-    //private final Vision limelightSubsystem = new Vision(drivetrain, placerSubsystem);
+  // The robot's subsystems and commands are defined here...
+  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-    //private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    //private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+  // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final CommandXboxController m_driverController =
+      new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-    private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
-    /* Setting up bindings for necessary control of the swerve drive platform */
-    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(TunerConstants.maxDriveSpeed * 0.1).withRotationalDeadband(TunerConstants.maxDriveAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  public RobotContainer() {
+   
+   //TO DO: send main configs to the pathplanner here
 
-    private final Telemetry logger = new Telemetry(TunerConstants.maxDriveSpeed);
+   /*You must register your named commands with pathplanner so that they can be used
+    in the creation of Event Markers and Autos. All of your named commands need to be
+   registered before you create a PathPlanner path or auto in your code. Failure to do
+   so would mean that any named command registered after path/auto creation will not be 
+   used in those paths and autos.*/
+   NamedCommands.registerCommand("Temp Command 1", new InstantCommand());
+   NamedCommands.registerCommand("Temp Command 2", new InstantCommand());
+   NamedCommands.registerCommand("Temp Command 3", new InstantCommand());
+  
 
-    private final CommandXboxController driverController = new CommandXboxController(OIConstants.driverControllerPort);
-    private final CommandXboxController operatorController = new CommandXboxController(OIConstants.operatorControllerPort);
+    //put sendable chooser on smart dashboard
+    SmartDashboard.putData(autoChooser);
 
-    public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser("Name selected auto here");
-        SmartDashboard.putData("Auto chooser", autoChooser);
-        //need to populate auto chooser still!!!
+    // Configure the trigger bindings
+    configureBindings();
 
-        configureBindings();
+  }
 
-    }
+  /**
+   * Use this method to define your trigger->command mappings. Triggers can be created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * predicate, or via the named factories in {@link
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * joysticks}.
+   */
+  private void configureBindings() {
+    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    new Trigger(m_exampleSubsystem::exampleCondition)
+        .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    private void configureBindings() {
-    /*
-    * __________________________________ DRIVER CONTROLLER __________________________________
-    */
-    
-        // Note that X is defined as forward according to WPILib convention,
-        // and Y is defined as to the left according to WPILib convention.
-        drivetrain.setDefaultCommand(
-            // Drivetrain will execute this command periodically
-            /*drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * TunerConstants.MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * TunerConstants.MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * TunerConstants.MaxAngularRate) // Drive counterclockwise with negative X (left)
-            )*/
-        new DriveCMD(drivetrain, driverController)
-        );
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // cancelling on release.
+    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+  }
 
-        driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        driverController.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
-        ));
-
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
-        // reset the field-centric heading on right bumper press
-        driverController.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-
-        driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.enableSlowMode()));
-        driverController.leftBumper().onFalse(drivetrain.runOnce(() -> drivetrain.disableSlowMode()));
-
-        drivetrain.registerTelemetry(logger::telemeterize);
-
-/*
-* __________________________________ OPERATOR CONTROLLER __________________________________
-*/
-
-        operatorController.y().whileTrue(new ElevatorToHomeCMD(elevatorSubsystem));
-        operatorController.x().whileTrue(new ElevatorIncrementDownCMD(elevatorSubsystem));
-        operatorController.b().whileTrue(new ElevatorIncrementUpCMD(elevatorSubsystem));
-        operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
-        operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));
-    }
-
-    public Command getAutonomousCommand() {
-        return Commands.print("No autonomous command configured");
-    }
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    // asks the chooser which auto the user selcted on the user interface
+    return autoChooser.getSelected();
+  }
 }
