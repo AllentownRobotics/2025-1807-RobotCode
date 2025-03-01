@@ -105,6 +105,10 @@ public class Elevator extends SubsystemBase {
     return elevatorEncoder.getAbsolutePosition().getValueAsDouble()*2*Math.PI*1.037; // 1.037 is the sprocket radius
   }
 
+  public double getElevatorSpeedMetersPerSecond() {
+    return elevatorEncoder.getVelocity().getValueAsDouble()* 2 * Math.PI * 1.037 * .0254;
+  }
+
   public boolean isLowerLimitReached() {
     return lowerLimitSwitch.get();
   }
@@ -121,10 +125,11 @@ public class Elevator extends SubsystemBase {
     rightMotor.getMotorTemperature();
 
     // change state only when state changes
-    Shuffleboard.getTab("Elevator").add("encoder position", desiredSetpoint);
-    Shuffleboard.getTab("Elevator").add("at min height", isLowerLimitReached());
-    Shuffleboard.getTab("Elevator").add("at max height", isUpperLimitReached());
-    Shuffleboard.getTab("Elevator").add("elevator position in inches", getElevatorPositionInInches());
+    Shuffleboard.getTab("Elevator").add("encoder position", desiredSetpoint); //desired position
+    Shuffleboard.getTab("Elevator").add("at min height", isLowerLimitReached()); //lower limit switch
+    Shuffleboard.getTab("Elevator").add("at max height", isUpperLimitReached()); // upper limit switch
+    Shuffleboard.getTab("Elevator").add("elevator position in inches", getElevatorPositionInInches()); //current position
+    Shuffleboard.getTab("Elevator").add("elevator speed (m/s)", getElevatorSpeedMetersPerSecond()); //speed
     
   }
 }

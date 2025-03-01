@@ -45,7 +45,7 @@ public class Placer extends SubsystemBase {
     boolean placerCoralState = isCoralInPlacer();
     if (placerCoralState != previousPlacerCoralState) {
 
-      SmartDashboard.putBoolean("Beam Break State", placerCoralState);
+      SmartDashboard.putBoolean("Beam Break State", placerCoralState); //placer beam break
       previousPlacerCoralState = placerCoralState;
     }
     

@@ -86,6 +86,10 @@ public class Climb extends SubsystemBase {
     climbEncoder.setPosition(desiredAngle);
   }
 
+  public double getDesiredAngle() {
+    return desiredAngle;
+  }
+
   public void incrementDesiredAngle(double increment) {
     desiredAngle += increment;
     climbEncoder.setPosition(desiredAngle);
@@ -111,12 +115,13 @@ public class Climb extends SubsystemBase {
     // Tells you when the climb is at setpoint
     if(outerLimitSwitchStatus() != true) { //change true to a boolean set to false
       leftClimbMotor.stopMotor(); // change stop to check direction condition
-      SmartDashboard.putBoolean("Climb at setpoint", outerLimitSwitchStatus());
+      SmartDashboard.putBoolean("Climb at setpoint", outerLimitSwitchStatus()); //outer climb limit switch
     }
 
     if(innerLimitSwitchStatus() == true) {
-      leftClimbMotor.stopMotor(); // change stop to check direction condition
+      leftClimbMotor.stopMotor(); // change stop to check direction condition inner climb limit switch status
     }
 
+    SmartDashboard.putNumber("climb encoder position", getDesiredAngle()); //climb encoder position
   }
 }

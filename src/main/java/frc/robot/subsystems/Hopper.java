@@ -35,7 +35,7 @@ public class Hopper extends SubsystemBase {
 
     // Updates smartdashboard status only when beam break value changes
     if(hopperStatus != CoralCollected) {
-      SmartDashboard.putBoolean("beam break", isCoralCollected());
+      SmartDashboard.putBoolean("beam break", isCoralCollected()); //hopper beam break
     }
 
     // Updates CoralCollected value
