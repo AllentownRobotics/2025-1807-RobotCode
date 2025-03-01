@@ -2,19 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.PlacerCommands;
+package frc.robot.commands.PlacerCMDs;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Placer;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class PlacerSetRearForwardCMD extends Command {
+public class PlacerSetFrontForwardCMD extends Command {
 
   Placer placer;
   double speed;
 
   /** Sets the speed of the front placer motor. */
-  public PlacerSetRearForwardCMD(Placer placer, double speed) {
+  public PlacerSetFrontForwardCMD(Placer placer, double speed) {
 
     this.placer = placer;
     this.speed = speed;
@@ -25,7 +25,7 @@ public class PlacerSetRearForwardCMD extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    placer.setRearMotorForwards(speed);
+    placer.setFrontMotorForwards(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
