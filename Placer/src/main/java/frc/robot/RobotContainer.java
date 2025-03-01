@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-<<<<<<< HEAD:src/main/java/frc/robot/RobotContainer.java
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -13,11 +12,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-=======
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.PlacerCommands.PlacerSetFrontForwardCMD;
-import frc.robot.subsystems.Placer;
->>>>>>> remy_placer:Placer/src/main/java/frc/robot/RobotContainer.java
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -38,7 +32,6 @@ import frc.robot.subsystems.Drivetrain.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drivetrain.Telemetry;
 
 public class RobotContainer {
-<<<<<<< HEAD:src/main/java/frc/robot/RobotContainer.java
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final Elevator elevatorSubsystem = new Elevator();
     private final Placer placerSubsystem = new Placer();
@@ -46,15 +39,10 @@ public class RobotContainer {
     private final Hopper hopperSubsystem = new Hopper();
     private final Blinkin lightSubsystem = new Blinkin();
     //private final Vision limelightSubsystem = new Vision(drivetrain, placerSubsystem);
-=======
-  // The robot's subsystems and commands are defined here...
-  private final Placer placer = new Placer();
->>>>>>> remy_placer:Placer/src/main/java/frc/robot/RobotContainer.java
 
     //private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     //private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-<<<<<<< HEAD:src/main/java/frc/robot/RobotContainer.java
     private final SendableChooser<Command> autoChooser;
 
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -128,40 +116,4 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return Commands.print("No autonomous command configured");
     }
-=======
-  private final CommandXboxController operatorController = 
-      new CommandXboxController(OperatorConstants.operatorControllerPort);
-
-  /** The container for the robot
-   * . Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
-
-    placer.setDefaultCommand(new PlacerSetFrontForwardCMD(placer, operatorController.getRightY()));
-  }
-
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
-
-  }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return null;
-  }
->>>>>>> remy_placer:Placer/src/main/java/frc/robot/RobotContainer.java
 }
