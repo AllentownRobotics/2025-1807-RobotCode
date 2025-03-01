@@ -96,8 +96,8 @@ public final class Constants {
 
   // Placer Constants
   public static class PlacerConstants {
-    public static final int frontMotorID = 21;
-    public static final int backMotorID = 22;
+    public static final int placerFrontMotorID = 21;
+    public static final int placerRearMotorID = 22;
     public static final int placerBeamBreakID = 0;
   }
 
