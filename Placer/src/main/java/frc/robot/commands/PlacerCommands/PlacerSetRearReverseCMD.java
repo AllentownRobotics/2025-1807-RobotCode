@@ -25,7 +25,7 @@ public class PlacerSetRearReverseCMD extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    placer.setRearMotorMinus(speed);
+    placer.setRearMotorReverse(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

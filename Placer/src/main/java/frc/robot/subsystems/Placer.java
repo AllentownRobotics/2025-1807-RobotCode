@@ -11,9 +11,10 @@ import frc.robot.Constants.PlacerConstants;
 
 public class Placer extends SubsystemBase {
 
-  Kraken frontMotor;
-  Kraken rearMotor;
-  DigitalInput beamBreak;
+  private Kraken frontMotor;
+  private Kraken rearMotor;
+  private DigitalInput beamBreak;
+  private boolean previousPlacerCoralState;
 
   /** Creates a new Placer. */
   public Placer() {
@@ -26,13 +27,27 @@ public class Placer extends SubsystemBase {
     // configuring motors
     frontMotor.setBrakeMode();
     rearMotor.setBrakeMode();
+
+    // sets up coral states to update on first scheduler tick
+    previousPlacerCoralState = isCoralInPlacer();
+
+    // sends inital coral state into smart dash
+    SmartDashboard.putBoolean("Beam Break State", previousPlacerCoralState);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("Beam Break State", getBeamBreakState());
+
     // adds beam break state to smart dashboard
+    // only if it changes states to reduce smartdash load
+    boolean placerCoralState = isCoralInPlacer();
+    if (placerCoralState != previousPlacerCoralState) {
+
+      SmartDashboard.putBoolean("Beam Break State", placerCoralState);
+      previousPlacerCoralState = placerCoralState;
+    }
+    
   }
 
   /** Stops the rear motor. */
@@ -55,7 +70,7 @@ public class Placer extends SubsystemBase {
    *  Only used for moving forwards. <p>
    *  Use positive numbers for the speed variable only.
    */
-  public void setFrontMotorPlus(double speed) {
+  public void setFrontMotorForwards(double speed) {
     frontMotor.setMotorSpeed(speed);
   }
 
@@ -63,23 +78,23 @@ public class Placer extends SubsystemBase {
    *  Only used for moving forwards. <p>
    *  Use positive numbers for the speed variable only.
    */
-  public void setRearMotorPlus(double speed) {
+  public void setRearMotorForwards(double speed) {
     rearMotor.setMotorSpeed(speed);
   }
 
   /** Sets the speed of the front motor. <p> 
-   *  Only used for moving backwards. <p>
+   *  Only used for moving in reverse. <p>
    *  Use positive numbers for the speed variable only.
    */
-  public void setFrontMotorMinus(double speed) {
+  public void setFrontMotorReverse(double speed) {
     frontMotor.setMotorSpeed(-speed);
   }
 
   /** Sets the speed of the rear motor. <p> 
-   *  Only used for moving backwards. <p>
+   *  Only used for moving in reverse. <p>
    *  Use positive numbers for the speed variable only.
    */
-  public void setRearMotorMinus(double speed) {
+  public void setRearMotorReverse(double speed) {
     rearMotor.setMotorSpeed(-speed);
   }
 
@@ -88,7 +103,7 @@ public class Placer extends SubsystemBase {
    *  to be scored and the elevator is safe to move. <p>
    *  Returns false when beam is obstructed and true when beam is unobstructed
    */
-  public boolean getBeamBreakState() {
+  public boolean isCoralInPlacer() {
     return beamBreak.get();
   }
 }

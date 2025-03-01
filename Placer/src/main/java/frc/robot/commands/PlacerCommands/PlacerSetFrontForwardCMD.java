@@ -25,7 +25,7 @@ public class PlacerSetFrontForwardCMD extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    placer.setFrontMotorPlus(speed);
+    placer.setFrontMotorForwards(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
