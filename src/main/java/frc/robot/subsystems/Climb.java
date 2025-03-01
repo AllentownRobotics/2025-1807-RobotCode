@@ -13,73 +13,112 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 
 public class Climb extends SubsystemBase {
-  DigitalInput outerClimbLimitSwitch, innerClimbLimitSwitch, cageContactLimitSwitch;
-  Kraken rightClimbMotor;
-  Kraken leftClimbMotor;
-  TalonFX motor;
-  CANcoder climbCANcoder;
-  double desiredAngle;
+  private DigitalInput cageContactLimitSwitch, fullyRetractedLimitSwitch;
+  private Kraken rightClimbMotor, leftClimbMotor;
+  private CANcoder climbCANcoder;
+  private double desiredAngle;
+  private TalonFX motor;
+  private boolean wasCageContacted;
+  private boolean wasClimbRetracted;
 
   /** Creates a new Climb. */
   public Climb() {
+    //Instantiates objects
     motor = new TalonFX(1);
     rightClimbMotor = new Kraken(ClimbConstants.rightclimbMotorID);
     leftClimbMotor = new Kraken(ClimbConstants.leftClimbMotorID);
     climbCANcoder = new CANcoder(ClimbConstants.climbCANcoderID);
+    cageContactLimitSwitch = new DigitalInput(ClimbConstants.climbCageSwitchID);
+    fullyRetractedLimitSwitch = new DigitalInput(ClimbConstants.fullyRetractedLimitSwitchID);
 
-    rightClimbMotor.resetEncoder();
+    //Resets motors
+    leftClimbMotor.restoreFactoryDefaults();
+    rightClimbMotor.restoreFactoryDefaults();
+
+    //Makes right climb motor follow the left climb motor
+    rightClimbMotor.follow(ClimbConstants.leftClimbMotorID, true);
+
+    //Resets encoder values
     leftClimbMotor.resetEncoder();
 
-    rightClimbMotor.restoreFactoryDefaults();
-    leftClimbMotor.restoreFactoryDefaults();
-
-    rightClimbMotor.addEncoder(climbCANcoder);
+    //Creates CANcoder
     leftClimbMotor.addEncoder(climbCANcoder);
 
-    rightClimbMotor.setSoftLimits(0,0);
+    //Motor speed limit
     leftClimbMotor.setSoftLimits(0, 0);
 
-    rightClimbMotor.setMotorCurrentLimits(0);
+    //Motor current limit
     leftClimbMotor.setMotorCurrentLimits(0);
 
-    rightClimbMotor.setInverted();
+    //Inverts left and right motors
     leftClimbMotor.setNotInverted();
 
-    rightClimbMotor.setPIDValues(ClimbConstants.CLIMB_P, ClimbConstants.CLIMB_I, ClimbConstants.CLIMB_D, ClimbConstants.CLIMB_SFF, ClimbConstants.CLIMB_VFF, ClimbConstants.CLIMB_AFF);
+    //Sets PID values
     leftClimbMotor.setPIDValues(ClimbConstants.CLIMB_P, ClimbConstants.CLIMB_I, ClimbConstants.CLIMB_D, ClimbConstants.CLIMB_SFF, ClimbConstants.CLIMB_VFF, ClimbConstants.CLIMB_AFF);
 
-    rightClimbMotor.setBrakeMode();
+    //Sets motors to break mode initially
     leftClimbMotor.setBrakeMode();
 
+    //Desired angle that climb wants to move to
     desiredAngle = ClimbConstants.ClimbDesiredAngle;
     climbCANcoder.setPosition(desiredAngle);
+
+    //Limit switch initial states
+    wasCageContacted = cageContactLimitSwitch.get();
+    SmartDashboard.putBoolean("Climb at desired point", cageContactLimitSwitch.get());
+    
+    wasClimbRetracted = fullyRetractedLimitSwitch.get();
+    SmartDashboard.putBoolean("Climb fully retracted", fullyRetractedLimitSwitch.get());
+
   }
 
+  //Stops climb
   public void stopClimb() {
-    rightClimbMotor.setMotionMagicParameters(0,0,0);
     leftClimbMotor.setMotionMagicParameters(0, 0, 0);
   }
 
+  //Sets the angle to the desired angle
   public void setDesiredState(double angle){
     desiredAngle = angle;
   }
 
+  //Increment that climb needs to go
   public void ClimbIncrement(double increment) {
     desiredAngle += increment;
   }
   
+  //Speed at which the motors will go
   public void climbLeftMotorSpeed(double speed) {
      leftClimbMotor.setMotorSpeed(speed);
-     rightClimbMotor.setMotorSpeed(speed);
   }
 
-  public boolean ClimbExtended() {
-     return rightClimbMotor.getPosition() > ClimbConstants.rightClimbExtended;
+  //Checks whether climb has made contact with cage 
+  public boolean isCageContacted() {
+     return cageContactLimitSwitch.get();
   }
+
+  //Checks whether climb has been fully retracted
+  public boolean isArmFullyRetracted() {
+    return fullyRetractedLimitSwitch.get();
+ }
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Climb at desired point", outerClimbLimitSwitch.get());
+
+    //Displays whether cage contact limit switch has been tripped
+    boolean isCageLimitSwitchSet = cageContactLimitSwitch.get();
+    if(isCageLimitSwitchSet != wasCageContacted) {
+      SmartDashboard.putBoolean("Climb at desired point", cageContactLimitSwitch.get());
+      wasCageContacted = isCageLimitSwitchSet;
+    }
+
+    //Displays whether climb is fully retracted
+    boolean isClimbFullyRetracted = fullyRetractedLimitSwitch.get();
+    if(isClimbFullyRetracted != wasClimbRetracted) {
+      SmartDashboard.putBoolean("Climb fully retracted", fullyRetractedLimitSwitch.get());
+      wasClimbRetracted = isClimbFullyRetracted;
+    }
+    
     // This method will be called once per scheduler run
   }
 }

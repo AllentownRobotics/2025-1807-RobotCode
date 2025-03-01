@@ -66,6 +66,11 @@ public final class Constants {
     public static final int rightclimbMotorID = 18;
     public static final int leftClimbMotorID = 19;
     public static final int climbCANcoderID = 20;
+    public static final int climbCageSwitchID = 21;
+    public static final int fullyRetractedLimitSwitchID = 22;
+
+    public static final double CageContact = 0;
+    public static final double ClimbFullyRetracted = 0;
 
 
   // climb motor PID
@@ -79,9 +84,6 @@ public final class Constants {
     public static final double CLIMB_MIN_OUTPUT = -1;
     public static final double CLIMB_MAX_OUTPUT = 1;
 
-    public static final double rightClimbExtended = 0;
-    public static final double leftClimbExtended = 0;
-
     public static final double ClimbOutangle = 0;
     public static final double ClimbInangle = 0;
     public static final double ClimbLock = 0;
@@ -90,7 +92,7 @@ public final class Constants {
 
   // Blinkin Constants
   public static class BlinkinConstants {
-    public static final int blinkinID = 21;
+    public static final int blinkinID = 23;
 
   // light codes
     public static final double DARK_RED = 0.59; // temporary default
