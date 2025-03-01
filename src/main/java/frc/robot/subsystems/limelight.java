@@ -15,8 +15,10 @@ public class LimeLight extends SubsystemBase {
   NetworkTable table;
   NetworkTableEntry Id,info,cameraSet,cameraPosition;
   double id;
+  /**contains the position of the april tag in the coordinate system of the robot */
   double[] Info;
-  double[] targetInfo;
+  /**empty list that is populted with values to be returned, can be used in multiple places to see how to use see the getTopDownAprilTagPosition method */
+  double[] returnArray;
   String limelightName;
   double[] cameraPose = new double[6];
   double[] cameraPositionArray;
@@ -132,11 +134,11 @@ public class LimeLight extends SubsystemBase {
   }
 
   public double[] getTopDownAprilTagPosition(){
-    targetInfo = new double[3];
-    targetInfo[0] = getAprilTagX();
-    targetInfo[1] = getAprilTagZ();
-    targetInfo[2] = getAprilTagYaw();
-    return targetInfo;
+    returnArray = new double[3];
+    returnArray[0] = getAprilTagX();
+    returnArray[1] = getAprilTagZ();
+    returnArray[2] = getAprilTagYaw();
+    return returnArray;
   }
 
   @Override

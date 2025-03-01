@@ -69,7 +69,7 @@ public class Vision extends SubsystemBase {
     }
   }
 
-  /**boolean that can be controlled by operator  */
+  /**boolean that can be controlled by operator  to switch the cameras to the rear cameras for climb*/
   boolean manualOverride = false;
 
   public void manualOverrideCamera(){
@@ -194,11 +194,16 @@ public class Vision extends SubsystemBase {
   }
 
   /**used for determining if the x,z, and yaw are alligned and if the robot itself is alligned as a whole */
-  boolean allignedX, allignedZ, allignedYaw, allignedAll = false;
+  boolean allignedX, allignedZ, allignedYaw, allignedFull = false;
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    //reset the position of the last seen aprilTag so that if it currently sees an aprilTag, it will use this information instead of the last seen aprilTag
+    resetAprilTagPosition();
+    setTemporaryTelementery();
+    setAprilTagTelemetry();
+    //determine if the robot is alligned in the x, z, and yaw directions
     if(Math.abs(getLeftAllignmentValues()[0]) < 0.1016 || Math.abs(getRightAllignmentValues()[0]) < 0.1016){
       allignedX = true;
     }
@@ -209,9 +214,9 @@ public class Vision extends SubsystemBase {
       allignedYaw = true;
     }
     if(allignedX && allignedZ && allignedYaw){
-      allignedAll = true;
+      allignedFull = true;
     }
 
-    SmartDashboard.putBoolean("Alligned", allignedAll);
+    SmartDashboard.putBoolean("Alligned", allignedFull);
   }
 }
