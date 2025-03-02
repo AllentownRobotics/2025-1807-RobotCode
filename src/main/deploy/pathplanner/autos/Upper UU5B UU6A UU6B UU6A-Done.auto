@@ -38,6 +38,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Reefscape",
+  "folder": null,
   "choreoAuto": false
 }
