@@ -5,14 +5,13 @@
 package frc.robot.commands.ClimbCMDs;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.Climb;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ClimbOutCMD extends Command {
+public class ManualClimbCMD extends Command {
   private Climb climbSubsystem;
-  /** Creates a new ClimbOut. */
-  public ClimbOutCMD(Climb climbSubsystem) {
+  /** Creates a new ManualClimbCMD. */
+  public ManualClimbCMD(Climb climbSubsystem) {
     this.climbSubsystem = climbSubsystem;
     addRequirements(climbSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -25,7 +24,7 @@ public class ClimbOutCMD extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-   climbSubsystem.setDesiredState(ClimbConstants.climbOuterAngle);
+    climbSubsystem.ClimbIncrement(0);
   }
 
   // Called once the command ends or is interrupted.

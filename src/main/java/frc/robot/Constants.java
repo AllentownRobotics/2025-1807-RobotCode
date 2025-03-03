@@ -44,6 +44,11 @@ public final class Constants {
     public static final int leftClimbMotorID = 15;
     public static final int rightClimbMotorID = 16;
     public static final int climbCANCoderID = 17;
+    public static final int climbCageSwitchID = 21;
+    public static final int fullyRetractedLimitSwitchID = 22;
+
+    public static final double CageContact = 0;
+    public static final double ClimbFullyRetracted = 0;
 
     public static final int outerLimitSwitchID = 3;
     public static final int innerLimitSwitchID = 2;
@@ -62,7 +67,7 @@ public final class Constants {
     public static final double climbOuterAngle = 180; // 90 degree angle outward
     public static final double climbInnerAngle = 0; // 90 degree angle inward
     public static final double climbLockAngle = 0; 
-    public static final double climbIncrementMeasurement = 0;
+    public static final double ClimbDesiredAngle = 0;
   }
 
   // Elevator Constants
