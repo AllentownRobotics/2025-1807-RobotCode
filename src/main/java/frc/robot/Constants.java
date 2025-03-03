@@ -62,6 +62,7 @@ public final class Constants {
     public static final double climbOuterAngle = 180; // 90 degree angle outward
     public static final double climbInnerAngle = 0; // 90 degree angle inward
     public static final double climbLockAngle = 0; 
+    public static final double climbIncrementMeasurement = 0;
   }
 
   // Elevator Constants
@@ -91,7 +92,16 @@ public final class Constants {
     public static final double L4Position = 0;
     public static final double softLimitMinPosition = 0;
     public static final double softLimitMaxPosition = 0;
-    public static final double incrementMeasurement = 0;
+    public static final double elevatorIncrementMeasurement = 1;
+
+    public static final double elevatorGearing = Units.inchesToMeters(3.111);
+    public static final double carriageMass = 12.6;
+    public static final double elevatorSprocketRadius = 2*Math.PI*1.037;
+    public static final double minHeightMeters = 0;
+    public static final double maxHeightMeters = Units.inchesToMeters(71.25);
+    public static final double startingHeightMeters = 0;
+
+
   }
 
   // Placer Constants

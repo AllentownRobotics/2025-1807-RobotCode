@@ -4,20 +4,30 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.CANcoder;
 
+import edu.wpi.first.math.system.LinearSystem;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Robot;
 import frc.utils.Kraken;
 
 public class Elevator extends SubsystemBase {
@@ -26,26 +36,36 @@ public class Elevator extends SubsystemBase {
   private CANcoder elevatorEncoder;
   private DigitalInput lowerLimitSwitch, upperLimitSwitch;
   private double desiredSetpoint; // desired setpoint of the encoder
-  
+
+  private SysIdRoutine appliedRoutine;
+
   private final SysIdRoutine elevatorSysIDRoutine = new SysIdRoutine(
     new Config(
       null,
       Voltage.ofBaseUnits(4, Volts),
-      null),
+      Seconds.of(4)),
     new Mechanism(
       state -> SignalLogger.writeString("sysID State", state.toString()),
       null,
-      this));
-
-  private SysIdRoutine appliedRoutine = elevatorSysIDRoutine;
+      this)
+      );
 
   /** Creates a new Elevator. */
   public Elevator() {
+
+    appliedRoutine = elevatorSysIDRoutine;
     
-    /*super(leftMotor, rightMotor, elevatorEncoder);
-    if(Utils.isSimulation()) {
-      startSimThread();
-    } */
+    /*if(Robot.isSimulation()) {
+      new ElevatorSim(
+        DCMotor.getKrakenX60(2),
+        ElevatorConstants.elevatorGearing,
+        ElevatorConstants.carriageMass,
+        ElevatorConstants.elevatorSprocketRadius,
+        ElevatorConstants.minHeightMeters,
+        ElevatorConstants.maxHeightMeters,
+        true,
+        ElevatorConstants.startingHeightMeters);*/
+
     leftMotor = new Kraken(ElevatorConstants.leftMotorID);
     rightMotor = new Kraken(ElevatorConstants.rightMotorID);
     elevatorEncoder = new CANcoder(ElevatorConstants.elevatorCANCoderID);
@@ -73,7 +93,9 @@ public class Elevator extends SubsystemBase {
     
     desiredSetpoint = ElevatorConstants.homePosition;
     elevatorEncoder.setPosition(desiredSetpoint);
-  }
+
+    SignalLogger.start();
+    }
 
   public Command SysIDQuasistatic(SysIdRoutine.Direction direction) {
     return appliedRoutine.quasistatic(direction);
@@ -102,7 +124,7 @@ public class Elevator extends SubsystemBase {
 
   /** Scales the elevator encoder position by a factor of 2(pi)(r), converting rotations to inches. */
   public double getElevatorPositionInInches() {
-    return elevatorEncoder.getAbsolutePosition().getValueAsDouble()*2*Math.PI*1.037; // 1.037 is the sprocket radius
+    return elevatorEncoder.getAbsolutePosition().getValueAsDouble()*ElevatorConstants.elevatorSprocketRadius;
   }
 
   public boolean isLowerLimitReached() {
@@ -121,18 +143,19 @@ public class Elevator extends SubsystemBase {
     rightMotor.getMotorTemperature();
 
     if (isLowerLimitReached() == true) {
-      leftMotor.setMotorSpeed(.2); //replace these numbers to spin the motors away from the limit switch
+      leftMotor.setMotorSpeed(.1); //replace these numbers to spin the motors away from the limit switch
     }
 
     if (isUpperLimitReached() == true) {
-      leftMotor.setMotorSpeed(-.2); //replace these numbers to spin the motors away from the limit switch
+      leftMotor.setMotorSpeed(-.1); //replace these numbers to spin the motors away from the limit switch
     }
 
     // change state only when state changes
-    Shuffleboard.getTab("Elevator").add("encoder position", desiredSetpoint);
+    SmartDashboard.getNumber("encoder desired position", desiredSetpoint);
     Shuffleboard.getTab("Elevator").add("at min height", isLowerLimitReached());
     Shuffleboard.getTab("Elevator").add("at max height", isUpperLimitReached());
     Shuffleboard.getTab("Elevator").add("elevator position in inches", getElevatorPositionInInches());
     
   }
+
 }

@@ -22,6 +22,6 @@ public class ElevatorIncrementUpCMD extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevator.adjustPositionIncrementally(ElevatorConstants.incrementMeasurement);
+    elevator.adjustPositionIncrementally(ElevatorConstants.elevatorIncrementMeasurement);
   }
 }
