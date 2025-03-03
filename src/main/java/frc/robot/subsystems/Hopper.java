@@ -20,10 +20,10 @@ public class Hopper extends SubsystemBase {
     hopperBeamBreak = new DigitalInput(HopperConstants.hopperBeamBreakID);
     hopperDebouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
     // Initializes smartdashboard as false
-    SmartDashboard.putBoolean("beam break", CoralCollected);
+    SmartDashboard.putBoolean("is coral in hopper", CoralCollected);
   }
 
-  public boolean isCoralCollected() {
+  public boolean isCoralInHopper() {
     return CoralCollected;
   }
 
@@ -35,7 +35,7 @@ public class Hopper extends SubsystemBase {
 
     // Updates smartdashboard status only when beam break value changes
     if(hopperStatus != CoralCollected) {
-      SmartDashboard.putBoolean("beam break", isCoralCollected());
+      SmartDashboard.putBoolean("is coral in hopper", isCoralInHopper());
     }
 
     // Updates CoralCollected value

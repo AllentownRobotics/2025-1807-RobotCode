@@ -45,7 +45,7 @@ public class Elevator extends SubsystemBase {
       Voltage.ofBaseUnits(4, Volts),
       Seconds.of(4)),
     new Mechanism(
-      state -> SignalLogger.writeString("sysID State", state.toString()),
+      state -> SignalLogger.writeString("elevator sysID State", state.toString()),
       null,
       this)
       );

@@ -33,7 +33,7 @@ public class Climb extends SubsystemBase {
       Voltage.ofBaseUnits(4, Volts),
       null),
     new Mechanism(
-      state -> SignalLogger.writeString("sysID State", state.toString()),
+      state -> SignalLogger.writeString("climb sysID State", state.toString()),
       null,
       this));
 
@@ -111,7 +111,7 @@ public class Climb extends SubsystemBase {
     // Tells you when the climb is at setpoint
     if(outerLimitSwitchStatus() != true) { //change true to a boolean set to false
       leftClimbMotor.setMotorSpeed(-.2); //replace these numbers to spin the motors away from the limit switch
-      SmartDashboard.putBoolean("Climb at setpoint", outerLimitSwitchStatus());
+      SmartDashboard.putBoolean("climb at setpoint", outerLimitSwitchStatus());
     }
 
     if(innerLimitSwitchStatus() == true) {

@@ -33,19 +33,19 @@ public class Placer extends SubsystemBase {
     previousPlacerCoralState = isCoralInPlacer();
 
     // sends inital coral state into smart dash
-    SmartDashboard.putBoolean("Beam Break State", previousPlacerCoralState);
+    SmartDashboard.putBoolean("is coral in placer", previousPlacerCoralState);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
 
-    // adds beam break state to smart dashboard
+    // adds isCoralInPlacer() to smart dashboard
     // only if it changes states to reduce smartdash load
     boolean placerCoralState = isCoralInPlacer();
     if (placerCoralState != previousPlacerCoralState) {
 
-      SmartDashboard.putBoolean("Beam Break State", placerCoralState);
+      SmartDashboard.putBoolean("is coral in placer", placerCoralState);
       previousPlacerCoralState = placerCoralState;
     }
     
