@@ -23,6 +23,11 @@ import frc.robot.commands.DrivetrainCMDs.DriveCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementDownCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementUpCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToHomeCMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorToL1CMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorToL2CMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorToL3CMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorToL4CMD;
+import frc.robot.commands.PlacerCMDs.PlacerSetBothForwardCMD;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Elevator;
@@ -111,16 +116,24 @@ public class RobotContainer {
 */
 
         // ELEVATOR SYSID
-        driverController.back().and(driverController.a()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        driverController.back().and(driverController.b()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        driverController.start().and(driverController.a()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        driverController.start().and(driverController.b()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        operatorController.back().and(operatorController.a()).whileTrue(elevatorSubsystem.sysIdDynamic(Direction.kForward));
+        operatorController.back().and(operatorController.b()).whileTrue(elevatorSubsystem.sysIdDynamic(Direction.kReverse));
+        operatorController.start().and(operatorController.a()).whileTrue(elevatorSubsystem.sysIdQuasistatic(Direction.kForward));
+        operatorController.start().and(operatorController.b()).whileTrue(elevatorSubsystem.sysIdQuasistatic(Direction.kReverse));
 
         operatorController.y().whileTrue(new ElevatorToHomeCMD(elevatorSubsystem));
+        operatorController.povDown().whileTrue(new ElevatorToL1CMD(elevatorSubsystem));
+        operatorController.povRight().whileTrue(new ElevatorToL2CMD(elevatorSubsystem));
+        operatorController.povLeft().whileTrue(new ElevatorToL3CMD(elevatorSubsystem));
+        operatorController.povUp().whileTrue(new ElevatorToL4CMD(elevatorSubsystem));
         operatorController.x().whileTrue(new ElevatorIncrementDownCMD(elevatorSubsystem));
         operatorController.b().whileTrue(new ElevatorIncrementUpCMD(elevatorSubsystem));
+
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
         operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));
+
+        operatorController.rightTrigger().whileTrue(new PlacerSetBothForwardCMD(placerSubsystem, operatorController.getRightTriggerAxis()));
+        operatorController.rightStick().whileTrue(new PlacerSetBothForwardCMD(placerSubsystem, operatorController.getRightY())); // if joystick is pushed down (negative values) motors will run in reverse
     }
 
     public Command getAutonomousCommand() {

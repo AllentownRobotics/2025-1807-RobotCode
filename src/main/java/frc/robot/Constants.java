@@ -45,8 +45,8 @@ public final class Constants {
     public static final int rightClimbMotorID = 16;
     public static final int climbCANCoderID = 17;
 
-    public static final int outerLimitSwitchID = 0;
-    public static final int innerLimitSwitchID = 0;
+    public static final int outerLimitSwitchID = 3;
+    public static final int innerLimitSwitchID = 2;
 
   // climb motor PID
     public static final double CLIMB_P = 0.01; // ADJUST ALL
@@ -71,8 +71,8 @@ public final class Constants {
     public static final int rightMotorID = 19;
     public static final int elevatorCANCoderID = 20;
 
-    public static final int lowerLimitSwitchPort = 0;
-    public static final int upperLimitSwitchPort = 0;
+    public static final int lowerLimitSwitchPort = 9;
+    public static final int upperLimitSwitchPort = 8;
 
   // elevator motor PID
     public static final double ELEVATOR_P = 0.01; // ADJUST ALL
@@ -108,7 +108,8 @@ public final class Constants {
   public static class PlacerConstants {
     public static final int placerFrontMotorID = 21;
     public static final int placerRearMotorID = 22;
-    public static final int placerBeamBreakID = 0;
+
+    public static final int placerBeamBreakID = 1;
   }
 
   // Hopper Constants

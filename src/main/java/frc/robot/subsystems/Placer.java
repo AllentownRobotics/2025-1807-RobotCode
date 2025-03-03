@@ -67,6 +67,16 @@ public class Placer extends SubsystemBase {
     rearMotor.stopMotor();
   }
 
+  public void setBothForward(double speed) {
+    frontMotor.setMotorSpeed(speed);
+    rearMotor.setMotorSpeed(speed);
+  }
+
+  public void setBothReverse(double speed) {
+    frontMotor.setMotorSpeed(-speed);
+    rearMotor.setMotorSpeed(-speed);
+  }
+
   /** Sets the speed of the front motor. <p> 
    *  Only used for moving forwards. <p>
    *  Use positive numbers for the speed variable only.

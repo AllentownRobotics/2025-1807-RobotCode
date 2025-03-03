@@ -97,11 +97,11 @@ public class Elevator extends SubsystemBase {
     SignalLogger.start();
     }
 
-  public Command SysIDQuasistatic(SysIdRoutine.Direction direction) {
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return appliedRoutine.quasistatic(direction);
   }
 
-  public Command SysIDDynamic(SysIdRoutine.Direction direction) {
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return appliedRoutine.dynamic(direction);
   }
 
@@ -143,7 +143,7 @@ public class Elevator extends SubsystemBase {
     rightMotor.getMotorTemperature();
 
     if (isLowerLimitReached() == true) {
-      leftMotor.setMotorSpeed(.1); //replace these numbers to spin the motors away from the limit switch
+      leftMotor.setMotorSpeed(0); //replace these numbers to spin the motors away from the limit switch
     }
 
     if (isUpperLimitReached() == true) {
