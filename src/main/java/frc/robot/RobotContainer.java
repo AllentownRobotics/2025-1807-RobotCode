@@ -33,6 +33,7 @@ import frc.robot.subsystems.Drivetrain.Telemetry;
 
 public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final TunerConstants tuner = new TunerConstants(); //test if this removes errors
     private final Elevator elevatorSubsystem = new Elevator();
     private final Placer placerSubsystem = new Placer();
     private final Climb climbSubsystem = new Climb();
