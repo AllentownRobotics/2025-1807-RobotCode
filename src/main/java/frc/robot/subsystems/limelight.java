@@ -13,10 +13,14 @@ import frc.robot.Constants.limlightCoordinateSystemConstants;
 public class LimeLight extends SubsystemBase {
   /** Creates a new limeLight. */
   NetworkTable table;
-  NetworkTableEntry Id,info,cameraSet,cameraPosition;
-  double id;
-  /**contains the position of the april tag in the coordinate system of the robot */
-  double[] Info;
+  NetworkTableEntry AprilTagId,infoAboutAprilTagDegreesOfFreedom,cameraSet,cameraPosition;
+  /**Primary in view AprilTag ID */
+  double aprilTagId;
+  /**contains the position of the april tag in the coordinate system of the robot, 
+   * the order of the values is:<p>
+   * X position, Y position, Z position, Pitch, Yaw, Roll
+   */
+  double[] InfoAboutAprilTagDegreesOfFreedom;
   /**empty list that is populted with values to be returned, can be used in multiple places to see how to use see the getTopDownAprilTagPosition method */
   double[] returnArray;
   String limelightName;
@@ -33,8 +37,8 @@ public class LimeLight extends SubsystemBase {
     this.limelightName = "limelight-" + hostName;
   
     this.table = NetworkTableInstance.getDefault().getTable(limelightName);
-    this.Id = table.getEntry("tid");
-    this.info = table.getEntry("targetpose_robotspace");
+    this.AprilTagId = table.getEntry("tid");
+    this.infoAboutAprilTagDegreesOfFreedom = table.getEntry("targetpose_robotspace");
     this.cameraSet = table.getEntry("camerapose_robotspace_set");
     this.cameraPosition = table.getEntry("camerapose_robotspace");
    
@@ -99,38 +103,38 @@ public class LimeLight extends SubsystemBase {
 
   
   public double getAprilTagX(){
-    Info = info.getDoubleArray(new double[6]);
-    return Info[limlightCoordinateSystemConstants.yPosition]; //x is changed to y
+    InfoAboutAprilTagDegreesOfFreedom = infoAboutAprilTagDegreesOfFreedom.getDoubleArray(new double[6]);
+    return InfoAboutAprilTagDegreesOfFreedom[limlightCoordinateSystemConstants.yPosition]; //x is changed to y
   }
 
   public double getAprilTagY(){
-    Info = info.getDoubleArray(new double[6]);
-    return Info[limlightCoordinateSystemConstants.zPosition];//y is changed to z
+    InfoAboutAprilTagDegreesOfFreedom = infoAboutAprilTagDegreesOfFreedom.getDoubleArray(new double[6]);
+    return InfoAboutAprilTagDegreesOfFreedom[limlightCoordinateSystemConstants.zPosition];//y is changed to z
   }
 
   public double getAprilTagZ(){
-    Info = info.getDoubleArray(new double[6]);
-    return Info[limlightCoordinateSystemConstants.xPosition];//z is changed to x
+    InfoAboutAprilTagDegreesOfFreedom = infoAboutAprilTagDegreesOfFreedom.getDoubleArray(new double[6]);
+    return InfoAboutAprilTagDegreesOfFreedom[limlightCoordinateSystemConstants.xPosition];//z is changed to x
   }
 
   public double getAprilTagPitch(){
-    Info = info.getDoubleArray(new double[6]);
-    return Info[limlightCoordinateSystemConstants.yaw];// pitch is rot. around x, x is changed to y, rot around y is yaw
+    InfoAboutAprilTagDegreesOfFreedom = infoAboutAprilTagDegreesOfFreedom.getDoubleArray(new double[6]);
+    return InfoAboutAprilTagDegreesOfFreedom[limlightCoordinateSystemConstants.yaw];// pitch is rot. around x, x is changed to y, rot around y is yaw
   }
 
   public double getAprilTagYaw(){
-    Info = info.getDoubleArray(new double[6]);
-    return Info[limlightCoordinateSystemConstants.roll];// yaw is rot. around y, y is changed to z, rot. around z is roll
+    InfoAboutAprilTagDegreesOfFreedom = infoAboutAprilTagDegreesOfFreedom.getDoubleArray(new double[6]);
+    return InfoAboutAprilTagDegreesOfFreedom[limlightCoordinateSystemConstants.roll];// yaw is rot. around y, y is changed to z, rot. around z is roll
   }
 
   public double getAprilTagRoll(){
-    Info = info.getDoubleArray(new double[6]);
-    return Info[limlightCoordinateSystemConstants.pitch];// roll is rot. around z, z is changed to x, rot. around x is pitch
+    InfoAboutAprilTagDegreesOfFreedom = infoAboutAprilTagDegreesOfFreedom.getDoubleArray(new double[6]);
+    return InfoAboutAprilTagDegreesOfFreedom[limlightCoordinateSystemConstants.pitch];// roll is rot. around z, z is changed to x, rot. around x is pitch
   }
 
   public double getAprilTagID(){
-    id = Id.getDouble(-1.0);
-    return id;
+    aprilTagId = AprilTagId.getDouble(-1.0);//-1.0 is returned if no AprilTag is found because 0 is a valid id, no id is -1
+    return aprilTagId;
   }
 
   public double[] getTopDownAprilTagPosition(){

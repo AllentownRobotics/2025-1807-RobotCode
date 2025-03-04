@@ -22,7 +22,7 @@ public class Vision extends SubsystemBase {
   RobotCoralState containsCoral = new RobotCoralState();
 
   /**coordinates of the robot in the fields coordinate system at the last time the camera
-   * (determined by the coral state in the robot) saw an aprilTag 
+   * (determined by the coral state in the robot) saw an aprilTag
    */
   double[] temporaryTelemetryReset = new double[3];
   /**current position in the field relative to the last position the robot saw an aprilTag */
@@ -51,7 +51,7 @@ public class Vision extends SubsystemBase {
     backViewLimeLight.setPitch(52);
   }
 
-  private void resetTemporaryTelementery(){
+  private void resetTemporaryTelemetry(){
     temporaryTelemetryReset = telemetry.m_poseArray;
     temporaryTelemetry[0] = 0;
     temporaryTelemetry[1] = 0;
@@ -59,7 +59,7 @@ public class Vision extends SubsystemBase {
   }
 
   private void resetAprilTagTelemetry(String limeLightName){
-    resetTemporaryTelementery();
+    resetTemporaryTelemetry();
     if(limeLightName == "front"){
       aprilTagTelemetryReset = frontMiddleLimeLight.getTopDownAprilTagPosition();
     }else if(limeLightName == "hopper"){
