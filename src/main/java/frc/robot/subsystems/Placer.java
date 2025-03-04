@@ -25,6 +25,9 @@ public class Placer extends SubsystemBase {
     rearMotor = new Kraken(PlacerConstants.placerRearMotorID);
     beamBreak = new DigitalInput(PlacerConstants.placerBeamBreakID);
 
+    frontMotor.setMotorCurrentLimits(30);
+    rearMotor.setMotorCurrentLimits(30);
+
     // configuring motors
     frontMotor.setBrakeMode();
     rearMotor.setBrakeMode();

@@ -78,7 +78,7 @@ public class Climb extends SubsystemBase {
     leftClimbMotor.setSoftLimits(0, 0);
 
     //Motor current limit
-    leftClimbMotor.setMotorCurrentLimits(0);
+    leftClimbMotor.setMotorCurrentLimits(40);
 
     //Inverts left and right motors
     leftClimbMotor.setNotInverted();
