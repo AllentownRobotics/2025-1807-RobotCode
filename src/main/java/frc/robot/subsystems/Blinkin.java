@@ -17,8 +17,8 @@ public class Blinkin extends SubsystemBase {
     }
 
     //creates a general statement for making a color 
-      public void color(double color){
-        blinkin.set(color);
+      public void setPattern(double pattern){
+        blinkin.set(pattern);
     }
 
   @Override

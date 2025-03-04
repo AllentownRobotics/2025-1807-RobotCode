@@ -105,7 +105,7 @@ public final class Constants {
     public static final double elevatorGearing = 4.25; // inches
     public static final double elevatorSprocketRadius = 1.037;
     public static final double elevatorSprocketCircumference = 2*Math.PI*elevatorSprocketRadius; // inches
-    
+
     public static final double carriageMass = 12.6;
     public static final double minHeightMeters = 0;
     public static final double maxHeightMeters = 71.25; // inches
@@ -130,6 +130,20 @@ public final class Constants {
   // Blinkin Constants
   public static class BlinkinConstants {
     public static final int blinkinID = 23;
+
+  enum blinkinPattern {
+    IDLE,
+    ALERT_HUMAN_PLAYER,
+    ALIGNED_WITH_REEF,
+    CELEBRATE,
+    CORAL_COLLECTED,
+    CORAL_INDEXED,
+    CORAL_PLACING,
+    CORAL_PLACED,
+    ELEVATOR_AT_DESIRED_POSITION,
+    CLIMBING,
+    CLIMB_COMPLETE
+  }
 
   // light codes
   public static final double defaultColor = 0.59; // dark red
