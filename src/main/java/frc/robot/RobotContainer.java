@@ -15,7 +15,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ClimbCMDs.ClimbInCMD;
+import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementDownCMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorIncrementUpCMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorToHomeCMD;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Climb;
@@ -80,9 +84,13 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        operatorController.a().whileTrue(new ElevatorIncrementDownCMD(elevatorSubsystem));
-
-
+        if(false) {
+        operatorController.y().whileTrue(new ElevatorToHomeCMD(elevatorSubsystem));
+        operatorController.x().whileTrue(new ElevatorIncrementDownCMD(elevatorSubsystem));
+        operatorController.b().whileTrue(new ElevatorIncrementUpCMD(elevatorSubsystem));
+        operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
+        operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem)); 
+        }
     }
 
     public Command getAutonomousCommand() {
