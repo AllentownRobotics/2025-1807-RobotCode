@@ -31,10 +31,11 @@ public class Elevator extends SubsystemBase {
 
   private SysIdRoutine appliedRoutine;
 
+  //https://v6.docs.ctr-electronics.com/en/stable/docs/api-reference/wpilib-integration/sysid-integration/plumbing-and-running-sysid.html
   private final SysIdRoutine elevatorSysIDRoutine = new SysIdRoutine(
     new Config(
       null,
-      Voltage.ofBaseUnits(4, Volts),
+      Voltage.ofBaseUnits(2, Volts),
       Seconds.of(4)),
     new Mechanism(
       state -> SignalLogger.writeString("elevator sysID State", state.toString()),
@@ -147,9 +148,9 @@ public class Elevator extends SubsystemBase {
 
     // change state only when state changes
     SmartDashboard.getNumber("encoder desired position", desiredSetpoint);
-    Shuffleboard.getTab("Elevator").add("at min height", isLowerLimitReached());
-    Shuffleboard.getTab("Elevator").add("at max height", isUpperLimitReached());
-    Shuffleboard.getTab("Elevator").add("elevator position in inches", getElevatorPositionInInches());
+    //Shuffleboard.getTab("Elevator").add("at min height", isLowerLimitReached());
+    //Shuffleboard.getTab("Elevator").add("at max height", isUpperLimitReached());
+    //Shuffleboard.getTab("Elevator").add("elevator position in inches", getElevatorPositionInInches());
     
   }
 

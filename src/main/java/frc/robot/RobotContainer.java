@@ -5,6 +5,7 @@
 package frc.robot;
 
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -49,7 +50,7 @@ public class RobotContainer {
     //private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     //private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-    private final SendableChooser<Command> autoChooser;
+    //private final SendableChooser<Command> autoChooser;
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -64,8 +65,8 @@ public class RobotContainer {
     private final CommandXboxController operatorController = new CommandXboxController(OIConstants.operatorControllerPort);
 
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser("Name selected auto here");
-        SmartDashboard.putData("Auto chooser", autoChooser);
+        //autoChooser = AutoBuilder.buildAutoChooser("Name selected auto here");
+        //SmartDashboard.putData("Auto chooser", autoChooser);
         //need to populate auto chooser still!!!
 
         configureBindings();
@@ -116,12 +117,15 @@ public class RobotContainer {
 */
 
         // ELEVATOR SYSID
+        operatorController.a().onTrue(Commands.runOnce(SignalLogger::start));
+        operatorController.b().onTrue(Commands.runOnce(SignalLogger::stop));
+        
         operatorController.back().and(operatorController.a()).whileTrue(elevatorSubsystem.sysIdDynamic(Direction.kForward));
         operatorController.back().and(operatorController.b()).whileTrue(elevatorSubsystem.sysIdDynamic(Direction.kReverse));
         operatorController.start().and(operatorController.a()).whileTrue(elevatorSubsystem.sysIdQuasistatic(Direction.kForward));
         operatorController.start().and(operatorController.b()).whileTrue(elevatorSubsystem.sysIdQuasistatic(Direction.kReverse));
 
-        operatorController.y().whileTrue(new ElevatorToHomeCMD(elevatorSubsystem));
+        /*operatorController.y().whileTrue(new ElevatorToHomeCMD(elevatorSubsystem));
         operatorController.povDown().whileTrue(new ElevatorToL1CMD(elevatorSubsystem));
         operatorController.povRight().whileTrue(new ElevatorToL2CMD(elevatorSubsystem));
         operatorController.povLeft().whileTrue(new ElevatorToL3CMD(elevatorSubsystem));
@@ -134,7 +138,8 @@ public class RobotContainer {
 
         operatorController.rightTrigger().whileTrue(new PlacerSetBothForwardCMD(placerSubsystem, operatorController.getRightTriggerAxis()));
         operatorController.rightStick().whileTrue(new PlacerSetBothForwardCMD(placerSubsystem, operatorController.getRightY())); // if joystick is pushed down (negative values) motors will run in reverse
-    }
+    */
+        }
 
     public Command getAutonomousCommand() {
         return Commands.print("No autonomous command configured");

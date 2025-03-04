@@ -129,7 +129,7 @@ public final class Constants {
 
   // Blinkin Constants
   public static class BlinkinConstants {
-    public static final int blinkinID = 23;
+    public static final int blinkinID = 10;
 
   enum blinkinPattern {
     IDLE,
