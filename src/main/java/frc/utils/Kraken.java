@@ -103,6 +103,17 @@ public class Kraken extends SubsystemBase {
     kraken.getConfigurator().apply(krakenConfiguration.Feedback.withRemoteCANcoder(encoder));
   }
 
+  /** The mechanism's gear ratio. */
+  public void setRotorToSensorRatio(double newRotorToSensorRatio) {
+    krakenConfiguration.Feedback.withRotorToSensorRatio(newRotorToSensorRatio);
+    kraken.getConfigurator().apply(krakenConfiguration);
+  }
+
+  /** The mechanism's circumference. */
+  public void setSensorToMechanismRatio(double newSensorToMechanismRatio) {
+    krakenConfiguration.Feedback.withSensorToMechanismRatio(newSensorToMechanismRatio);
+  }
+
   /** Returns the device temperature. */
   public void getMotorTemperature() {
     kraken.getDeviceTemp();

@@ -65,6 +65,9 @@ public class Climb extends SubsystemBase {
     //Makes right climb motor follow the left climb motor
     rightClimbMotor.follow(ClimbConstants.leftClimbMotorID, true);
 
+    leftClimbMotor.setRotorToSensorRatio(ClimbConstants.climbRotorToSensorRatio);
+    leftClimbMotor.setSensorToMechanismRatio(ClimbConstants.climbSensorToMechanismRatio);
+
     //Resets encoder values
     leftClimbMotor.resetEncoder();
 
@@ -115,11 +118,13 @@ public class Climb extends SubsystemBase {
   //Sets the angle to the desired angle
   public void setDesiredState(double angle){
     desiredAngle = angle;
+    climbCANcoder.setPosition(desiredAngle);
   }
 
   //Increment that climb needs to go
   public void ClimbIncrement(double increment) {
     desiredAngle += increment;
+    climbCANcoder.setPosition(desiredAngle);
   }
   
   //Speed at which the motors will go

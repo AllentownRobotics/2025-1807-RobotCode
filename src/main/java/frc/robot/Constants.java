@@ -68,6 +68,9 @@ public final class Constants {
     public static final double climbInnerAngle = 0; // 90 degree angle inward
     public static final double climbLockAngle = 0; 
     public static final double ClimbDesiredAngle = 0;
+
+    public static final double climbRotorToSensorRatio = 50/1;
+    public static final double climbSensorToMechanismRatio = 1;
   }
 
   // Elevator Constants
@@ -99,11 +102,13 @@ public final class Constants {
     public static final double softLimitMaxPosition = 0;
     public static final double elevatorIncrementMeasurement = 1;
 
-    public static final double elevatorGearing = Units.inchesToMeters(3.111);
+    public static final double elevatorGearing = 4.25; // inches
+    public static final double elevatorSprocketRadius = 1.037;
+    public static final double elevatorSprocketCircumference = 2*Math.PI*elevatorSprocketRadius; // inches
+    
     public static final double carriageMass = 12.6;
-    public static final double elevatorSprocketRadius = 2*Math.PI*1.037;
     public static final double minHeightMeters = 0;
-    public static final double maxHeightMeters = Units.inchesToMeters(71.25);
+    public static final double maxHeightMeters = 71.25; // inches
     public static final double startingHeightMeters = 0;
 
 
