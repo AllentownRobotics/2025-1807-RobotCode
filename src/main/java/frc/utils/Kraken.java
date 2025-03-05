@@ -9,12 +9,15 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.core.CoreCANcoder;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /** An abstract motor object that contains all necessary configurations for the motors. */
@@ -56,7 +59,8 @@ public class Kraken extends SubsystemBase {
 
   /** Sets an encoder position depending on user generated values. */
   public void setDesiredEncoderPosition(double position) {
-    kraken.getConfigurator().setPosition(position);
+    PositionVoltage request = new PositionVoltage(position).withSlot(0);
+    kraken.setControl(request);
   }
 
   /** Sets motor speed to zero. */
@@ -95,13 +99,25 @@ public class Kraken extends SubsystemBase {
   }
 
   /** Allows a motor to follow another motor. Setting the inverted boolean to true allows motor to turn opposite the leader. */
-  public void follow(double leaderCANID, boolean inverted) {
-    kraken.setControl(new Follower(krakenID, inverted));
+  public void follow(int leaderCANID, boolean inverted) {
+    kraken.setControl(new Follower(leaderCANID, inverted));
   }
 
   /** Connects a CANCoder to the specified motor. */
   public void addEncoder(CoreCANcoder encoder) {
     kraken.getConfigurator().apply(krakenConfiguration.Feedback.withRemoteCANcoder(encoder));
+  }
+
+  /** The mechanism's gear ratio. */
+  public void setRotorToSensorRatio(double newRotorToSensorRatio) {
+    krakenConfiguration.Feedback.withRotorToSensorRatio(newRotorToSensorRatio);
+    kraken.getConfigurator().apply(krakenConfiguration);
+  }
+
+  /** The mechanism's circumference. */
+  public void setSensorToMechanismRatio(double newSensorToMechanismRatio) {
+    krakenConfiguration.Feedback.withSensorToMechanismRatio(newSensorToMechanismRatio);
+    kraken.getConfigurator().apply(krakenConfiguration);
   }
 
   /** Returns the device temperature. */
@@ -133,13 +149,14 @@ public class Kraken extends SubsystemBase {
   }
 
   //** Allows preset PID values to be passed to the motor. */
-  public void setPIDValues(double kP, double kI, double kD, double kS, double kV, double kA) {
+  public void setPIDValues(double kP, double kI, double kD, double kS, double kV, double kA, double kG) {
     krakenConfiguration.Slot0.kP = kP;
     krakenConfiguration.Slot0.kI = kI;
     krakenConfiguration.Slot0.kD = kD;
     krakenConfiguration.Slot0.kS = kS;
     krakenConfiguration.Slot0.kV = kV;
     krakenConfiguration.Slot0.kA = kA;
+    krakenConfiguration.Slot0.kG = kG;
 
     kraken.getConfigurator().apply(krakenConfiguration);
   }
@@ -158,5 +175,14 @@ public class Kraken extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  public void setVolts(Voltage volts) {
+    VoltageOut request = new VoltageOut(volts);
+    kraken.setControl(request);
+  }
+
+  public double getSupplyCurrent() {
+    return kraken.getSupplyCurrent().getValueAsDouble();
   }
 }

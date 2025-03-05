@@ -4,14 +4,23 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volt;
 import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.VoltsPerMeterPerSecond;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.units.VelocityUnit;
+import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -26,26 +35,40 @@ public class Elevator extends SubsystemBase {
   private CANcoder elevatorEncoder;
   private DigitalInput lowerLimitSwitch, upperLimitSwitch;
   private double desiredSetpoint; // desired setpoint of the encoder
-  
+
+  private SysIdRoutine appliedRoutine;
+
+  private ElevatorFeedforward feedforward;
+
+  //https://v6.docs.ctr-electronics.com/en/stable/docs/api-reference/wpilib-integration/sysid-integration/plumbing-and-running-sysid.html
   private final SysIdRoutine elevatorSysIDRoutine = new SysIdRoutine(
     new Config(
+      Volts.of(.5).per(Second),
+      Volts.of(1),
       null,
-      Voltage.ofBaseUnits(4, Volts),
-      null),
+      (state) -> SignalLogger.writeString("elevator sysID State", state.toString())),
     new Mechanism(
-      state -> SignalLogger.writeString("sysID State", state.toString()),
+      (volts) -> leftMotor.setVolts(volts),
       null,
-      this));
-
-  private SysIdRoutine appliedRoutine = elevatorSysIDRoutine;
+      this)
+      );
 
   /** Creates a new Elevator. */
   public Elevator() {
+
+    appliedRoutine = elevatorSysIDRoutine;
     
-    /*super(leftMotor, rightMotor, elevatorEncoder);
-    if(Utils.isSimulation()) {
-      startSimThread();
-    } */
+    /*if(Robot.isSimulation()) {
+      new ElevatorSim(
+        DCMotor.getKrakenX60(2),
+        ElevatorConstants.elevatorGearing,
+        ElevatorConstants.carriageMass,
+        ElevatorConstants.elevatorSprocketRadius,
+        ElevatorConstants.minHeightMeters,
+        ElevatorConstants.maxHeightMeters,
+        true,
+        ElevatorConstants.startingHeightMeters);*/
+
     leftMotor = new Kraken(ElevatorConstants.leftMotorID);
     rightMotor = new Kraken(ElevatorConstants.rightMotorID);
     elevatorEncoder = new CANcoder(ElevatorConstants.elevatorCANCoderID);
@@ -55,31 +78,40 @@ public class Elevator extends SubsystemBase {
 
     leftMotor.restoreFactoryDefaults();
     rightMotor.restoreFactoryDefaults();
-
-    rightMotor.follow(ElevatorConstants.leftMotorID, true);
-
+    
+    leftMotor.setInverted();
+    
+    rightMotor.follow(ElevatorConstants.leftMotorID, false);
+    
     leftMotor.addEncoder(elevatorEncoder);
-
+    
+    leftMotor.setRotorToSensorRatio(ElevatorConstants.elevatorGearing);
+    leftMotor.setSensorToMechanismRatio(ElevatorConstants.elevatorEncoderToMechanismRatio);
+    
+    
     leftMotor.setPIDValues(ElevatorConstants.ELEVATOR_P, ElevatorConstants.ELEVATOR_I,
-                              ElevatorConstants.ELEVATOR_D, ElevatorConstants.ELEVATOR_SFF,
-                              ElevatorConstants.ELEVATOR_VFF, ElevatorConstants.ELEVATOR_AFF);
-
+    ElevatorConstants.ELEVATOR_D, ElevatorConstants.ELEVATOR_SFF,
+    ElevatorConstants.ELEVATOR_VFF, ElevatorConstants.ELEVATOR_AFF, ElevatorConstants.ELEVATOR_GFF);
+    
     leftMotor.setBrakeMode();
-    leftMotor.setNotInverted();
-
+    rightMotor.setBrakeMode();
+    
     leftMotor.setMotorCurrentLimits(40);
     leftMotor.setSoftLimits(ElevatorConstants.softLimitMinPosition, // prevent us from overdriving the motor
-                            ElevatorConstants.softLimitMaxPosition); 
+    ElevatorConstants.softLimitMaxPosition);
     
     desiredSetpoint = ElevatorConstants.homePosition;
-    elevatorEncoder.setPosition(desiredSetpoint);
+    elevatorEncoder.setPosition(0);
+    leftMotor.setDesiredEncoderPosition(desiredSetpoint);
+    
+    SignalLogger.start();
   }
 
-  public Command SysIDQuasistatic(SysIdRoutine.Direction direction) {
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return appliedRoutine.quasistatic(direction);
   }
 
-  public Command SysIDDynamic(SysIdRoutine.Direction direction) {
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return appliedRoutine.dynamic(direction);
   }
 
@@ -88,21 +120,30 @@ public class Elevator extends SubsystemBase {
     leftMotor.stopMotor();
   }
 
+  public void setPercent(double percent) {
+    leftMotor.setMotorSpeed(percent);
+  }
+
+  /** Stop elevator (emergency feature). */
+  public void stopElevatorVolts() {
+    leftMotor.setVolts(Voltage.ofBaseUnits(0, Volts));
+  }
+
   /** Sets elevator position based off setpoint value. */
   public void setElevatorPosition(double setpoint) {
     desiredSetpoint = setpoint;
-    elevatorEncoder.setPosition(desiredSetpoint);
+    leftMotor.setDesiredEncoderPosition(desiredSetpoint);
   }
 
   /** Adjust the position of the elevator by a set increment. */
   public void adjustPositionIncrementally(double increment) {
     desiredSetpoint += increment;
-    elevatorEncoder.setPosition(desiredSetpoint);
+    leftMotor.setDesiredEncoderPosition(desiredSetpoint);
   }
 
   /** Scales the elevator encoder position by a factor of 2(pi)(r), converting rotations to inches. */
   public double getElevatorPositionInInches() {
-    return elevatorEncoder.getAbsolutePosition().getValueAsDouble()*2*Math.PI*1.037; // 1.037 is the sprocket radius
+    return leftMotor.getPosition();
   }
 
   public boolean isLowerLimitReached() {
@@ -120,11 +161,24 @@ public class Elevator extends SubsystemBase {
     leftMotor.getMotorTemperature();
     rightMotor.getMotorTemperature();
 
+    /*if (isLowerLimitReached() == true) {
+      leftMotor.setMotorSpeed(0); //replace these numbers to spin the motors away from the limit switch
+    }
+
+    if (isUpperLimitReached() == true) {
+      leftMotor.setMotorSpeed(-.1); //replace these numbers to spin the motors away from the limit switch
+    }*/
+
     // change state only when state changes
-    Shuffleboard.getTab("Elevator").add("encoder position", desiredSetpoint);
-    Shuffleboard.getTab("Elevator").add("at min height", isLowerLimitReached());
-    Shuffleboard.getTab("Elevator").add("at max height", isUpperLimitReached());
-    Shuffleboard.getTab("Elevator").add("elevator position in inches", getElevatorPositionInInches());
+    SmartDashboard.putNumber("elevator encoder desired position", desiredSetpoint);
+    SmartDashboard.putBoolean("elevator min limit", !isLowerLimitReached());
+    SmartDashboard.putBoolean("elevator max limit", !isUpperLimitReached());
+    SmartDashboard.putNumber("elevator height", getElevatorPositionInInches());
+    SmartDashboard.putNumber("elevator encoder heihgt", elevatorEncoder.getPosition().getValueAsDouble());
+
+    SmartDashboard.putNumber("right elevator draw", rightMotor.getSupplyCurrent());
+    SmartDashboard.putNumber("left elevator draw", leftMotor.getSupplyCurrent());
     
   }
+
 }

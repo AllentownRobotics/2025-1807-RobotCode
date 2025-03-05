@@ -5,6 +5,9 @@
 package frc.robot.subsystems;
 
 import frc.utils.Kraken;
+
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,6 +20,9 @@ public class Placer extends SubsystemBase {
   private DigitalInput beamBreak;
   private boolean previousPlacerCoralState;
 
+  private TalonFX front;
+  private TalonFX back;
+
   /** Creates a new Placer. */
   public Placer() {
 
@@ -24,6 +30,9 @@ public class Placer extends SubsystemBase {
     frontMotor = new Kraken(PlacerConstants.placerFrontMotorID);
     rearMotor = new Kraken(PlacerConstants.placerRearMotorID);
     beamBreak = new DigitalInput(PlacerConstants.placerBeamBreakID);
+
+    front = new TalonFX(21);
+    back = new TalonFX(22);
 
     // configuring motors
     frontMotor.setBrakeMode();
@@ -107,4 +116,9 @@ public class Placer extends SubsystemBase {
   public boolean isCoralInPlacer() {
     return beamBreak.get();
   }
+
+public void setBothForward(double speed) {
+    front.set(speed);
+    back.set(speed);
+}
 }

@@ -6,12 +6,14 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
@@ -20,6 +22,8 @@ import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementDownCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementUpCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToHomeCMD;
+import frc.robot.commands.PlacerCMDs.PlacerSetBothForwardCMD;
+import frc.robot.commands.PlacerCMDs.PlacerStopBothCMD;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Climb;
@@ -84,10 +88,24 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
+        operatorController.povDown().onTrue(new ElevatorIncrementDownCMD(elevatorSubsystem));
+        operatorController.povUp().onTrue(new ElevatorIncrementUpCMD(elevatorSubsystem));
+
+        // ELEVATOR SYSID
+        operatorController.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
+        operatorController.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
+        
+        operatorController.back().and(operatorController.a()).whileTrue(elevatorSubsystem.sysIdDynamic(Direction.kForward)).onFalse((new InstantCommand(() -> elevatorSubsystem.stopElevatorVolts(), elevatorSubsystem)));
+        operatorController.back().and(operatorController.b()).whileTrue(elevatorSubsystem.sysIdDynamic(Direction.kReverse)).onFalse((new InstantCommand(() -> elevatorSubsystem.stopElevatorVolts(), elevatorSubsystem)));
+        operatorController.start().and(operatorController.a()).whileTrue(elevatorSubsystem.sysIdQuasistatic(Direction.kForward)).onFalse((new InstantCommand(() -> elevatorSubsystem.stopElevatorVolts(), elevatorSubsystem)));
+        operatorController.start().and(operatorController.b()).whileTrue(elevatorSubsystem.sysIdQuasistatic(Direction.kReverse)).onFalse((new InstantCommand(() -> elevatorSubsystem.stopElevatorVolts(), elevatorSubsystem)));
+
+        operatorController.povLeft().onTrue(new PlacerSetBothForwardCMD(placerSubsystem, .2)).onFalse(new PlacerStopBothCMD(placerSubsystem));
+        operatorController.a().whileTrue(new PlacerSetBothForwardCMD(placerSubsystem, .2));
+
         if(false) {
         operatorController.y().whileTrue(new ElevatorToHomeCMD(elevatorSubsystem));
-        operatorController.x().whileTrue(new ElevatorIncrementDownCMD(elevatorSubsystem));
-        operatorController.b().whileTrue(new ElevatorIncrementUpCMD(elevatorSubsystem));
+        
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
         operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem)); 
         }
