@@ -160,5 +160,10 @@ public class Climb extends SubsystemBase {
     }
     
     // This method will be called once per scheduler run
+
+    // inner sthlimit switch fail safe
+    if(isClimbFullyRetracted == true) {
+      climbLeftMotorSpeed(.1); //change this to -.1 if positive on the non-inverted climb motor brings the climber in
+    }
   }
 }
