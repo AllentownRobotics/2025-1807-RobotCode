@@ -70,18 +70,18 @@ public class Elevator extends SubsystemBase {
     rightMotor.restoreFactoryDefaults();
 
     rightMotor.follow(ElevatorConstants.leftMotorID, true);
+    
+    leftMotor.addEncoder(elevatorEncoder);
 
     leftMotor.setRotorToSensorRatio(ElevatorConstants.elevatorGearing);
     leftMotor.setSensorToMechanismRatio(ElevatorConstants.elevatorSprocketCircumference);
-
-    leftMotor.addEncoder(elevatorEncoder);
 
     leftMotor.setPIDValues(ElevatorConstants.ELEVATOR_P, ElevatorConstants.ELEVATOR_I,
                               ElevatorConstants.ELEVATOR_D, ElevatorConstants.ELEVATOR_SFF,
                               ElevatorConstants.ELEVATOR_VFF, ElevatorConstants.ELEVATOR_AFF);
 
     leftMotor.setBrakeMode();
-    leftMotor.setNotInverted();
+    leftMotor.setInverted(); //changed from not inverted (may need to be fixed) <(||._.)
 
     leftMotor.setMotorCurrentLimits(40);
     leftMotor.setSoftLimits(ElevatorConstants.softLimitMinPosition, // prevent us from overdriving the motor
@@ -139,7 +139,7 @@ public class Elevator extends SubsystemBase {
     rightMotor.getMotorTemperature();
 
     if (isLowerLimitReached() == true) {
-      leftMotor.setMotorSpeed(0); //replace these numbers to spin the motors away from the limit switch
+      leftMotor.setMotorSpeed(.1); //replace these numbers to spin the motors away from the limit switch
     }
 
     if (isUpperLimitReached() == true) {
