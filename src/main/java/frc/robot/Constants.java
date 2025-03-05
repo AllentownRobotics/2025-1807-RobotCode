@@ -52,7 +52,8 @@ public final class Constants {
   }
 
   public static class telementeryValues {
-    public static double MaxSpeed = telementeryValues.kSpeedAt12Volts.in(MetersPerSecond);
+    public static double MaxSpeed = 5.41;
+    //public static double MaxSpeed = telementeryValues.kSpeedAt12Volts.in(MetersPerSecond);
     public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.41);
   }
 

@@ -82,7 +82,7 @@ public class Vision extends SubsystemBase {
      if(frontMiddleLimeLight.getAprilTagID() > -1 && containsCoral.robotContainsCoral()){
         //if the front limelight sees an aprilTag and the robot contains coral, reset the telemetry to the front limelight sees
         resetAprilTagTelemetry("front");
-      } 
+      } else 
      if(hopperLimeLight.getAprilTagID() > -1 && containsCoral.robotContainsCoral()){
         //if the hopper limelight sees an aprilTag and the robot contains coral, reset the telemetry to what the the hopper limelight sees
         resetAprilTagTelemetry("hopper");
@@ -226,5 +226,11 @@ public class Vision extends SubsystemBase {
 
     SmartDashboard.putBoolean("Alligned", allignedFull);
     displayAprilTagTelemetry();
+    SmartDashboard.putNumber("x change for left", getLeftAllignmentValues()[0]);
+    SmartDashboard.putNumber("z change for left", getLeftAllignmentValues()[1]);
+    SmartDashboard.putNumber("yaw change for left", getLeftAllignmentValues()[2]);
+    SmartDashboard.putNumber("x change for right", getRightAllignmentValues()[0]);
+    SmartDashboard.putNumber("z change for right", getRightAllignmentValues()[1]);
+    SmartDashboard.putNumber("yaw change for right", getRightAllignmentValues()[2]);
   }
 }

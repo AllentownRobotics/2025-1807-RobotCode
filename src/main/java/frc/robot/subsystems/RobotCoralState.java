@@ -27,6 +27,7 @@ public class RobotCoralState extends SubsystemBase {
     // sets the boolean robot contains coral by checking if the hoper had the coral, and the robot had no other coral, if the placer beam is broken then it sets the state to 2
     // and if the placer beam is not broken and the placer beam has been broken before that, it seta the robot to not contain coral.
     if(hopperSubsystem.isCoralCollected()&&coralState==0){
+      robotContainsCoral = true;
       coralState=1;
     }
     if(!placer.getBeamBreakState()){
@@ -34,7 +35,7 @@ public class RobotCoralState extends SubsystemBase {
     }
     if(coralState==2&&placer.getBeamBreakState()){
       coralState=0;
-      robotContainsCoral = true;
+      robotContainsCoral = false;
     }
     SmartDashboard.putBoolean("Has Coral", robotContainsCoral);
   }
