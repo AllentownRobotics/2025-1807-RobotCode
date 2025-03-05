@@ -27,11 +27,9 @@ public class TunerConstants {
     public static final PIDConstants rotationConstants = new PIDConstants(0.05, 0.0, 0.0);
 
     // maximum motor outputs
-    public static double maxDriveSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     public static double maxDriveAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     // slow drive motor outputs
-    public static double slowDriveSpeed = 0.25 * maxDriveSpeed;
     public static double slowDriveAngularRate = 0.25 * maxDriveAngularRate;
 
     // Both sets of gains need to be tuned to your individual robot.
@@ -81,12 +79,14 @@ public class TunerConstants {
     private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
     // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
     private static final Pigeon2Configuration pigeonConfigs = new Pigeon2Configuration()
-        .withMountPose(
-            new MountPoseConfigs()
+     /*    .withMountPose(
+             new MountPoseConfigs()
             .withMountPosePitch(null)
             .withMountPoseYaw(null)
             .withMountPoseRoll(null)
-    );
+    ) */
+    ;
+
 
     // CAN bus that the devices are located on;
     // All swerve devices must share the same CAN bus
@@ -95,6 +95,8 @@ public class TunerConstants {
     // Theoretical free speed (m/s) at 12 V applied output;
     // This needs to be tuned to your individual robot
     public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.41);
+    public static double maxDriveSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+       public static double slowDriveSpeed = 0.25 * maxDriveSpeed;
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
