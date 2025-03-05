@@ -30,13 +30,13 @@ public final class Constants {
   public static class allignmentValues {
     //All values are translations and rotations from the robot to the center of the neerest AprilTag.
 
-    public static final double leftRodAllignmentX = -0.3302;
-    public static final double leftRodAllignmentZ = 0.432308;
-    public static final double leftRodAllignmentYaw = 0;
-
-    public static final double rightRodAllignmentX = 0.0127;
-    public static final double rightRodAllignmentZ = 0.432308;
+    public static final double rightRodAllignmentX = 0.3302-0.054;
+    public static final double rightRodAllignmentZ = 0.02;
     public static final double rightRodAllignmentYaw = 0;
+
+    public static final double leftRodAllignmentX = 0.0127;
+    public static final double leftRodAllignmentZ = 0.02;
+    public static final double leftRodAllignmentYaw = 0;
 
     public static final double leftCoralStationAllignmentX = -0.6604;
     public static final double leftCoralStationAllignmentZ = 0.439801;
