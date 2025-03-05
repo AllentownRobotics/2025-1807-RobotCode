@@ -131,7 +131,8 @@ public final class Constants {
   public static class BlinkinConstants {
     public static final int blinkinID = 10;
 
-  enum blinkinPattern {
+  public enum LEDPattern {
+    OFF,
     IDLE,
     ALERT_HUMAN_PLAYER,
     ALIGNED_WITH_REEF,
@@ -142,6 +143,8 @@ public final class Constants {
     CORAL_PLACED,
     ELEVATOR_AT_DESIRED_POSITION,
     CLIMBING,
+    CLIMB_COMPLETE_RED,
+    CLIMB_COMPLETE_BLUE,
     CLIMB_COMPLETE
   }
 
@@ -150,7 +153,10 @@ public final class Constants {
   public static final double humanPlayerStation = -0.05; // strobe white (flashing)
   public static final double climbOcean = -0.95; // rainbow ocean palette
   public static final double climbLava = -0.93; // rainbow lava palette
+  public static final double climbUndecided = -0.99;//rainbow rainbow palette
   public static final double alignedWithReef = 0.35; // strobe color 2 (green)
+  public static final double off = 0.99;//black
+  public static final double idle = -0.17;//breath red
   }
 
 }
