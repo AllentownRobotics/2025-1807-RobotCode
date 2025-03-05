@@ -5,16 +5,29 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.limelight;
+import frc.robot.subsystems.Vision;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class putLimelight extends Command {
-  /** Creates a new putLimelight. */
-  limelight limeLight;
-  public putLimelight(limelight limeLight) {
+public class TargetRightReef extends Command {
+  Vision vision;
+  double xAllignmentValue;
+  double zAllignmentValue;
+  double yawAllignmentValue;
+  //DriveTrain drivetrain;
+
+  /** Creates a new TargetRightReef. */
+  public TargetRightReef(Vision vision/*,DriveTrain driveTrain */) {
+    this.vision = vision;
+    //this.driveTrain = driveTrain;
     // Use addRequirements() here to declare subsystem dependencies.
-    this.limeLight = limeLight;
-    addRequirements(limeLight);
+    addRequirements(vision/*,driveTrain*/);
+  }
+
+  public void target(){
+    xAllignmentValue = vision.getRightAllignmentValues()[0];
+    zAllignmentValue = vision.getRightAllignmentValues()[1];
+    yawAllignmentValue = vision.getRightAllignmentValues()[2];
+    //driveTrain.drive(xAllignmentValue, zAllignmentValue, yawAllignmentValue);
   }
 
   // Called when the command is initially scheduled.
@@ -23,9 +36,7 @@ public class putLimelight extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    limeLight.putToDash();
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

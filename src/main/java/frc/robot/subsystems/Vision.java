@@ -46,9 +46,10 @@ public class Vision extends SubsystemBase {
     hopperLimeLight.setZ(0.047498);
     hopperLimeLight.setPitch(-29);
 
-    backViewLimeLight.setZ(0.150368);
-    backViewLimeLight.setY(0.997458);
+    backViewLimeLight.setZ(-0.150368);
+    backViewLimeLight.setY(-0.997458);
     backViewLimeLight.setPitch(52);
+    backViewLimeLight.setYaw(180);//back limelight is facing backwards, so turning it around
   }
 
   private void resetTemporaryTelemetry(){
@@ -113,8 +114,14 @@ public class Vision extends SubsystemBase {
     aprilTagTelemetry[2] = temporaryTelemetry[2] - aprilTagTelemetryReset[2];
   }
 
+  public void displayAprilTagTelemetry(){
+    SmartDashboard.putNumber("aprilTagX",aprilTagTelemetry[0]);
+    SmartDashboard.putNumber("aprilTagZ",aprilTagTelemetry[1]);
+    SmartDashboard.putNumber("aprilTagYaw",aprilTagTelemetry[2]);
+  }
+
   /**Returns an array that contains the translations and rotation that the robot has to make to allign with the left rod of the reef.<p>
-   * Returns a double array containing the x,, z, and yaw translations needed to allign with left rod.<p>
+   * Returns a double array containing the x, z, and yaw translations needed to allign with left rod.<p>
    * Order of array returned is: [X translation, Z translation, Yaw rotation].
    */
   public double[] getLeftAllignmentValues(){
@@ -130,7 +137,7 @@ public class Vision extends SubsystemBase {
   }
 
   /**Returns an array that contains the translations and rotation that the robot has to make to allign with the right rod of the reef.<p>
-   * Returns a double array containing the x,, z, and yaw translations needed to allign with right rod.<p>
+   * Returns a double array containing the x, z, and yaw translations needed to allign with right rod.<p>
    * Order of array returned is: [X translation, Z translation, Yaw rotation].
    */
   public double[] getRightAllignmentValues(){
@@ -146,7 +153,7 @@ public class Vision extends SubsystemBase {
   }
 
   /**Returns an array that contains the translations and rotation that the robot has to make to allign with the left coral station.<p>
-   * Returns a double array containing the x,, z, and yaw translations needed to allign with left coral station.<p>
+   * Returns a double array containing the x, z, and yaw translations needed to allign with left coral station.<p>
    * Order of array returned is: [X translation, Z translation, Yaw rotation].
    */
   public double[] getLeftCoralStationAllignmentValues(){
@@ -162,7 +169,7 @@ public class Vision extends SubsystemBase {
   }
 
   /**Returns an array that contains the translations and rotation that the robot has to make to allign with the center coral station.<p>
-   * Returns a double array containing the x,, z, and yaw translations needed to allign with center coral station.<p>
+   * Returns a double array containing the x, z, and yaw translations needed to allign with center coral station.<p>
    * Order of array returned is: [X translation, Z translation, Yaw rotation].
    */
   public double[] getCenterCoralStationAllignmentValues(){
@@ -178,7 +185,7 @@ public class Vision extends SubsystemBase {
   }
 
   /**Returns an array that contains the translations and rotation that the robot has to make to allign with the right coral station.<p>
-   * Returns a double array containing the x,, z, and yaw translations needed to allign with right coral station.<p>
+   * Returns a double array containing the x, z, and yaw translations needed to allign with right coral station.<p>
    * Order of array returned is: [X translation, Z translation, Yaw rotation].
    */
   public double[] getRightCoralStationAllignmentValues(){
@@ -218,5 +225,6 @@ public class Vision extends SubsystemBase {
     }
 
     SmartDashboard.putBoolean("Alligned", allignedFull);
+    displayAprilTagTelemetry();
   }
 }

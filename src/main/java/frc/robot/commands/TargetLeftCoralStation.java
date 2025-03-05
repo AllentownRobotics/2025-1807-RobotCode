@@ -4,16 +4,29 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.LimeLight;
+import frc.robot.subsystems.Vision;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class target extends Command {
-  /** Creates a new target. */
-  
-  public target(LimeLight limeLight) {
+public class TargetLeftCoralStation extends Command {
+  Vision vision;
+  //DriveTrain drivetrain;
+  double xAllignmentValue;
+  double zAllignmentValue;
+  double yawAllignmentValue;
+  /** Creates a new TargetLeftCoralStation. */
+  public TargetLeftCoralStation(Vision vision/*,DriveTrain driveTrain */) {
+    this.vision = vision;
+    //this.driveTrain = driveTrain;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(vision/*,driveTrain*/);
+  }
+
+  public void target(){
+    xAllignmentValue = vision.getLeftCoralStationAllignmentValues()[0];
+    zAllignmentValue = vision.getLeftCoralStationAllignmentValues()[1];
+    yawAllignmentValue = vision.getLeftCoralStationAllignmentValues()[2];
+    //driveTrain.drive(xAllignmentValue, zAllignmentValue, yawAllignmentValue);
   }
 
   // Called when the command is initially scheduled.
@@ -22,8 +35,7 @@ public class target extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
