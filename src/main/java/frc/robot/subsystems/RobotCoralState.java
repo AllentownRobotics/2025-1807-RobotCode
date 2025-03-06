@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotCoralState extends SubsystemBase {
   
   Placer placer = new Placer();
-  HopperSubsystem hopperSubsystem = new HopperSubsystem();
+  Hopper hopperSubsystem = new Hopper();
   boolean robotContainsCoral = true;
   int coralState = 0;
   /** Creates a new RobotCoralState. */
@@ -30,10 +30,10 @@ public class RobotCoralState extends SubsystemBase {
       robotContainsCoral = true;
       coralState=1;
     }
-    if(!placer.getBeamBreakState()){
+    if(!placer.isCoralInPlacer()){
       coralState=2;
     }
-    if(coralState==2&&placer.getBeamBreakState()){
+    if(coralState==2&&placer.isCoralInPlacer()){
       coralState=0;
       robotContainsCoral = false;
     }

@@ -4,10 +4,7 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.MetersPerSecond;
-
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.LinearVelocity;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -136,7 +133,7 @@ public final class Constants {
 
   public static class allignmentValues {
     //All values are translations and rotations from the robot to the center of the neerest AprilTag.
-    public static final double timeToTarget = 0.5;//in seconds
+    public static final double timeToTarget = 5;//in seconds
 
     public static final double rightRodAllignmentX = 0.3302-0.054;
     public static final double rightRodAllignmentZ = 0.02;
