@@ -7,13 +7,17 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
+import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
@@ -36,6 +40,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Placer;
 import frc.robot.subsystems.Vision;
+import com.pathplanner.lib.auto.AutoBuilder;
 
 public class RobotContainer {
     public static final double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -56,6 +61,9 @@ public class RobotContainer {
     private final CommandXboxController driverController = new CommandXboxController(OIConstants.driverControllerPort);
     private final CommandXboxController operatorController = new CommandXboxController(OIConstants.operatorControllerPort);
 
+    private final SendableChooser<Command> autoChooser;
+
+
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final Elevator elevatorSubsystem = new Elevator();
     private final Placer placerSubsystem = new Placer();
@@ -65,6 +73,11 @@ public class RobotContainer {
     private final Vision visionSubsystem = new Vision();
 
     public RobotContainer() {
+        //Named autos here
+        autoChooser = AutoBuilder.buildAutoChooser("NAME SELECTED AUTO HERE");
+        SmartDashboard.putData(autoChooser);
+        //Need to populate auto chooser still!!!!!
+
         configureBindings();
     }
 
@@ -153,6 +166,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return Commands.print("No autonomous command configured");
+        return autoChooser.getSelected();
+       //return Commands.print("No autonomous command configured");
     }
 }
