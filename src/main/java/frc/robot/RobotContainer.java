@@ -25,7 +25,7 @@ import frc.robot.commands.ElevatorCMDs.ElevatorToL2CMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToL3CMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToL4CMD;
 import frc.robot.commands.PlacerCMDs.CollectFromHopperCMD;
-import frc.robot.commands.PlacerCMDs.EjectAlgaeCMD;
+import frc.robot.commands.PlacerCMDs.EjectAlgaeFromReefCMD;
 import frc.robot.commands.PlacerCMDs.PlaceCMD;
 import frc.robot.commands.PlacerCMDs.ReverseFrontWheelsCMD;
 import frc.robot.generated.TunerConstants;
@@ -134,7 +134,7 @@ public class RobotContainer {
         */
 
         //testing
-        //operatorController.b().onTrue(new ElevatorIncrementCMD(elevatorSubsystem,1));
+        operatorController.b().onTrue(new ElevatorIncrementCMD(elevatorSubsystem,1));
         operatorController.x().onTrue(new ElevatorIncrementCMD(elevatorSubsystem, -1));
 
         operatorController.y().whileTrue(new ElevatorToHomeCMD(elevatorSubsystem));
@@ -144,12 +144,12 @@ public class RobotContainer {
         operatorController.povUp().whileTrue(new ElevatorToL4CMD(elevatorSubsystem));
 
         operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
-        operatorController.back().whileTrue(new PlaceCMD(placerSubsystem)); // change to read joystick values
+        operatorController.leftStick().whileTrue(new PlaceCMD(placerSubsystem, operatorController.getLeftY()));
         operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem));
-        operatorController.x().whileTrue(new EjectAlgaeCMD(placerSubsystem));
+        operatorController.x().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward
         
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
-        operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem)); 
+        operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));
     }
 
     public Command getAutonomousCommand() {

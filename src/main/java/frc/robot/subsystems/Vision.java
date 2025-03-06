@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,6 +25,8 @@ public class Vision extends SubsystemBase {
   PIDController rotationController;
   PIDController translationController;
 
+  public boolean linedUpEnough;
+
   /** Creates a new Vision. */
   public Vision() {
     frontLimelightTable = NetworkTableInstance.getDefault().getTable("limelight-front");
@@ -38,6 +41,7 @@ public class Vision extends SubsystemBase {
     translationController = new PIDController(VisionConstants.translation_kP, VisionConstants.translation_kI, VisionConstants.translation_kD);
   }
 
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -47,13 +51,20 @@ public class Vision extends SubsystemBase {
 
     rightXTranslationOffsetToPlacer = rightXTranslationOffset + VisionConstants.placerOffsetToRobotCenter;
 
+    if(rightXTranslationOffsetToPlacer >= 0.05) {
+      linedUpEnough = true;
+    }
+
+    if(linedUpEnough == true) {
+      rightXTranslationOffsetToPlacer = 0;
+    }
+
     SmartDashboard.putNumber("Right Rotation Offset", rightRotationOffset);
     SmartDashboard.putNumber("rightXTranslationOffset", rightXTranslationOffset);
     SmartDashboard.putNumber("rightZTranslationOffset", rightZTranslationOffset);
     SmartDashboard.putNumber("rightXTranslationOffsetToPlacer", rightXTranslationOffsetToPlacer);
     SmartDashboard.putNumber("right rotation pid output", getRightRotationPID());
     SmartDashboard.putNumber("right translation pid output", getRightXTranslationPID());
-
   }
 
   public double getRightRotationPID() {
@@ -63,4 +74,5 @@ public class Vision extends SubsystemBase {
   public double getRightXTranslationPID() {
     return -translationController.calculate(rightXTranslationOffsetToPlacer, 0);
   }
+
 }

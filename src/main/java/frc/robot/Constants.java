@@ -92,7 +92,7 @@ public final class Constants {
     public static final double ELEVATOR_SFF = 0; // static feedforward
     public static final double ELEVATOR_VFF = 0; // velocity feedforward
     public static final double ELEVATOR_AFF = 0; // acceleration feedforward
-    public static final double ELEVATOR_GFF = 0.4; // gravity feedforward RETUNE
+    public static final double ELEVATOR_GFF = 0.01; // gravity feedforward RETUNE
     public static final double ELEVATOR_MIN_OUTPUT = -1;
     public static final double ELEVATOR_MAX_OUTPUT = 1;
     
