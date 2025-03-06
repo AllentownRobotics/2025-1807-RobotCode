@@ -25,15 +25,15 @@ public class Blinkin extends SubsystemBase {
     
     patternMap.put(BlinkinConstants.LEDPattern.OFF, BlinkinConstants.off);
     patternMap.put(BlinkinConstants.LEDPattern.IDLE, BlinkinConstants.idle);
-    patternMap.put(BlinkinConstants.LEDPattern.ALERT_HUMAN_PLAYER, BlinkinConstants.defaultColor);//color tbd
+    patternMap.put(BlinkinConstants.LEDPattern.ALERT_HUMAN_PLAYER, BlinkinConstants.alertHumanPlayer);
     patternMap.put(BlinkinConstants.LEDPattern.ALIGNED_WITH_REEF, BlinkinConstants.alignedWithReef);
-    patternMap.put(BlinkinConstants.LEDPattern.CELEBRATE, BlinkinConstants.defaultColor);//color tbd
-    patternMap.put(BlinkinConstants.LEDPattern.CORAL_COLLECTED, BlinkinConstants.defaultColor);//color tbd
+    patternMap.put(BlinkinConstants.LEDPattern.CELEBRATE, BlinkinConstants.celebrate);
+    /*patternMap.put(BlinkinConstants.LEDPattern.CORAL_COLLECTED, BlinkinConstants.defaultColor);//color tbd
     patternMap.put(BlinkinConstants.LEDPattern.CORAL_INDEXED, BlinkinConstants.defaultColor);//color tbd
     patternMap.put(BlinkinConstants.LEDPattern.CORAL_PLACING, BlinkinConstants.defaultColor);//color tbd
-    patternMap.put(BlinkinConstants.LEDPattern.CORAL_PLACED, BlinkinConstants.defaultColor);///color tbd
-    patternMap.put(BlinkinConstants.LEDPattern.ELEVATOR_AT_DESIRED_POSITION, BlinkinConstants.defaultColor);//color tbd
-    patternMap.put(BlinkinConstants.LEDPattern.CLIMBING, BlinkinConstants.defaultColor);//color tbd
+    patternMap.put(BlinkinConstants.LEDPattern.CORAL_PLACED, BlinkinConstants.defaultColor);///color tbd*/
+    patternMap.put(BlinkinConstants.LEDPattern.ELEVATOR_AT_DESIRED_POSITION, BlinkinConstants.elevatorAtDesiredPosition);
+    patternMap.put(BlinkinConstants.LEDPattern.CLIMBING, BlinkinConstants.climbing);
     patternMap.put(BlinkinConstants.LEDPattern.CLIMB_COMPLETE, BlinkinConstants.climbUndecided);
     patternMap.put(BlinkinConstants.LEDPattern.CLIMB_COMPLETE_RED, BlinkinConstants.climbLava);
     patternMap.put(BlinkinConstants.LEDPattern.CLIMB_COMPLETE_BLUE, BlinkinConstants.climbOcean);

@@ -150,13 +150,16 @@ public final class Constants {
 
   // light codes
   public static final double defaultColor = 0.59; // dark red
-  public static final double humanPlayerStation = -0.05; // strobe white (flashing)
+  public static final double alertHumanPlayer = -0.05; // strobe white (flashing)
+  public static final double climbing = -0.57; //fire large
   public static final double climbOcean = -0.95; // rainbow ocean palette
   public static final double climbLava = -0.93; // rainbow lava palette
-  public static final double climbUndecided = -0.99;//rainbow rainbow palette
+  public static final double climbUndecided = -0.91;//rainbow forest palette
   public static final double alignedWithReef = 0.35; // strobe color 2 (green)
+  public static final double elevatorAtDesiredPosition = -0.85; //shot red
   public static final double off = 0.99;//black
   public static final double idle = -0.17;//breath red
+  public static final double celebrate = -0.97; //rainbow party palette
   }
 
 }
