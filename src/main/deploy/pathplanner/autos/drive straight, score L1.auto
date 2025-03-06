@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "drive straight score l1"
+            "pathName": "middle field drive straight"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "score L1"
           }
         }
       ]
