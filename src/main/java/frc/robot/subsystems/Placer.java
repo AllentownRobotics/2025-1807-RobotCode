@@ -6,8 +6,6 @@ package frc.robot.subsystems;
 
 import frc.utils.Kraken;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,9 +18,6 @@ public class Placer extends SubsystemBase {
   private DigitalInput beamBreak;
   private boolean previousPlacerCoralState;
 
-  private TalonFX front;
-  private TalonFX back;
-
   /** Creates a new Placer. */
   public Placer() {
 
@@ -31,8 +26,6 @@ public class Placer extends SubsystemBase {
     rearMotor = new Kraken(PlacerConstants.placerRearMotorID);
     beamBreak = new DigitalInput(PlacerConstants.placerBeamBreakID);
 
-    front = new TalonFX(21);
-    back = new TalonFX(22);
 
     // configuring motors
     frontMotor.setBrakeMode();
@@ -57,30 +50,13 @@ public class Placer extends SubsystemBase {
       SmartDashboard.putBoolean("Beam Break State", placerCoralState);
       previousPlacerCoralState = placerCoralState;
     }
-    
-  }
-
-  /** Stops the rear motor. */
-  public void stopRearMotor() {
-    rearMotor.stopMotor();
-  }
-  
-  /** Stops the front motor. */
-  public void stopFrontMotor() {
-    frontMotor.stopMotor();
-  }
-
-  /** Stops both motors. */
-  public void stopBothMotors() {
-    frontMotor.stopMotor();
-    rearMotor.stopMotor();
   }
 
   /** Sets the speed of the front motor. <p> 
    *  Only used for moving forwards. <p>
    *  Use positive numbers for the speed variable only.
    */
-  public void setFrontMotorForwards(double speed) {
+  public void setFrontMotor(double speed) {
     frontMotor.setMotorSpeed(speed);
   }
 
@@ -88,24 +64,8 @@ public class Placer extends SubsystemBase {
    *  Only used for moving forwards. <p>
    *  Use positive numbers for the speed variable only.
    */
-  public void setRearMotorForwards(double speed) {
+  public void setRearMotor(double speed) {
     rearMotor.setMotorSpeed(speed);
-  }
-
-  /** Sets the speed of the front motor. <p> 
-   *  Only used for moving in reverse. <p>
-   *  Use positive numbers for the speed variable only.
-   */
-  public void setFrontMotorReverse(double speed) {
-    frontMotor.setMotorSpeed(-speed);
-  }
-
-  /** Sets the speed of the rear motor. <p> 
-   *  Only used for moving in reverse. <p>
-   *  Use positive numbers for the speed variable only.
-   */
-  public void setRearMotorReverse(double speed) {
-    rearMotor.setMotorSpeed(-speed);
   }
 
   /** Gets the state of the beam break sensor. <p>
@@ -114,11 +74,6 @@ public class Placer extends SubsystemBase {
    *  Returns false when beam is obstructed and true when beam is unobstructed
    */
   public boolean isCoralInPlacer() {
-    return beamBreak.get();
+    return !beamBreak.get();
   }
-
-public void setBothForward(double speed) {
-    front.set(speed);
-    back.set(speed);
-}
 }

@@ -5,19 +5,11 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volt;
 import static edu.wpi.first.units.Units.Volts;
-import static edu.wpi.first.units.Units.VoltsPerMeterPerSecond;
-
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.units.VelocityUnit;
-import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

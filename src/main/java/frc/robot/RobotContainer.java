@@ -19,11 +19,16 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
-import frc.robot.commands.ElevatorCMDs.ElevatorIncrementDownCMD;
-import frc.robot.commands.ElevatorCMDs.ElevatorIncrementUpCMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorIncrementCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToHomeCMD;
-import frc.robot.commands.PlacerCMDs.PlacerSetBothForwardCMD;
-import frc.robot.commands.PlacerCMDs.PlacerStopBothCMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorToL1CMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorToL2CMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorToL3CMD;
+import frc.robot.commands.ElevatorCMDs.ElevatorToL4CMD;
+import frc.robot.commands.PlacerCMDs.CollectFromHopper;
+import frc.robot.commands.PlacerCMDs.EjectAlgae;
+import frc.robot.commands.PlacerCMDs.PlaceCMD;
+import frc.robot.commands.PlacerCMDs.ReverseFrontWheelsCMD;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Climb;
@@ -60,6 +65,11 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+
+/*
+* __________________________________ DRIVER CONTROLLER ________________________________
+*/
+
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
@@ -76,39 +86,50 @@ public class RobotContainer {
             point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
         ));
 
-        // Run SysId routines when holding back/start and X/Y.
+        // Run Drivetrain SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        /*driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        */
 
         // reset the field-centric heading on left bumper press
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        operatorController.povDown().onTrue(new ElevatorIncrementDownCMD(elevatorSubsystem));
-        operatorController.povUp().onTrue(new ElevatorIncrementUpCMD(elevatorSubsystem));
+/*
+* __________________________________ OPERATOR CONTROLLER __________________________________
+*/
 
         // ELEVATOR SYSID
-        operatorController.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
+        /*operatorController.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
         operatorController.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
-        
+
         operatorController.back().and(operatorController.a()).whileTrue(elevatorSubsystem.sysIdDynamic(Direction.kForward)).onFalse((new InstantCommand(() -> elevatorSubsystem.stopElevatorVolts(), elevatorSubsystem)));
         operatorController.back().and(operatorController.b()).whileTrue(elevatorSubsystem.sysIdDynamic(Direction.kReverse)).onFalse((new InstantCommand(() -> elevatorSubsystem.stopElevatorVolts(), elevatorSubsystem)));
         operatorController.start().and(operatorController.a()).whileTrue(elevatorSubsystem.sysIdQuasistatic(Direction.kForward)).onFalse((new InstantCommand(() -> elevatorSubsystem.stopElevatorVolts(), elevatorSubsystem)));
         operatorController.start().and(operatorController.b()).whileTrue(elevatorSubsystem.sysIdQuasistatic(Direction.kReverse)).onFalse((new InstantCommand(() -> elevatorSubsystem.stopElevatorVolts(), elevatorSubsystem)));
+        */
 
-        operatorController.povLeft().onTrue(new PlacerSetBothForwardCMD(placerSubsystem, .2)).onFalse(new PlacerStopBothCMD(placerSubsystem));
-        operatorController.a().whileTrue(new PlacerSetBothForwardCMD(placerSubsystem, .2));
+        //testing
+        operatorController.b().onTrue(new ElevatorIncrementCMD(elevatorSubsystem,1));
+        operatorController.x().onTrue(new ElevatorIncrementCMD(elevatorSubsystem, -1));
 
-        if(false) {
         operatorController.y().whileTrue(new ElevatorToHomeCMD(elevatorSubsystem));
+        operatorController.povDown().whileTrue(new ElevatorToL1CMD(elevatorSubsystem));
+        operatorController.povRight().whileTrue(new ElevatorToL2CMD(elevatorSubsystem));
+        operatorController.povLeft().whileTrue(new ElevatorToL3CMD(elevatorSubsystem));
+        operatorController.povUp().whileTrue(new ElevatorToL4CMD(elevatorSubsystem));
+
+        operatorController.a().whileTrue(new CollectFromHopper(placerSubsystem));
+        operatorController.back().whileTrue(new PlaceCMD(placerSubsystem));
+        operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem));
+        operatorController.x().whileTrue(new EjectAlgae(placerSubsystem));
         
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
         operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem)); 
-        }
     }
 
     public Command getAutonomousCommand() {

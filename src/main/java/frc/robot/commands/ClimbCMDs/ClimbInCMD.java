@@ -20,18 +20,21 @@ public class ClimbInCMD extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    climbSubsystem.setClimbSpeed(-ClimbConstants.climbSpeed);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     //Commands the robot to go to the desired state
-    climbSubsystem.setDesiredState(ClimbConstants.climbInnerAngle);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    climbSubsystem.setClimbSpeed(0);
+  }
 
   // Returns true when the command should end.
   @Override

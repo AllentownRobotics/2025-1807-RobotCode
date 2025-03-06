@@ -11,10 +11,12 @@ import frc.robot.subsystems.Elevator;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ElevatorIncrementDownCMD extends InstantCommand {
+public class ElevatorIncrementCMD extends InstantCommand {
   Elevator elevator;
-  public ElevatorIncrementDownCMD(Elevator elevator) {
+  int increment;
+  public ElevatorIncrementCMD(Elevator elevator, int increment) {
     this.elevator = elevator;
+    this.increment = increment;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator);
   }
@@ -22,6 +24,6 @@ public class ElevatorIncrementDownCMD extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevator.adjustPositionIncrementally(-ElevatorConstants.incrementMeasurement);
+    elevator.adjustPositionIncrementally(increment);
   }
 }

@@ -5,19 +5,15 @@
 package frc.robot.commands.PlacerCMDs;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.PlacerConstants;
 import frc.robot.subsystems.Placer;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class PlacerSetRearReverseCMD extends Command {
-
+public class EjectAlgae extends Command {
   Placer placer;
-  double speed;
-
-  /** Sets the speed of the front placer motor. */
-  public PlacerSetRearReverseCMD(Placer placer, double speed) {
-
+  /** Creates a new EjectAlgae. */
+  public EjectAlgae(Placer placer) {
     this.placer = placer;
-    this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(placer);
   }
@@ -25,16 +21,24 @@ public class PlacerSetRearReverseCMD extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    placer.setRearMotorReverse(speed);
+    placer.setFrontMotor(PlacerConstants.placerAlgaeSpeed);
+    placer.setRearMotor(PlacerConstants.placerAlgaeSpeed);
+  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    placer.setFrontMotor(0);
+    placer.setRearMotor(0);
+  
+  }
 
   // Returns true when the command should end.
   @Override

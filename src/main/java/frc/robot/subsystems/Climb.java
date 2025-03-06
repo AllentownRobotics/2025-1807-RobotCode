@@ -23,11 +23,10 @@ import frc.utils.Kraken;
 
 
 public class Climb extends SubsystemBase {
-  private DigitalInput cageContactLimitSwitch, fullyRetractedLimitSwitch;
+  private DigitalInput cageContactLimitSwitch, fullyRetractedLimitSwitch; // fully retracted is for the "all the way out" state
   private Kraken rightClimbMotor, leftClimbMotor;
   private CANcoder climbCANcoder;
   private double desiredAngle;
-  private TalonFX motor;
   private boolean wasCageContacted;
   private boolean wasClimbRetracted;
 
@@ -42,25 +41,22 @@ public class Climb extends SubsystemBase {
       this));
 
   private SysIdRoutine appliedRoutine = climbSysIDRoutine;
-
-
-
     
   /** Creates a new Climb. */
   public Climb() {
     //Instantiates objects
-    motor = new TalonFX(1);
     rightClimbMotor = new Kraken(ClimbConstants.rightClimbMotorID);
     leftClimbMotor = new Kraken(ClimbConstants.leftClimbMotorID);
     climbCANcoder = new CANcoder(ClimbConstants.climbCANCoderID);
     cageContactLimitSwitch = new DigitalInput(ClimbConstants.climbCageSwitchID);
-    fullyRetractedLimitSwitch = new DigitalInput(ClimbConstants.fullyRetractedLimitSwitchID);
+    fullyRetractedLimitSwitch = new DigitalInput(ClimbConstants.climbFullyRetractedLimitSwitchID);
 
-
-    
     //Resets motors
     leftClimbMotor.restoreFactoryDefaults();
     rightClimbMotor.restoreFactoryDefaults();
+    
+    //Inverts left and right motors
+    leftClimbMotor.setNotInverted();
 
     //Makes right climb motor follow the left climb motor
     rightClimbMotor.follow(ClimbConstants.leftClimbMotorID, true);
@@ -72,23 +68,18 @@ public class Climb extends SubsystemBase {
     leftClimbMotor.addEncoder(climbCANcoder);
 
     //Motor speed limit
-    leftClimbMotor.setSoftLimits(0, 0);
+    //leftClimbMotor.setSoftLimits(0, 0);
 
     //Motor current limit
-    leftClimbMotor.setMotorCurrentLimits(0);
-
-    //Inverts left and right motors
-    leftClimbMotor.setNotInverted();
+    //leftClimbMotor.setMotorCurrentLimits(0);
 
     //Sets PID values
-    leftClimbMotor.setPIDValues(ClimbConstants.CLIMB_P, ClimbConstants.CLIMB_I, ClimbConstants.CLIMB_D, ClimbConstants.CLIMB_SFF, ClimbConstants.CLIMB_VFF, ClimbConstants.CLIMB_AFF, ClimbConstants.CLIMB_GFF);
+    leftClimbMotor.setPIDValues(ClimbConstants.CLIMB_P, ClimbConstants.CLIMB_I, ClimbConstants.CLIMB_D,
+                                ClimbConstants.CLIMB_SFF, ClimbConstants.CLIMB_VFF, ClimbConstants.CLIMB_AFF, ClimbConstants.CLIMB_GFF);
 
     //Sets motors to break mode initially
     leftClimbMotor.setBrakeMode();
-
-    //Desired angle that climb wants to move to
-    desiredAngle = ClimbConstants.ClimbDesiredAngle;
-    climbCANcoder.setPosition(desiredAngle);
+    rightClimbMotor.setBrakeMode();
 
     //Limit switch initial states
     wasCageContacted = cageContactLimitSwitch.get();
@@ -106,24 +97,9 @@ public class Climb extends SubsystemBase {
   public Command SysIDDynamic(SysIdRoutine.Direction direction) {
     return appliedRoutine.dynamic(direction);
   }
-
-  //Stops climb
-  public void stopClimb() {
-    leftClimbMotor.setMotionMagicParameters(0, 0, 0);
-  }
-
-  //Sets the angle to the desired angle
-  public void setDesiredState(double angle){
-    desiredAngle = angle;
-  }
-
-  //Increment that climb needs to go
-  public void ClimbIncrement(double increment) {
-    desiredAngle += increment;
-  }
   
   //Speed at which the motors will go
-  public void climbLeftMotorSpeed(double speed) {
+  public void setClimbSpeed(double speed) {
      leftClimbMotor.setMotorSpeed(speed);
   }
 

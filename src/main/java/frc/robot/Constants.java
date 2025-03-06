@@ -44,8 +44,9 @@ public final class Constants {
     public static final int leftClimbMotorID = 15;
     public static final int rightClimbMotorID = 16;
     public static final int climbCANCoderID = 17;
-    public static final int climbCageSwitchID = 3;
-    public static final int fullyRetractedLimitSwitchID = 2;
+
+    public static final int climbCageSwitchID = 2;
+    public static final int climbFullyRetractedLimitSwitchID = 3;
 
     public static final double CageContact = 0;
     public static final double ClimbFullyRetracted = 0;
@@ -53,7 +54,7 @@ public final class Constants {
 
   // climb motor PID
     public static final double CLIMB_P = 0.01; // ADJUST ALL
-    public static final double CLIMB_I = 0.001;
+    public static final double CLIMB_I = 0;
     public static final double CLIMB_D = 0;
     public static final double CLIMB_SFF = 0; // static feedforward
     public static final double CLIMB_VFF = 0; // velocity feedforward
@@ -67,6 +68,7 @@ public final class Constants {
     public static final double climbInnerAngle = 0; // 90 degree angle inward
     public static final double climbLockAngle = 0; 
     public static final double ClimbDesiredAngle = 0;
+    public static final double climbSpeed = 0.5;
   }
 
   // Elevator Constants
@@ -79,25 +81,25 @@ public final class Constants {
     public static final int upperLimitSwitchPort = 8;
     
   // elevator motor PID
-    public static final double ELEVATOR_P = 0.01; // ADJUST ALL
-    public static final double ELEVATOR_I = 0.001;
+    public static final double ELEVATOR_P = 0.25; // ADJUST ALL
+    public static final double ELEVATOR_I = 0;
     public static final double ELEVATOR_D = 0;
     public static final double ELEVATOR_SFF = 0; // static feedforward
     public static final double ELEVATOR_VFF = 0; // velocity feedforward
     public static final double ELEVATOR_AFF = 0; // acceleration feedforward
-    public static final double ELEVATOR_GFF = 0; // originally 11.5
+    public static final double ELEVATOR_GFF = 0.4; // gravity feedforward
     public static final double ELEVATOR_MIN_OUTPUT = -1;
     public static final double ELEVATOR_MAX_OUTPUT = 1;
 
-  // elevator setpoints
+  // elevator setpoints (inches)
     public static final double homePosition = 0;
-    public static final double L1Position = 0;
-    public static final double L2Position = 0;
+    public static final double L1Position = 19;
+    public static final double L2Position = 28;
     public static final double L3Position = 0;
     public static final double L4Position = 0;
     public static final double softLimitMinPosition = 0;
     public static final double softLimitMaxPosition = 0;
-    public static final double incrementMeasurement = 1;
+    public static final double incrementMeasurement = 5;
 
     public static final double elevatorGearing = 14/60; // inches
     public static final double elevatorSprocketRadius = 1.037;
@@ -110,6 +112,11 @@ public final class Constants {
     public static final int placerFrontMotorID = 21;
     public static final int placerRearMotorID = 22;
     public static final int placerBeamBreakID = 1;
+
+    public static final double placerFrontMotorSpeed = 0.2;
+    public static final double placerBackMotorSpeed = 0.15; //.125
+    public static final double placerAlgaeSpeed = 0.4;
+    public static final double placerCollectAlgaeSpeed = 0.6;
   }
 
   // Hopper Constants
