@@ -36,12 +36,7 @@
       "name": "score L1",
       "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "score L1"
-        }
-      }
+      "command": null
     }
   ],
   "globalConstraints": {
