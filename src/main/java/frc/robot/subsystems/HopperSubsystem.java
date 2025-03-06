@@ -16,7 +16,7 @@ public class HopperSubsystem extends SubsystemBase {
   /** Creates a new BeamBreak. */
   public HopperSubsystem() {
     CoralCollected = false;
-    hopperBeamBreak = new DigitalInput(HopperConstants.kBeamBreakPort);
+    hopperBeamBreak = new DigitalInput(HopperConstants.hopperBeamBreakID);
     hopper_debouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
     // Initializes smartdashboard as false
     SmartDashboard.putBoolean("beam break", CoralCollected);

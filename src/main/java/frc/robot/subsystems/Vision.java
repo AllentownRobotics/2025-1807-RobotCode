@@ -7,11 +7,11 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.allignmentValues;
-import frc.robot.Constants.telementeryValues;
+import frc.robot.TunerConstants;
 
 public class Vision extends SubsystemBase {
   /**telemetry system from the drive train */
-  Telemetry telemetry = new Telemetry(telementeryValues.MaxSpeed);
+  Telemetry telemetry = new Telemetry(TunerConstants.maxDriveSpeed);
   /**limelight on the front of the elevator, used to allign with the reef*/
   LimeLight frontMiddleLimeLight = new LimeLight("front");
   /** limelight on top of the hopper, facing the same firection as the front limelight to allign with the reef*/
@@ -53,7 +53,8 @@ public class Vision extends SubsystemBase {
   }
 
   private void resetTemporaryTelemetry(){
-    temporaryTelemetryReset = telemetry.m_poseArray;
+    temporaryTelemetryReset = new double[]{0,0,0};
+    //temporaryTelemetryReset = telemetry.m_poseArray;
     temporaryTelemetry[0] = 0;
     temporaryTelemetry[1] = 0;
     temporaryTelemetry[2] = 0;
