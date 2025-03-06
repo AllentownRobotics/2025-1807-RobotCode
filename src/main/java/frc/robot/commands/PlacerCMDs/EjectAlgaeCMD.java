@@ -9,10 +9,10 @@ import frc.robot.Constants.PlacerConstants;
 import frc.robot.subsystems.Placer;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class EjectAlgae extends Command {
+public class EjectAlgaeCMD extends Command {
   Placer placer;
   /** Creates a new EjectAlgae. */
-  public EjectAlgae(Placer placer) {
+  public EjectAlgaeCMD(Placer placer) {
     this.placer = placer;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(placer);

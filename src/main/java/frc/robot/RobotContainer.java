@@ -6,16 +6,13 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
@@ -25,8 +22,8 @@ import frc.robot.commands.ElevatorCMDs.ElevatorToL1CMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToL2CMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToL3CMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToL4CMD;
-import frc.robot.commands.PlacerCMDs.CollectFromHopper;
-import frc.robot.commands.PlacerCMDs.EjectAlgae;
+import frc.robot.commands.PlacerCMDs.CollectFromHopperCMD;
+import frc.robot.commands.PlacerCMDs.EjectAlgaeCMD;
 import frc.robot.commands.PlacerCMDs.PlaceCMD;
 import frc.robot.commands.PlacerCMDs.ReverseFrontWheelsCMD;
 import frc.robot.generated.TunerConstants;
@@ -123,10 +120,10 @@ public class RobotContainer {
         operatorController.povLeft().whileTrue(new ElevatorToL3CMD(elevatorSubsystem));
         operatorController.povUp().whileTrue(new ElevatorToL4CMD(elevatorSubsystem));
 
-        operatorController.a().whileTrue(new CollectFromHopper(placerSubsystem));
-        operatorController.back().whileTrue(new PlaceCMD(placerSubsystem));
+        operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
+        operatorController.back().whileTrue(new PlaceCMD(placerSubsystem)); // change to read joystick values
         operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem));
-        operatorController.x().whileTrue(new EjectAlgae(placerSubsystem));
+        operatorController.x().whileTrue(new EjectAlgaeCMD(placerSubsystem));
         
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
         operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem)); 

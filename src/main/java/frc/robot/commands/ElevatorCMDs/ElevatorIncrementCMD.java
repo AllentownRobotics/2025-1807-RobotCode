@@ -5,7 +5,6 @@
 package frc.robot.commands.ElevatorCMDs;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
