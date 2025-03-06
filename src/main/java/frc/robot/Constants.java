@@ -7,11 +7,15 @@ package frc.robot;
 import edu.wpi.first.math.util.Units;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean
+ * constants. This class should not be used for any other purpose. All constants
+ * should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
@@ -33,10 +37,12 @@ public final class Constants {
   public static class AutoConstants { // ADJUST ALL
     public static final double AUTO_MAX_SPEED_MPS = 5;
 
-    public static final double driveTrainRadius = Units.inchesToMeters(Math.sqrt(Math.pow(12, 2) + Math.pow(12, 2))); // in meters
+    public static final double driveTrainRadius = Units.inchesToMeters(Math.sqrt(Math.pow(12, 2) + Math.pow(12, 2))); // in
+                                                                                                                      // meters
 
     public static final double PX_CONTROLLER = 5;
     public static final double P_THETA_CONTROLLER = 1;
+
   }
   
   // Climb Constants
@@ -51,8 +57,7 @@ public final class Constants {
     public static final double CageContact = 0;
     public static final double ClimbFullyRetracted = 0;
 
-
-  // climb motor PID
+    // climb motor PID
     public static final double CLIMB_P = 0.01; // ADJUST ALL
     public static final double CLIMB_I = 0;
     public static final double CLIMB_D = 0;
@@ -62,11 +67,11 @@ public final class Constants {
     public static final double CLIMB_GFF = 0;
     public static final double CLIMB_MIN_OUTPUT = -1;
     public static final double CLIMB_MAX_OUTPUT = 1;
-
-  // climb setpoints
+    
+    // climb setpoints
     public static final double climbOuterAngle = 180; // 90 degree angle outward
     public static final double climbInnerAngle = 0; // 90 degree angle inward
-    public static final double climbLockAngle = 0; 
+    public static final double climbLockAngle = 0;
     public static final double ClimbDesiredAngle = 0;
     public static final double climbSpeed = 0.5;
   }
@@ -79,19 +84,19 @@ public final class Constants {
 
     public static final int lowerLimitSwitchPort = 9;
     public static final int upperLimitSwitchPort = 8;
-    
-  // elevator motor PID
+
+    // elevator motor PID
     public static final double ELEVATOR_P = 0.25; // ADJUST ALL
     public static final double ELEVATOR_I = 0;
     public static final double ELEVATOR_D = 0;
     public static final double ELEVATOR_SFF = 0; // static feedforward
     public static final double ELEVATOR_VFF = 0; // velocity feedforward
     public static final double ELEVATOR_AFF = 0; // acceleration feedforward
-    public static final double ELEVATOR_GFF = 0.4; // gravity feedforward
+    public static final double ELEVATOR_GFF = 0.4; // gravity feedforward RETUNE
     public static final double ELEVATOR_MIN_OUTPUT = -1;
     public static final double ELEVATOR_MAX_OUTPUT = 1;
-
-  // elevator setpoints (inches)
+    
+    // elevator setpoints (inches)
     public static final double homePosition = 0;
     public static final double L1Position = 19;
     public static final double L2Position = 28;
@@ -101,24 +106,24 @@ public final class Constants {
     public static final double softLimitMaxPosition = 0;
     public static final double incrementMeasurement = 5;
 
-    public static final double elevatorGearing = 14/60; // inches
+    public static final double elevatorGearing = 14 / 60; // inches
     public static final double elevatorSprocketRadius = 1.037;
-    public static final double elevatorSprocketCircumference = 2*Math.PI*elevatorSprocketRadius; // inches
-    public static final double elevatorEncoderToMechanismRatio = (1/elevatorSprocketCircumference)/3;
+    public static final double elevatorSprocketCircumference = 2 * Math.PI * elevatorSprocketRadius; // inches
+    public static final double elevatorEncoderToMechanismRatio = (1 / elevatorSprocketCircumference) / 3;
   }
-
+  
   // Placer Constants
   public static class PlacerConstants {
     public static final int placerFrontMotorID = 21;
     public static final int placerRearMotorID = 22;
     public static final int placerBeamBreakID = 1;
-
+    
     public static final double placerFrontMotorSpeed = 0.2;
-    public static final double placerBackMotorSpeed = 0.15; //.125
+    public static final double placerBackMotorSpeed = 0.15; // .125
     public static final double placerAlgaeSpeed = 0.4;
     public static final double placerCollectAlgaeSpeed = 0.6;
   }
-
+  
   // Hopper Constants
   public static class HopperConstants {
     public static final int hopperBeamBreakID = 0;
@@ -127,13 +132,28 @@ public final class Constants {
   // Blinkin Constants
   public static class BlinkinConstants {
     public static final int blinkinID = 10;
+    
+    // light codes
+    public static final double defaultColor = 0.59; // dark red
+    public static final double humanPlayerStation = -0.05; // strobe white (flashing)
+    public static final double climbOcean = -0.95; // rainbow ocean palette
+    public static final double climbLava = -0.93; // rainbow lava palette
+    public static final double alignedWithReef = 0.35; // strobe color 2 (green)
+  }
 
-  // light codes
-  public static final double defaultColor = 0.59; // dark red
-  public static final double humanPlayerStation = -0.05; // strobe white (flashing)
-  public static final double climbOcean = -0.95; // rainbow ocean palette
-  public static final double climbLava = -0.93; // rainbow lava palette
-  public static final double alignedWithReef = 0.35; // strobe color 2 (green)
+  public static class VisionConstants {
+    public static final double placerOffsetToRobotCenter = 0.0;
+    
+    public static final double rotation_kP = 0.1;
+    public static final double rotation_kI = 0.0;
+    public static final double rotation_kD = 0.05;
+    public static final double translation_kP = 0.75;
+    public static final double translation_kI = 0.0;
+    public static final double translation_kD = 0.0;
+    
+    public static final double rotationTargetingSpeed = 0.75; // rotations per second
+
+    public static final double translationTargetingSpeed = 5.41; // meters per second
   }
 
 }
