@@ -61,7 +61,7 @@ public class RobotContainer {
     private final CommandXboxController driverController = new CommandXboxController(OIConstants.driverControllerPort);
     private final CommandXboxController operatorController = new CommandXboxController(OIConstants.operatorControllerPort);
 
-    private final SendableChooser<Command> autoChooser;
+    //private final SendableChooser<Command> autoChooser;
 
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -74,8 +74,8 @@ public class RobotContainer {
 
     public RobotContainer() {
         //Named autos here
-        autoChooser = AutoBuilder.buildAutoChooser("NAME SELECTED AUTO HERE");
-        SmartDashboard.putData(autoChooser);
+        //autoChooser = AutoBuilder.buildAutoChooser("NAME SELECTED AUTO HERE");
+        //SmartDashboard.putData(autoChooser);
         //Need to populate auto chooser still!!!!!
 
         configureBindings();
@@ -166,7 +166,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
-       //return Commands.print("No autonomous command configured");
+        //return autoChooser.getSelected();
+       return Commands.print("No autonomous command configured");
     }
 }

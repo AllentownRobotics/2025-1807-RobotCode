@@ -119,7 +119,7 @@ public final class Constants {
     public static final int placerBeamBreakID = 1;
     
     public static final double placerFrontMotorSpeed = 0.2;
-    public static final double placerBackMotorSpeed = 0.17; // .125
+    public static final double placerBackMotorSpeed = 0.1; // .125
     public static final double placerAlgaeSpeed = 0.4;
     public static final double placerCollectAlgaeSpeed = 0.6;
   }
