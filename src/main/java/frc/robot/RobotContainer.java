@@ -14,15 +14,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-//import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.VisionConstants;
-//import frc.robot.commands.Commands;  // JK .Commands removed
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementCMD;
@@ -118,7 +117,13 @@ public class RobotContainer {
         NamedCommands.registerCommand("BackUp2Inches",
           drivetrain.applyRequest(() -> driveRobotCentric.withVelocityY(0.0).withVelocityX(-1.0).withRotationalRate(0.0)).withTimeout(0.25)); // TRAIF -- will this work?
 
+        //Named autos here
         autoChooser = AutoBuilder.buildAutoChooser("NAME SELECTED AUTO HERE");
+        
+        NamedCommands.registerCommand("raise elevator to L1", new ElevatorToL1CMD(elevatorSubsystem));
+        NamedCommands.registerCommand("score L1", new PlaceCMD(placerSubsystem));
+        NamedCommands.registerCommand("lower elevator to home", new ElevatorToHomeCMD(elevatorSubsystem));
+
         SmartDashboard.putData(autoChooser);
         //Need to populate auto chooser still!!!!!
 
@@ -191,8 +196,8 @@ public class RobotContainer {
         */
 
         //testing
-        operatorController.b().onTrue(new ElevatorIncrementCMD(elevatorSubsystem,1));
-        operatorController.x().onTrue(new ElevatorIncrementCMD(elevatorSubsystem, -1));
+        operatorController.b().whileTrue(new ElevatorIncrementCMD(elevatorSubsystem,1));
+        operatorController.x().whileTrue(new ElevatorIncrementCMD(elevatorSubsystem, -1));
 
         operatorController.y().whileTrue(new ElevatorToHomeCMD(elevatorSubsystem));
         operatorController.povDown().whileTrue(new ElevatorToL1CMD(elevatorSubsystem));

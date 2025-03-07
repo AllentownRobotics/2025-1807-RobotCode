@@ -155,7 +155,7 @@ public final class Constants {
     public static final double defaultColor = 0.59; // dark red
     public static final double alertHumanPlayer = -0.05; // strobe white (flashing)
     public static final double climbing = -0.57; //fire large
-    public static final double humanPlayerStation = -0.05; // strobe white (flashing)      
+    public static final double humanPlayerStation = -0.05; // strobe white (flashing)
     public static final double climbOcean = -0.95; // rainbow ocean palette
     public static final double climbLava = -0.93; // rainbow lava palette
     public static final double climbUndecided = -0.91;//rainbow forest palette
