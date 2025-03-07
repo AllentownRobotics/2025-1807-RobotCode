@@ -147,8 +147,8 @@ public class RobotContainer {
         */
 
         //testing
-        operatorController.b().onTrue(new ElevatorIncrementCMD(elevatorSubsystem,1));
-        operatorController.x().onTrue(new ElevatorIncrementCMD(elevatorSubsystem, -1));
+        operatorController.b().whileTrue(new ElevatorIncrementCMD(elevatorSubsystem,1));
+        operatorController.x().whileTrue(new ElevatorIncrementCMD(elevatorSubsystem, -1));
 
         operatorController.y().whileTrue(new ElevatorToHomeCMD(elevatorSubsystem));
         operatorController.povDown().whileTrue(new ElevatorToL1CMD(elevatorSubsystem));
@@ -157,9 +157,9 @@ public class RobotContainer {
         operatorController.povUp().whileTrue(new ElevatorToL4CMD(elevatorSubsystem));
 
         operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
-        operatorController.leftStick().whileTrue(new PlaceCMD(placerSubsystem, operatorController.getLeftY()));
-        operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem));
-        operatorController.x().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward
+        operatorController.back().whileTrue(new PlaceCMD(placerSubsystem));
+        //operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem));
+        //operatorController.x().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward
         
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
         operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));
