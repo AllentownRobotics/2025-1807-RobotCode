@@ -86,13 +86,13 @@ public final class Constants {
     public static final int upperLimitSwitchPort = 8;
 
     // elevator motor PID
-    public static final double ELEVATOR_P = 0.25; // ADJUST ALL
+    public static final double ELEVATOR_P = 0.15;
     public static final double ELEVATOR_I = 0;
     public static final double ELEVATOR_D = 0;
     public static final double ELEVATOR_SFF = 0; // static feedforward
     public static final double ELEVATOR_VFF = 0; // velocity feedforward
     public static final double ELEVATOR_AFF = 0; // acceleration feedforward
-    public static final double ELEVATOR_GFF = 0.01; // gravity feedforward RETUNE
+    public static final double ELEVATOR_GFF = 0.296; // gravity feedforward
     public static final double ELEVATOR_MIN_OUTPUT = -1;
     public static final double ELEVATOR_MAX_OUTPUT = 1;
     
@@ -100,8 +100,8 @@ public final class Constants {
     public static final double homePosition = 0;
     public static final double L1Position = 19;
     public static final double L2Position = 28;
-    public static final double L3Position = 0;
-    public static final double L4Position = 0;
+    public static final double L3Position = 44;
+    public static final double L4Position = 66;
     public static final double positionTolerance = .1;
     public static final double softLimitMinPosition = 0;
     public static final double softLimitMaxPosition = 0;
@@ -120,7 +120,7 @@ public final class Constants {
     public static final int placerBeamBreakID = 1;
     
     public static final double placerFrontMotorSpeed = 0.2;
-    public static final double placerBackMotorSpeed = 0.15; // .125
+    public static final double placerBackMotorSpeed = 0.1; // .125
     public static final double placerAlgaeSpeed = 0.4;
     public static final double placerCollectAlgaeSpeed = 0.6;
   }
@@ -155,6 +155,7 @@ public final class Constants {
     public static final double defaultColor = 0.59; // dark red
     public static final double alertHumanPlayer = -0.05; // strobe white (flashing)
     public static final double climbing = -0.57; //fire large
+    public static final double humanPlayerStation = -0.05; // strobe white (flashing)      
     public static final double climbOcean = -0.95; // rainbow ocean palette
     public static final double climbLava = -0.93; // rainbow lava palette
     public static final double climbUndecided = -0.91;//rainbow forest palette
