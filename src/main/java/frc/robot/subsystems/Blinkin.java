@@ -11,14 +11,11 @@ import frc.robot.Constants.BlinkinConstants;
 public class Blinkin extends SubsystemBase {
   /** Creates a new blinkin. */
    Spark blinkin;
-  
+
     public Blinkin() {
       blinkin = new Spark(BlinkinConstants.blinkinID);
     }
 
-    //creates a general statement for making a color 
-      public void color(double color){
-        blinkin.set(color);
     }
 
   @Override
