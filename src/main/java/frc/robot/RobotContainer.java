@@ -206,9 +206,9 @@ public class RobotContainer {
         operatorController.povUp().whileTrue(new ElevatorToL4CMD(elevatorSubsystem));
 
         operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
-        operatorController.leftStick().whileTrue(new PlaceCMD(placerSubsystem, operatorController.getLeftY()));
-        operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem));
-        operatorController.x().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward
+        operatorController.rightTrigger().whileTrue(new PlaceCMD(placerSubsystem));
+        //operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem));
+        //operatorController.x().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward
         
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
         operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));
