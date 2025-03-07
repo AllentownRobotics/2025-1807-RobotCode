@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "middle field drive straight"
+            "pathName": "leave barge"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "raise elevator to L1"
           }
         },
         {
