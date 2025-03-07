@@ -86,13 +86,13 @@ public final class Constants {
     public static final int upperLimitSwitchPort = 8;
 
     // elevator motor PID
-    public static final double ELEVATOR_P = 0.15; // was .25
+    public static final double ELEVATOR_P = 0.15;
     public static final double ELEVATOR_I = 0;
     public static final double ELEVATOR_D = 0;
     public static final double ELEVATOR_SFF = 0; // static feedforward
     public static final double ELEVATOR_VFF = 0; // velocity feedforward
     public static final double ELEVATOR_AFF = 0; // acceleration feedforward
-    public static final double ELEVATOR_GFF = 0.296; // .295
+    public static final double ELEVATOR_GFF = 0.296; // gravity feedforward
     public static final double ELEVATOR_MIN_OUTPUT = -1;
     public static final double ELEVATOR_MAX_OUTPUT = 1;
     

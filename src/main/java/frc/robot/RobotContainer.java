@@ -61,7 +61,7 @@ public class RobotContainer {
     private final CommandXboxController driverController = new CommandXboxController(OIConstants.driverControllerPort);
     private final CommandXboxController operatorController = new CommandXboxController(OIConstants.operatorControllerPort);
 
-    //private final SendableChooser<Command> autoChooser;
+    private final SendableChooser<Command> autoChooser;
 
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -74,8 +74,13 @@ public class RobotContainer {
 
     public RobotContainer() {
         //Named autos here
-        //autoChooser = AutoBuilder.buildAutoChooser("NAME SELECTED AUTO HERE");
-        //SmartDashboard.putData(autoChooser);
+        autoChooser = AutoBuilder.buildAutoChooser("NAME SELECTED AUTO HERE");
+        
+        NamedCommands.registerCommand("raise elevator to L1", new ElevatorToL1CMD(elevatorSubsystem));
+        NamedCommands.registerCommand("score L1", new PlaceCMD(placerSubsystem));
+        NamedCommands.registerCommand("lower elevator to home", new ElevatorToHomeCMD(elevatorSubsystem));
+
+        SmartDashboard.putData(autoChooser);
         //Need to populate auto chooser still!!!!!
 
         configureBindings();
@@ -157,7 +162,7 @@ public class RobotContainer {
         operatorController.povUp().whileTrue(new ElevatorToL4CMD(elevatorSubsystem));
 
         operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
-        operatorController.back().whileTrue(new PlaceCMD(placerSubsystem));
+        operatorController.rightTrigger().whileTrue(new PlaceCMD(placerSubsystem));
         //operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem));
         //operatorController.x().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward
         
@@ -166,7 +171,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        //return autoChooser.getSelected();
-       return Commands.print("No autonomous command configured");
+        return autoChooser.getSelected();
+       //return Commands.print("No autonomous command configured");
     }
 }
