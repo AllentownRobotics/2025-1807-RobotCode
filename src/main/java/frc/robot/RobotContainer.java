@@ -10,6 +10,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -51,7 +52,7 @@ import java.util.function.BooleanSupplier;
 
 public class RobotContainer {
     public static final double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    private double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -88,10 +89,10 @@ public class RobotContainer {
         NamedCommands.registerCommand("ElevatorToL2", new ElevatorToL2CMD(elevatorSubsystem));
         NamedCommands.registerCommand("ElevatorToL3", new ElevatorToL3CMD(elevatorSubsystem));
         NamedCommands.registerCommand("ElevatorToL4", new ElevatorToL4CMD(elevatorSubsystem));
-        NamedCommands.registerCommand("PlaceToL1", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed)); // TRAIF figure out and put in Constants.java
-        NamedCommands.registerCommand("PlaceToL2", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed)); //TRAIF figure out and put in Constants.java
-        NamedCommands.registerCommand("PlaceToL3", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed)); //TRAIF figure out and put in Constants.java
-        NamedCommands.registerCommand("PlaceToL4", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed)); //TRAIF figure out and put in Constants.java
+        NamedCommands.registerCommand("PlaceToL1", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed).withTimeout(.5)); // TRAIF figure out and put in Constants.java
+        NamedCommands.registerCommand("PlaceToL2", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed).withTimeout(.5)); //TRAIF figure out and put in Constants.java
+        NamedCommands.registerCommand("PlaceToL3", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed).withTimeout(.5)); //TRAIF figure out and put in Constants.java
+        NamedCommands.registerCommand("PlaceToL4", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed).withTimeout(.5)); //TRAIF figure out and put in Constants.java
         NamedCommands.registerCommand("CollectFromHopper", new CollectFromHopperCMD(placerSubsystem));
         NamedCommands.registerCommand("ElevatorWaitforL4", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L4Position)));
         NamedCommands.registerCommand("ElevatorWaitforL3", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L3Position)));
@@ -179,7 +180,7 @@ public class RobotContainer {
         */
 
         // reset the field-centric heading on left bumper press
-        driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -210,9 +211,15 @@ public class RobotContainer {
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
         operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));
 
-        placerSubsystem.setDefaultCommand(
-            new PlaceCMD(placerSubsystem, operatorController.getLeftY(), operatorController.getLeftY())
-        );
+        // TEST THESE
+
+        /*placerSubsystem.setDefaultCommand(
+            new PlaceCMD(placerSubsystem, operatorController.getRightY(), operatorController.getRightY())
+        );*/
+
+        /*placerSubsystem.setDefaultCommand(
+            new InstantCommand(() -> placerSubsystem.setBothMotor(MathUtil.applyDeadband(operatorController.getRightY(), .1)), placerSubsystem)
+        );*/
 
         operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
         operatorController.rightTrigger().whileTrue(new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed));

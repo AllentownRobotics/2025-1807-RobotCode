@@ -68,6 +68,11 @@ public class Placer extends SubsystemBase {
     rearMotor.setMotorSpeed(speed);
   }
 
+  public void setBothMotor(double speed) {
+    frontMotor.setMotorSpeed(speed);
+    rearMotor.setMotorSpeed(speed);
+  }
+
   /** Gets the state of the beam break sensor. <p>
    *  This sensor is used in the scoring pipeline to determine when the coral is prepared
    *  to be scored and the elevator is safe to move. <p>

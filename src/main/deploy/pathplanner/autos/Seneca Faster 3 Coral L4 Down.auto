@@ -17,6 +17,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "PlaceToL4"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 1.0
@@ -35,22 +41,22 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Botton Down 3 B"
+                  "pathName": "Bottom Down 3 B"
                 }
               }
             ]
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "CollectFromHopper"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "CollectFromHopper"
-                }
-              },
               {
                 "type": "path",
                 "data": {

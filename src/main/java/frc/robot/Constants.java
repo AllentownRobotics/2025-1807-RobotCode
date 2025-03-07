@@ -97,11 +97,11 @@ public final class Constants {
     public static final double ELEVATOR_MAX_OUTPUT = 1;
     
     // elevator setpoints (inches)
-    public static final double homePosition = 0;
+    public static final double homePosition = -2;
     public static final double L1Position = 19;
     public static final double L2Position = 28;
     public static final double L3Position = 44;
-    public static final double L4Position = 66;
+    public static final double L4Position = 68;
     public static final double positionTolerance = .1;
     public static final double softLimitMinPosition = 0;
     public static final double softLimitMaxPosition = 0;
