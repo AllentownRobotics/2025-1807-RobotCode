@@ -35,7 +35,7 @@ public class Placer extends SubsystemBase {
     previousPlacerCoralState = isCoralInPlacer();
 
     // sends inital coral state into smart dash
-    SmartDashboard.putBoolean("Beam Break State", previousPlacerCoralState);
+    SmartDashboard.putBoolean("Placer Beam Break State", previousPlacerCoralState);
   }
 
   @Override
@@ -47,7 +47,7 @@ public class Placer extends SubsystemBase {
     boolean placerCoralState = isCoralInPlacer();
     if (placerCoralState != previousPlacerCoralState) {
 
-      SmartDashboard.putBoolean("Beam Break State", placerCoralState);
+      SmartDashboard.putBoolean("Placer Beam Break State", placerCoralState);
       previousPlacerCoralState = placerCoralState;
     }
   }

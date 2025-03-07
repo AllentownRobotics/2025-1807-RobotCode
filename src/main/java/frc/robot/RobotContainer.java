@@ -19,8 +19,11 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.ElevatorConstants;
+
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.PlacerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
@@ -85,10 +88,10 @@ public class RobotContainer {
         NamedCommands.registerCommand("ElevatorToL2", new ElevatorToL2CMD(elevatorSubsystem));
         NamedCommands.registerCommand("ElevatorToL3", new ElevatorToL3CMD(elevatorSubsystem));
         NamedCommands.registerCommand("ElevatorToL4", new ElevatorToL4CMD(elevatorSubsystem));
-        NamedCommands.registerCommand("PlaceToL1", new PlaceCMD(placerSubsystem, 1.0)); //TRAIF figure out and put in Constants.java
-        NamedCommands.registerCommand("PlaceToL2", new PlaceCMD(placerSubsystem, 1.0)); //TRAIF figure out and put in Constants.java
-        NamedCommands.registerCommand("PlaceToL3", new PlaceCMD(placerSubsystem, 1.0)); //TRAIF figure out and put in Constants.java
-        NamedCommands.registerCommand("PlaceToL4", new PlaceCMD(placerSubsystem, 1.0)); //TRAIF figure out and put in Constants.java
+        NamedCommands.registerCommand("PlaceToL1", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed)); // TRAIF figure out and put in Constants.java
+        NamedCommands.registerCommand("PlaceToL2", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed)); //TRAIF figure out and put in Constants.java
+        NamedCommands.registerCommand("PlaceToL3", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed)); //TRAIF figure out and put in Constants.java
+        NamedCommands.registerCommand("PlaceToL4", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed)); //TRAIF figure out and put in Constants.java
         NamedCommands.registerCommand("CollectFromHopper", new CollectFromHopperCMD(placerSubsystem));
         NamedCommands.registerCommand("ElevatorWaitforL4", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L4Position)));
         NamedCommands.registerCommand("ElevatorWaitforL3", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L3Position)));
@@ -121,11 +124,10 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser("NAME SELECTED AUTO HERE");
         
         NamedCommands.registerCommand("raise elevator to L1", new ElevatorToL1CMD(elevatorSubsystem));
-        NamedCommands.registerCommand("score L1", new PlaceCMD(placerSubsystem));
+        NamedCommands.registerCommand("score L1", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed));
         NamedCommands.registerCommand("lower elevator to home", new ElevatorToHomeCMD(elevatorSubsystem));
 
         SmartDashboard.putData(autoChooser);
-        //Need to populate auto chooser still!!!!!
 
         configureBindings();
     }
@@ -196,8 +198,8 @@ public class RobotContainer {
         */
 
         //testing
-        operatorController.b().whileTrue(new ElevatorIncrementCMD(elevatorSubsystem,1));
-        operatorController.x().whileTrue(new ElevatorIncrementCMD(elevatorSubsystem, -1));
+        operatorController.b().whileTrue(new ElevatorIncrementCMD(elevatorSubsystem, 3/2));
+        operatorController.x().whileTrue(new ElevatorIncrementCMD(elevatorSubsystem, -3/2));
 
         operatorController.y().whileTrue(new ElevatorToHomeCMD(elevatorSubsystem));
         operatorController.povDown().whileTrue(new ElevatorToL1CMD(elevatorSubsystem));
@@ -205,13 +207,18 @@ public class RobotContainer {
         operatorController.povLeft().whileTrue(new ElevatorToL3CMD(elevatorSubsystem));
         operatorController.povUp().whileTrue(new ElevatorToL4CMD(elevatorSubsystem));
 
-        operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
-        operatorController.rightTrigger().whileTrue(new PlaceCMD(placerSubsystem));
-        //operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem));
-        //operatorController.x().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward
-        
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
         operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));
+
+        placerSubsystem.setDefaultCommand(
+            new PlaceCMD(placerSubsystem, operatorController.getLeftY(), operatorController.getLeftY())
+        );
+
+        operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
+        operatorController.rightTrigger().whileTrue(new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed));
+        //operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem));
+        operatorController.start().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward
+        
     }
 
     public Command getAutonomousCommand() {

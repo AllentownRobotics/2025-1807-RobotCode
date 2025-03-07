@@ -11,9 +11,13 @@ import frc.robot.subsystems.Placer;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class PlaceCMD extends Command {
   Placer placer;
+  double frontMotorSpeed;
+  double backMotorSpeed;
   /** Creates a new PlaceCMD. */
-  public PlaceCMD(Placer placer) {
+  public PlaceCMD(Placer placer, double frontMotorSpeed, double backMotorSpeed) {
     this.placer = placer;
+    this.frontMotorSpeed = frontMotorSpeed;
+    this.backMotorSpeed = backMotorSpeed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(placer);
   }
@@ -21,8 +25,8 @@ public class PlaceCMD extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    placer.setFrontMotor(PlacerConstants.placerFrontMotorSpeed);
-    placer.setRearMotor(PlacerConstants.placerBackMotorSpeed);
+    placer.setFrontMotor(frontMotorSpeed);
+    placer.setRearMotor(backMotorSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -105,7 +105,7 @@ public final class Constants {
     public static final double positionTolerance = .1;
     public static final double softLimitMinPosition = 0;
     public static final double softLimitMaxPosition = 0;
-    public static final double incrementMeasurement = 5;
+    public static final double incrementMeasurement = 1.5;
 
     public static final double elevatorGearing = 14 / 60; // inches
     public static final double elevatorSprocketRadius = 1.037;

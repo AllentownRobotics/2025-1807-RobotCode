@@ -5,21 +5,15 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "CollectFromHopper"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "leave barge"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "raise elevator to L1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "score L1"
           }
         }
       ]

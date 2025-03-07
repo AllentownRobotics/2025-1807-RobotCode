@@ -9,7 +9,6 @@ import static edu.wpi.first.units.Units.Volts;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.hardware.CANcoder;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -23,7 +22,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.utils.Kraken;
 import java.util.function.BooleanSupplier;
-import edu.wpi.first.math.util.Units;
 
 public class Elevator extends SubsystemBase {
 
