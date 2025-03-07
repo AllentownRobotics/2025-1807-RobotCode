@@ -42,6 +42,8 @@ import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Placer;
 import frc.robot.subsystems.Vision;
 import com.pathplanner.lib.auto.AutoBuilder;
+import java.util.function.BooleanSupplier;
+
 
 public class RobotContainer {
     public static final double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -87,29 +89,29 @@ public class RobotContainer {
         NamedCommands.registerCommand("PlaceToL3", new PlaceCMD(placerSubsystem, 1.0)); //TRAIF figure out and put in Constants.java
         NamedCommands.registerCommand("PlaceToL4", new PlaceCMD(placerSubsystem, 1.0)); //TRAIF figure out and put in Constants.java
         NamedCommands.registerCommand("CollectFromHopper", new CollectFromHopperCMD(placerSubsystem));
-        NamedCommands.registerCommand("ElevatorWaitforL4", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L4Position)));
-        NamedCommands.registerCommand("ElevatorWaitforL3", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L3Position)));
-        NamedCommands.registerCommand("ElevatorWaitforL2", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L2Position)));
-        NamedCommands.registerCommand("ElevatorWaitforL1", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L1Position)));
-        NamedCommands.registerCommand("ElevatorWaitforHome", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.homePosition)));
+        //NamedCommands.registerCommand("ElevatorWaitforL4", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L4Position)));
+        //NamedCommands.registerCommand("ElevatorWaitforL3", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L3Position)));
+        //NamedCommands.registerCommand("ElevatorWaitforL2", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L2Position)));
+        //NamedCommands.registerCommand("ElevatorWaitforL1", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L1Position)));
+        //NamedCommands.registerCommand("ElevatorWaitforHome", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.homePosition)));
 
-        booleanSupplier isCoralCollectedSupplier = () -> hopperSubsystem.isCoralCollected();
+        BooleanSupplier isCoralCollectedSupplier = () -> hopperSubsystem.isCoralCollected();
         NamedCommands.registerCommand("HopperWaitForCoralCollected", new WaitUntilCommand() -> isCoralCollectedSupplier); // TRAIF -- does this work?
 
-        NamedCommands.registerCommand("LEDPatternOff", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.OFF), blinkinSubsystem);
-        NamedCommands.registerCommand("LEDPatternIdle", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.IDLE), blinkinSubsystem);
-        NamedCommands.registerCommand("LEDPatternAlertHumanPlayer", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.ALERT_HUMAN_PLAYER), blinkinSubsystem);
-        NamedCommands.registerCommand("LEDPatternAlignedWithReef", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.ALIGNED_WITH_REEF), blinkinSubsystem);
-        NamedCommands.registerCommand("LEDPatternCelebrate", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CELEBRATE), blinkinSubsystem);
-        NamedCommands.registerCommand("LEDPatternCoralCollected", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_COLLECTED), blinkinSubsystem);
-        NamedCommands.registerCommand("LEDPatternCoralIndexed", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_INDEXED), blinkinSubsystem);
-        NamedCommands.registerCommand("LEDPatternCoralPlacing", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_PLACING), blinkinSubsystem);
-        NamedCommands.registerCommand("LEDPatternCoralPlaced", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_PLACED), blinkinSubsystem);
-        NamedCommands.registerCommand("LEDPatternElevatorAtPosition", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.ELEVATOR_AT_DESIRED_POSITION), blinkinSubsystem);
-        NamedCommands.registerCommand("LEDPatternClimbing", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMBING), blinkinSubsystem);
-        NamedCommands.registerCommand("LEDPatternClimbCompleteRed", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_RED), blinkinSubsystem);
-        NamedCommands.registerCommand("LEDPatternClimbCompleteBlue", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_BLUE), blinkinSubsystem);
-        NamedCommands.registerCommand("LEDPatternClimbComplete", new InstantCommand() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE), blinkinSubsystem);
+        NamedCommands.registerCommand("LEDPatternOff", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.OFF), blinkinSubsystem));
+        NamedCommands.registerCommand("LEDPatternIdle", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.IDLE), blinkinSubsystem));
+        NamedCommands.registerCommand("LEDPatternAlertHumanPlayer", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.ALERT_HUMAN_PLAYER), blinkinSubsystem));
+        NamedCommands.registerCommand("LEDPatternAlignedWithReef", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.ALIGNED_WITH_REEF), blinkinSubsystem));
+        NamedCommands.registerCommand("LEDPatternCelebrate", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CELEBRATE), blinkinSubsystem));
+        NamedCommands.registerCommand("LEDPatternCoralCollected", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_COLLECTED), blinkinSubsystem));
+        NamedCommands.registerCommand("LEDPatternCoralIndexed", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_INDEXED), blinkinSubsystem));
+        NamedCommands.registerCommand("LEDPatternCoralPlacing", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_PLACING), blinkinSubsystem));
+        NamedCommands.registerCommand("LEDPatternCoralPlaced", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_PLACED), blinkinSubsystem));
+        NamedCommands.registerCommand("LEDPatternElevatorAtPosition", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.ELEVATOR_AT_DESIRED_POSITION), blinkinSubsystem));
+        NamedCommands.registerCommand("LEDPatternClimbing", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMBING), blinkinSubsystem));
+        NamedCommands.registerCommand("LEDPatternClimbCompleteRed", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_RED), blinkinSubsystem));
+        NamedCommands.registerCommand("LEDPatternClimbCompleteBlue", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_BLUE), blinkinSubsystem));
+        NamedCommands.registerCommand("LEDPatternClimbComplete", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE), blinkinSubsystem));
 
         NamedCommands.registerCommand("BackUp2Inches",
           drivetrain.applyRequest(() -> driveRobotCentric.withVelocityY(0.0).withVelocityX(-1.0).withRotationalRate(0.0)).withTimeout(0.25)); // TRAIF -- will this work?
