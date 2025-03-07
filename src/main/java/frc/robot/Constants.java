@@ -102,6 +102,7 @@ public final class Constants {
     public static final double L2Position = 28;
     public static final double L3Position = 0;
     public static final double L4Position = 0;
+    public static final double positionTolerance = .1;
     public static final double softLimitMinPosition = 0;
     public static final double softLimitMaxPosition = 0;
     public static final double incrementMeasurement = 5;
@@ -133,6 +134,23 @@ public final class Constants {
   public static class BlinkinConstants {
     public static final int blinkinID = 10;
     
+  public enum LEDPattern {
+    OFF,
+    IDLE,
+    ALERT_HUMAN_PLAYER,
+    ALIGNED_WITH_REEF,
+    CELEBRATE,
+    CORAL_COLLECTED,
+    CORAL_INDEXED,
+    CORAL_PLACING,
+    CORAL_PLACED,
+    ELEVATOR_AT_DESIRED_POSITION,
+    CLIMBING,
+    CLIMB_COMPLETE_RED,
+    CLIMB_COMPLETE_BLUE,
+    CLIMB_COMPLETE
+  }
+
     // light codes
     public static final double defaultColor = 0.59; // dark red
     public static final double humanPlayerStation = -0.05; // strobe white (flashing)

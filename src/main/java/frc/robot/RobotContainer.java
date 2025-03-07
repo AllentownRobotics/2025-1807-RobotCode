@@ -20,6 +20,7 @@ import frc.robot.Constants.AutoConstants;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.commands.Commmand;
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementCMD;
@@ -73,7 +74,46 @@ public class RobotContainer {
     private final Vision visionSubsystem = new Vision();
 
     public RobotContainer() {
-        //Named autos here
+        /*  You must register your commands with NamedCommands (i.e. with pathplanner) so that they can be used
+            by Event Markers in a path or as a command in an Auto.  Commands not registered will be ignored (TRAIF -- need to verify). */
+
+        NamedCommands.registerCommand("ElevatorToHome", new ElevatorToHomeCMD(elevatorSubsystem));
+        NamedCommands.registerCommand("ElevatorToL1", new ElevatorToL1CMD(elevatorSubsystem));
+        NamedCommands.registerCommand("ElevatorToL2", new ElevatorToL2CMD(elevatorSubsystem));
+        NamedCommands.registerCommand("ElevatorToL3", new ElevatorToL3CMD(elevatorSubsystem));
+        NamedCommands.registerCommand("ElevatorToL4", new ElevatorToL4CMD(elevatorSubsystem));
+        NamedCommands.registerCommand("PlaceToL1", new PlaceCMD(placerSubsystem, 1.0)); //TRAIF figure out and put in Constants.java
+        NamedCommands.registerCommand("PlaceToL2", new PlaceCMD(placerSubsystem, 1.0)); //TRAIF figure out and put in Constants.java
+        NamedCommands.registerCommand("PlaceToL3", new PlaceCMD(placerSubsystem, 1.0)); //TRAIF figure out and put in Constants.java
+        NamedCommands.registerCommand("PlaceToL4", new PlaceCMD(placerSubsystem, 1.0)); //TRAIF figure out and put in Constants.java
+        NamedCommands.registerCommand("CollectFromHopper", new CollectFromHopperCMD(placerSubsystem));
+        NamedCommands.registerCommand("ElevatorWaitforL4", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L4Position)));
+        NamedCommands.registerCommand("ElevatorWaitforL3", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L3Position)));
+        NamedCommands.registerCommand("ElevatorWaitforL2", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L2Position)));
+        NamedCommands.registerCommand("ElevatorWaitforL1", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L1Position)));
+        NamedCommands.registerCommand("ElevatorWaitforHome", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.homePosition)));
+
+        booleanSupplier isCoralCollectedSupplier = () -> hopperSubsystem.isCoralCollected();
+        NamedCommands.registerCommand("HopperWaitForCoralCollected", new WaitUntilCommand() -> isCoralCollectedSupplier); // TRAIF -- does this work?
+
+        NamedCommands.registerCommand("LEDPatternOff", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.OFF), blinkinSubsystem);
+        NamedCommands.registerCommand("LEDPatternIdle", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.IDLE), blinkinSubsystem);
+        NamedCommands.registerCommand("LEDPatternAlertHumanPlayer", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.ALERT_HUMAN_PLAYER), blinkinSubsystem);
+        NamedCommands.registerCommand("LEDPatternAlignedWithReef", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.ALIGNED_WITH_REEF), blinkinSubsystem);
+        NamedCommands.registerCommand("LEDPatternCelebrate", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CELEBRATE), blinkinSubsystem);
+        NamedCommands.registerCommand("LEDPatternCoralCollected", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_COLLECTED), blinkinSubsystem);
+        NamedCommands.registerCommand("LEDPatternCoralIndexed", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_INDEXED), blinkinSubsystem);
+        NamedCommands.registerCommand("LEDPatternCoralPlacing", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_PLACING), blinkinSubsystem);
+        NamedCommands.registerCommand("LEDPatternCoralPlaced", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_PLACED), blinkinSubsystem);
+        NamedCommands.registerCommand("LEDPatternElevatorAtPosition", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.ELEVATOR_AT_DESIRED_POSITION), blinkinSubsystem);
+        NamedCommands.registerCommand("LEDPatternClimbing", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMBING), blinkinSubsystem);
+        NamedCommands.registerCommand("LEDPatternClimbCompleteRed", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_RED), blinkinSubsystem);
+        NamedCommands.registerCommand("LEDPatternClimbCompleteBlue", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_BLUE), blinkinSubsystem);
+        NamedCommands.registerCommand("LEDPatternClimbComplete", new InstantCommand() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE), blinkinSubsystem);
+
+        NamedCommands.registerCommand("BackUp2Inches",
+          drivetrain.applyRequest(() -> driveRobotCentric.withVelocityY(0.0).withVelocityX(-1.0).withRotationalRate(0.0)).withTimeout(0.25)); // TRAIF -- will this work?
+
         autoChooser = AutoBuilder.buildAutoChooser("NAME SELECTED AUTO HERE");
         SmartDashboard.putData(autoChooser);
         //Need to populate auto chooser still!!!!!
