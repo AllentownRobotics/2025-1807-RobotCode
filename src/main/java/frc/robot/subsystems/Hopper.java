@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 import frc.robot.Constants.HopperConstants;
+
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
