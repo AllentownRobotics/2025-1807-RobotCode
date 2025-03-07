@@ -14,13 +14,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+//import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.commands.Commmand;
+//import frc.robot.commands.Commands;  // JK .Commands removed
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementCMD;
@@ -89,14 +91,14 @@ public class RobotContainer {
         NamedCommands.registerCommand("PlaceToL3", new PlaceCMD(placerSubsystem, 1.0)); //TRAIF figure out and put in Constants.java
         NamedCommands.registerCommand("PlaceToL4", new PlaceCMD(placerSubsystem, 1.0)); //TRAIF figure out and put in Constants.java
         NamedCommands.registerCommand("CollectFromHopper", new CollectFromHopperCMD(placerSubsystem));
-        //NamedCommands.registerCommand("ElevatorWaitforL4", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L4Position)));
-        //NamedCommands.registerCommand("ElevatorWaitforL3", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L3Position)));
-        //NamedCommands.registerCommand("ElevatorWaitforL2", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L2Position)));
-        //NamedCommands.registerCommand("ElevatorWaitforL1", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L1Position)));
-        //NamedCommands.registerCommand("ElevatorWaitforHome", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.homePosition)));
+        NamedCommands.registerCommand("ElevatorWaitforL4", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L4Position)));
+        NamedCommands.registerCommand("ElevatorWaitforL3", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L3Position)));
+        NamedCommands.registerCommand("ElevatorWaitforL2", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L2Position)));
+        NamedCommands.registerCommand("ElevatorWaitforL1", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L1Position)));
+        NamedCommands.registerCommand("ElevatorWaitforHome", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.homePosition)));
 
-        BooleanSupplier isCoralCollectedSupplier = () -> hopperSubsystem.isCoralCollected();
-        NamedCommands.registerCommand("HopperWaitForCoralCollected", new WaitUntilCommand() -> isCoralCollectedSupplier); // TRAIF -- does this work?
+ 
+        NamedCommands.registerCommand("HopperWaitForCoralCollected2", new WaitUntilCommand(() -> hopperSubsystem.isCoralCollected())); // TRAIF -- does this work?
 
         NamedCommands.registerCommand("LEDPatternOff", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.OFF), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternIdle", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.IDLE), blinkinSubsystem));

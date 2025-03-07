@@ -9,7 +9,7 @@ import static edu.wpi.first.units.Units.Volts;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.hardware.CANcoder;
 
-import edu.wip.first.math.MathUtil;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -19,8 +19,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
+import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.utils.Kraken;
+import java.util.function.BooleanSupplier;
+import edu.wpi.first.math.util.Units;
 
 public class Elevator extends SubsystemBase {
 
@@ -147,9 +150,12 @@ public class Elevator extends SubsystemBase {
     return upperLimitSwitch.get();
   }
 
-  public booleanSupplier isAtPosition(double position) {
-   
-    if (MathUtil.epsilonEquals(getElevatorPositionInInches(), position, Constants.ElevatorConstants.positionTolerance) {
+  public BooleanSupplier isAtPosition(double targetPosition) {
+
+    // if ( Units.epsilonEquals(getElevatorPositionInInches(), position, Constants.ElevatorConstants.positionTolerance )) {
+    double currentPosition = getElevatorPositionInInches();
+    if ( (targetPosition - Constants.ElevatorConstants.positionTolerance >= currentPosition ) && 
+         (targetPosition + Constants.ElevatorConstants.positionTolerance <= currentPosition)) {
       return () -> true;
     }
     
