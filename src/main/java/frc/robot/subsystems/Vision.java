@@ -22,13 +22,22 @@ public class Vision extends SubsystemBase {
   double rightZTranslationOffset;
   double rightXTranslationOffsetToPlacer;
 
+  double leftRotationOffset;
+  double leftXTranslationOffset;
+  double leftZTranslationOffset;
+  double leftXTranslationOffsetToPlacer;
+
   PIDController rotationController;
   PIDController translationController;
 
-  public boolean linedUpEnough;
+  Pose2d botpose;
+
+  //public boolean linedUpEnough;
 
   /** Creates a new Vision. */
   public Vision() {
+    botpose = new Pose2d();
+
     frontLimelightTable = NetworkTableInstance.getDefault().getTable("limelight-front");
     hopperLimelightTable = NetworkTableInstance.getDefault().getTable("limelight-hopper");
     rearLimelightTable = NetworkTableInstance.getDefault().getTable("limelight-back");
@@ -45,34 +54,61 @@ public class Vision extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    // right side reef targeting
     rightRotationOffset = frontLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[4];
     rightXTranslationOffset = frontLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[0];
     rightZTranslationOffset = frontLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[2];
 
     rightXTranslationOffsetToPlacer = rightXTranslationOffset + VisionConstants.placerOffsetToRobotCenter;
 
-    if(rightXTranslationOffsetToPlacer >= 0.05) {
-      linedUpEnough = true;
-    }
-
-    if(linedUpEnough == true) {
+    /*
+    if(Math.abs(rightXTranslationOffsetToPlacer) <= VisionConstants.alignmentDeadzone) {
       rightXTranslationOffsetToPlacer = 0;
-    }
+    } */
 
-    SmartDashboard.putNumber("Right Rotation Offset", rightRotationOffset);
+    //left side reef targeting
+    leftRotationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[4];
+    leftXTranslationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[0];
+    leftZTranslationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[2];
+
+    leftXTranslationOffsetToPlacer = leftXTranslationOffset + VisionConstants.placerOffsetToRobotCenter;
+
+    /*
+    if(Math.abs(leftXTranslationOffsetToPlacer) <= VisionConstants.alignmentDeadzone) {
+      leftXTranslationOffsetToPlacer = 0;
+    } */
+
+    //SmartDashboard.putNumber("Right Rotation Offset", rightRotationOffset);
     SmartDashboard.putNumber("rightXTranslationOffset", rightXTranslationOffset);
     SmartDashboard.putNumber("rightZTranslationOffset", rightZTranslationOffset);
     SmartDashboard.putNumber("rightXTranslationOffsetToPlacer", rightXTranslationOffsetToPlacer);
-    SmartDashboard.putNumber("right rotation pid output", getRightRotationPID());
+    //SmartDashboard.putNumber("right rotation pid output", getRightRotationPID());
     SmartDashboard.putNumber("right translation pid output", getRightXTranslationPID());
-  }
 
+    //SmartDashboard.putNumber("Left Rotation Offset", leftRotationOffset);
+    SmartDashboard.putNumber("leftXTranslationOffset", leftXTranslationOffset);
+    SmartDashboard.putNumber("leftZTranslationOffset", leftZTranslationOffset);
+    SmartDashboard.putNumber("leftXTranslationOffsetToPlacer", leftXTranslationOffsetToPlacer);
+    //SmartDashboard.putNumber("left rotation pid output", getLeftRotationPID());
+    SmartDashboard.putNumber("left translation pid output", getLeftXTranslationPID());
+    
+  }
+    
   public double getRightRotationPID() {
     return -rotationController.calculate(rightRotationOffset, 0);
   }
 
   public double getRightXTranslationPID() {
     return -translationController.calculate(rightXTranslationOffsetToPlacer, 0);
+  }
+
+  public double getLeftRotationPID() {
+    return rotationController.calculate(leftRotationOffset, 0);
+  }
+
+  public double getLeftXTranslationPID() {
+    return translationController.calculate(leftXTranslationOffsetToPlacer, 0);
   }
 
 }

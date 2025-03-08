@@ -68,7 +68,7 @@ public class Placer extends SubsystemBase {
     rearMotor.setMotorSpeed(speed);
   }
 
-  public void setBothMotor(double speed) {
+  public void setBothMotors(double speed) {
     frontMotor.setMotorSpeed(speed);
     rearMotor.setMotorSpeed(speed);
   }

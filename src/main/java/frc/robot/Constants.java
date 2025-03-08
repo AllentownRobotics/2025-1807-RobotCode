@@ -172,13 +172,16 @@ public final class Constants {
     public static final double rotation_kP = 0.1;
     public static final double rotation_kI = 0.0;
     public static final double rotation_kD = 0.05;
-    public static final double translation_kP = 0.75;
+
+    public static final double translation_kP = 0.1; // was .25
     public static final double translation_kI = 0.0;
     public static final double translation_kD = 0.0;
     
     public static final double rotationTargetingSpeed = 0.75; // rotations per second
 
     public static final double translationTargetingSpeed = 5.41; // meters per second
+
+    public static final double alignmentDeadzone = 0;
   }
 
 }

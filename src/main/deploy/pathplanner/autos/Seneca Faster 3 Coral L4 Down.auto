@@ -48,15 +48,21 @@
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "CollectFromHopper"
+            "waitTime": 2.0
           }
         },
         {
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "CollectFromHopper"
+                }
+              },
               {
                 "type": "path",
                 "data": {

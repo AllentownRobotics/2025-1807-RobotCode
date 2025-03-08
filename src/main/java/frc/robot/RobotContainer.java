@@ -17,11 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.ElevatorConstants;
-
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PlacerConstants;
@@ -37,7 +33,6 @@ import frc.robot.commands.ElevatorCMDs.ElevatorToL4CMD;
 import frc.robot.commands.PlacerCMDs.CollectFromHopperCMD;
 import frc.robot.commands.PlacerCMDs.EjectAlgaeFromReefCMD;
 import frc.robot.commands.PlacerCMDs.PlaceCMD;
-import frc.robot.commands.PlacerCMDs.ReverseFrontWheelsCMD;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Climb;
@@ -46,18 +41,33 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Placer;
 import frc.robot.subsystems.Vision;
-import com.pathplanner.lib.auto.AutoBuilder;
-import java.util.function.BooleanSupplier;
 
 
 public class RobotContainer {
     public static final double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
+    private double slowDriveSpeed = MaxSpeed * 0.25; // TRAIF
+    private double slowAngularRate = MaxSpeed * 0.25; // TRAIF -- move to constants
+
     /* Setting up bindings for necessary control of the swerve drive platform */
-    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+    private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+
+    private final SwerveRequest.FieldCentric slowDriveFieldCentric = new SwerveRequest.FieldCentric()
+            .withDeadband(MaxSpeed).withRotationalDeadband(MaxAngularRate) // Add a 10% deadband
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+
+    /*
+    private final SwerveRequest.FieldCentric limelightFieldCentric = new SwerveRequest.FieldCentric()
+            .withDeadband(0.1)
+            .withRotationalDeadband(0.1)
+            .withDriveRequestType(DriveRequestType.Velocity);
+*/
+
     private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
             .withDeadband(MaxSpeed * 0.0).withRotationalDeadband(MaxAngularRate * 0.05)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -139,38 +149,6 @@ public class RobotContainer {
 * __________________________________ DRIVER CONTROLLER ________________________________
 */
 
-        // Note that X is defined as forward according to WPILib convention,
-        // and Y is defined as to the left according to WPILib convention.
-        drivetrain.setDefaultCommand(
-            // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            )
-        );
-
-        driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        driverController.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
-        ));
-        driverController.y().whileTrue(
-            drivetrain.applyRequest(() ->
-            driveRobotCentric.withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID())
-            .withVelocityX(0.0)
-            .withVelocityY(0.0)
-            )
-        );
-
-        driverController.x().whileTrue(
-            drivetrain.applyRequest(() ->
-            driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
-            .withVelocityX(0.0)
-            .withRotationalRate(0.0)
-            //.withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID())
-            )
-        );
-
         // Run Drivetrain SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
         /*driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
@@ -179,10 +157,86 @@ public class RobotContainer {
         driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
         */
 
+        // Note that X is defined as forward according to WPILib convention,
+        // and Y is defined as to the left according to WPILib convention.
+        // fast drive CMD
+        drivetrain.setDefaultCommand(
+            // Drivetrain will execute this command periodically
+                drivetrain.applyRequest(() ->
+                driveFieldCentric.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            )
+        );
+
+        // slow drive CMD
+        driverController.leftBumper().whileTrue(
+            drivetrain.applyRequest(() ->
+            slowDriveFieldCentric.withVelocityX(-driverController.getLeftY() * slowDriveSpeed) // Drive forward with negative Y (forward)
+                .withVelocityY(-driverController.getLeftX() * slowDriveSpeed) // Drive left with negative X (left)
+                .withRotationalRate(-driverController.getRightX() * slowAngularRate) // Drive counterclockwise with negative X (left)
+            )   
+        );
+
+        driverController.x().whileTrue(drivetrain.applyRequest(() -> brake)); // x lock
+        
+        driverController.b().whileTrue(drivetrain.applyRequest(() ->
+            point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
+        ));
+        
+
+        // align translationally with left reef peg using hopper limelight
+        driverController.leftTrigger().whileTrue(
+            drivetrain.applyRequest(() ->
+            driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getLeftXTranslationPID())
+            .withVelocityX(0.0)
+            .withRotationalRate(0.0)
+            )
+        );
+
+        // align translationally with right reef peg using front middle limelight
+        driverController.rightTrigger().whileTrue(
+            drivetrain.applyRequest(() ->
+            driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
+            .withVelocityX(0.0)
+            .withRotationalRate(0.0)
+            //.withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID())
+            )
+        );
+
+        // align rotationally right
+        driverController.povRight().whileTrue(
+            drivetrain.applyRequest(() ->
+            driveRobotCentric.withVelocityY(0)
+            .withVelocityX(0.0)
+            .withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID())
+            )
+        );
+
+        // align rotationally left
+        driverController.povLeft().whileTrue(
+            drivetrain.applyRequest(() ->
+            driveRobotCentric.withVelocityY(0)
+            .withVelocityX(0.0)
+            .withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getLeftRotationPID())
+            )
+        );
+
         // reset the field-centric heading on left bumper press
         driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+
+        /*
+        // align rotationally with right reef peg
+        driverController.y().whileTrue(
+            drivetrain.applyRequest(() ->
+            driveRobotCentric.withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID())
+            .withVelocityX(0.0)
+            .withVelocityY(0.0)
+            )
+        ); 
+        */
 
 /*
 * __________________________________ OPERATOR CONTROLLER __________________________________
@@ -198,7 +252,6 @@ public class RobotContainer {
         operatorController.start().and(operatorController.b()).whileTrue(elevatorSubsystem.sysIdQuasistatic(Direction.kReverse)).onFalse((new InstantCommand(() -> elevatorSubsystem.stopElevatorVolts(), elevatorSubsystem)));
         */
 
-        //testing
         operatorController.b().whileTrue(new ElevatorIncrementCMD(elevatorSubsystem, 3/2));
         operatorController.x().whileTrue(new ElevatorIncrementCMD(elevatorSubsystem, -3/2));
 
@@ -215,15 +268,17 @@ public class RobotContainer {
 
         /*placerSubsystem.setDefaultCommand(
             new PlaceCMD(placerSubsystem, operatorController.getRightY(), operatorController.getRightY())
-        );*/
+        );*/ // TRAIF -- use suppliers instead of getting boolean on startup
 
-        /*placerSubsystem.setDefaultCommand(
-            new InstantCommand(() -> placerSubsystem.setBothMotor(MathUtil.applyDeadband(operatorController.getRightY(), .1)), placerSubsystem)
-        );*/
+        placerSubsystem.setDefaultCommand(
+            new InstantCommand(() -> placerSubsystem.setFrontMotor(
+                MathUtil.applyDeadband(-operatorController.getRightY() * .5, .1)),
+                placerSubsystem)
+        );
 
         operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
         operatorController.rightTrigger().whileTrue(new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed));
-        //operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem));
+        //operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem)); // TRAIF -- might remove if joystick binding works?
         operatorController.start().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward
         
     }

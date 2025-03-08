@@ -82,7 +82,7 @@ public class Climb extends SubsystemBase {
 
     //Limit switch initial states
     wasCageContacted = cageContactLimitSwitch.get();
-    SmartDashboard.putBoolean("Climb at desired point", cageContactLimitSwitch.get());
+    SmartDashboard.putBoolean("Cage contacted", cageContactLimitSwitch.get());
     
     wasClimbRetracted = fullyRetractedLimitSwitch.get();
     SmartDashboard.putBoolean("Climb fully retracted", fullyRetractedLimitSwitch.get());
@@ -118,7 +118,7 @@ public class Climb extends SubsystemBase {
     //Displays whether cage contact limit switch has been tripped
     boolean isCageLimitSwitchSet = cageContactLimitSwitch.get();
     if(isCageLimitSwitchSet != wasCageContacted) {
-      SmartDashboard.putBoolean("Climb at desired point", cageContactLimitSwitch.get());
+      SmartDashboard.putBoolean("Cage contacted", cageContactLimitSwitch.get());
       wasCageContacted = isCageLimitSwitchSet;
     }
 

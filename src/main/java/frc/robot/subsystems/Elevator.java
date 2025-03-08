@@ -32,8 +32,6 @@ public class Elevator extends SubsystemBase {
 
   private SysIdRoutine appliedRoutine;
 
-  private ElevatorFeedforward feedforward;
-
   //https://v6.docs.ctr-electronics.com/en/stable/docs/api-reference/wpilib-integration/sysid-integration/plumbing-and-running-sysid.html
   private final SysIdRoutine elevatorSysIDRoutine = new SysIdRoutine(
     new Config(
@@ -180,7 +178,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putBoolean("elevator min limit", !isLowerLimitReached());
     SmartDashboard.putBoolean("elevator max limit", !isUpperLimitReached());
     SmartDashboard.putNumber("elevator height", getElevatorPositionInInches());
-    SmartDashboard.putNumber("elevator encoder heihgt", elevatorEncoder.getPosition().getValueAsDouble());
+    SmartDashboard.putNumber("elevator encoder height", elevatorEncoder.getPosition().getValueAsDouble());
 
     SmartDashboard.putNumber("right elevator draw", rightMotor.getSupplyCurrent());
     SmartDashboard.putNumber("left elevator draw", leftMotor.getSupplyCurrent());
