@@ -21,7 +21,7 @@ public class Hopper extends SubsystemBase {
   public Hopper() {
     CoralCollected = false;
     hopperBeamBreak = new DigitalInput(HopperConstants.hopperBeamBreakID);
-    hopperDebouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
+    hopperDebouncer = new Debouncer(0, Debouncer.DebounceType.kBoth);
     // Initializes smartdashboard as false
     SmartDashboard.putBoolean("Hopper Beam Break State", CoralCollected);
   }

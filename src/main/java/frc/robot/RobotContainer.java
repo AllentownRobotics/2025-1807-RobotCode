@@ -52,17 +52,16 @@ public class RobotContainer {
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDeadband(MaxSpeed * 0.1)
+            .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-
 
     private final SwerveRequest.FieldCentric slowDriveFieldCentric = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed).withRotationalDeadband(MaxAngularRate) // Add a 10% deadband
+            .withDeadband(MaxSpeed)
+            .withRotationalDeadband(MaxAngularRate)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-
-    /*
-    private final SwerveRequest.FieldCentric limelightFieldCentric = new SwerveRequest.FieldCentric()
+    /*private final SwerveRequest.FieldCentric limelightFieldCentric = new SwerveRequest.FieldCentric()
             .withDeadband(0.1)
             .withRotationalDeadband(0.1)
             .withDriveRequestType(DriveRequestType.Velocity);
@@ -71,6 +70,8 @@ public class RobotContainer {
     private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
             .withDeadband(MaxSpeed * 0.0).withRotationalDeadband(MaxAngularRate * 0.05)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    
+
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
@@ -200,7 +201,15 @@ public class RobotContainer {
             driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
             .withVelocityX(0.0)
             .withRotationalRate(0.0)
-            //.withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID())
+            )
+            );
+/*
+        // align rotationally left
+        driverController.povLeft().whileTrue(
+            drivetrain.applyRequest(() ->
+            driveRobotCentric.withVelocityY(0)
+            .withVelocityX(0.0)
+            .withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getLeftRotationPID())
             )
         );
 
@@ -212,15 +221,7 @@ public class RobotContainer {
             .withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID())
             )
         );
-
-        // align rotationally left
-        driverController.povLeft().whileTrue(
-            drivetrain.applyRequest(() ->
-            driveRobotCentric.withVelocityY(0)
-            .withVelocityX(0.0)
-            .withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getLeftRotationPID())
-            )
-        );
+*/
 
         // reset the field-centric heading on left bumper press
         driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
@@ -271,7 +272,7 @@ public class RobotContainer {
         );*/ // TRAIF -- use suppliers instead of getting boolean on startup
 
         placerSubsystem.setDefaultCommand(
-            new InstantCommand(() -> placerSubsystem.setFrontMotor(
+            new InstantCommand(() -> placerSubsystem.setBothMotors(
                 MathUtil.applyDeadband(-operatorController.getRightY() * .5, .1)),
                 placerSubsystem)
         );

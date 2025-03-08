@@ -108,7 +108,7 @@ public class Vision extends SubsystemBase {
   }
 
   public double getLeftXTranslationPID() {
-    return translationController.calculate(leftXTranslationOffsetToPlacer, 0);
+    return -translationController.calculate(leftXTranslationOffsetToPlacer, 0);
   }
 
 }

@@ -45,6 +45,12 @@
           "data": {
             "name": "ElevatorToHome"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center Push"
+          }
         }
       ]
     }

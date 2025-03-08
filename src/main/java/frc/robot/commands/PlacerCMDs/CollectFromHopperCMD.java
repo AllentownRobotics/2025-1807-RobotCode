@@ -39,6 +39,7 @@ public class CollectFromHopperCMD extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return placer.isCoralInPlacer();
+    //return placer.isCoralInPlacer();
+    return false;
   }
 }
