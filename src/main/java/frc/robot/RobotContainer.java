@@ -44,21 +44,17 @@ import frc.robot.subsystems.Vision;
 
 
 public class RobotContainer {
+
     public static final double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     private double slowDriveSpeed = MaxSpeed * 0.25; // TRAIF
-    private double slowAngularRate = MaxSpeed * 0.25; // TRAIF -- move to constants
+    private double slowAngularRate = MaxAngularRate * 0.25; // TRAIF -- move to constants
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1)
             .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-
-    private final SwerveRequest.FieldCentric slowDriveFieldCentric = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed)
-            .withRotationalDeadband(MaxAngularRate)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     /*private final SwerveRequest.FieldCentric limelightFieldCentric = new SwerveRequest.FieldCentric()
@@ -92,6 +88,7 @@ public class RobotContainer {
     private final Vision visionSubsystem = new Vision();
 
     public RobotContainer() {
+
         /*  You must register your commands with NamedCommands (i.e. with pathplanner) so that they can be used
             by Event Markers in a path or as a command in an Auto.  Commands not registered will be ignored (TRAIF -- need to verify). */
 
@@ -128,6 +125,28 @@ public class RobotContainer {
         NamedCommands.registerCommand("LEDPatternClimbCompleteRed", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_RED), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternClimbCompleteBlue", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_BLUE), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternClimbComplete", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE), blinkinSubsystem));
+
+
+        NamedCommands.registerCommand("Align to Left Reef", new InstantCommand(() ->
+            driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getLeftXTranslationPID())
+            .withVelocityX(0.0)
+            .withRotationalRate(0.0)
+            )
+        );
+
+        NamedCommands.registerCommand("Wait for Left Reef Alignment", new WaitUntilCommand(visionSubsystem::isRobotAlignedToLeftReef));
+
+        
+        NamedCommands.registerCommand("Align to Right Reef", new InstantCommand(() ->
+            driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
+            .withVelocityX(0.0)
+            .withRotationalRate(0.0)
+            )
+        );
+
+        NamedCommands.registerCommand("Wait for Left Reef Alignment", new WaitUntilCommand(visionSubsystem::isRobotAlignedToRightReef));
+
+
 
         NamedCommands.registerCommand("BackUp2Inches",
           drivetrain.applyRequest(() -> driveRobotCentric.withVelocityY(0.0).withVelocityX(-1.0).withRotationalRate(0.0)).withTimeout(0.25)); // TRAIF -- will this work?
@@ -167,13 +186,12 @@ public class RobotContainer {
                 driveFieldCentric.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            )
-        );
+            )        );
 
         // slow drive CMD
         driverController.leftBumper().whileTrue(
             drivetrain.applyRequest(() ->
-            slowDriveFieldCentric.withVelocityX(-driverController.getLeftY() * slowDriveSpeed) // Drive forward with negative Y (forward)
+            driveFieldCentric.withVelocityX(-driverController.getLeftY() * slowDriveSpeed) // Drive forward with negative Y (forward)
                 .withVelocityY(-driverController.getLeftX() * slowDriveSpeed) // Drive left with negative X (left)
                 .withRotationalRate(-driverController.getRightX() * slowAngularRate) // Drive counterclockwise with negative X (left)
             )   

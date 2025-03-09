@@ -173,7 +173,7 @@ public final class Constants {
     public static final double rotation_kI = 0.0;
     public static final double rotation_kD = 0.05;
 
-    public static final double translation_kP = 0.1; // was .25
+    public static final double translation_kP = 0.75; // was .25
     public static final double translation_kI = 0.0;
     public static final double translation_kD = 0.0;
     

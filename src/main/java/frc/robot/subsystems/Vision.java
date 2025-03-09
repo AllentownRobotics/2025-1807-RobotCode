@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
+import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTable;
@@ -30,13 +33,13 @@ public class Vision extends SubsystemBase {
   PIDController rotationController;
   PIDController translationController;
 
-  Pose2d botpose;
+  boolean alignedLeft = false;
+  boolean alignedRight = false;
 
   //public boolean linedUpEnough;
 
   /** Creates a new Vision. */
   public Vision() {
-    botpose = new Pose2d();
 
     frontLimelightTable = NetworkTableInstance.getDefault().getTable("limelight-front");
     hopperLimelightTable = NetworkTableInstance.getDefault().getTable("limelight-hopper");
@@ -72,7 +75,7 @@ public class Vision extends SubsystemBase {
     leftXTranslationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[0];
     leftZTranslationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[2];
 
-    leftXTranslationOffsetToPlacer = leftXTranslationOffset + VisionConstants.placerOffsetToRobotCenter;
+    leftXTranslationOffsetToPlacer = leftXTranslationOffset + 0.05;
 
     /*
     if(Math.abs(leftXTranslationOffsetToPlacer) <= VisionConstants.alignmentDeadzone) {
@@ -109,6 +112,22 @@ public class Vision extends SubsystemBase {
 
   public double getLeftXTranslationPID() {
     return -translationController.calculate(leftXTranslationOffsetToPlacer, 0);
+  }
+
+  public boolean isRobotAlignedToLeftReef() {
+    if (rightXTranslationOffsetToPlacer <= 0.05) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public boolean isRobotAlignedToRightReef() {
+    if (rightXTranslationOffsetToPlacer <= 0.05) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }
