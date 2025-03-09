@@ -126,7 +126,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("LEDPatternClimbCompleteBlue", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_BLUE), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternClimbComplete", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE), blinkinSubsystem));
 
-
+//FIX
         NamedCommands.registerCommand("Align to Left Reef", new InstantCommand(() ->
             driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getLeftXTranslationPID())
             .withVelocityX(0.0)
@@ -134,9 +134,9 @@ public class RobotContainer {
             )
         );
 
-        NamedCommands.registerCommand("Wait for Left Reef Alignment", new WaitUntilCommand(visionSubsystem::isRobotAlignedToLeftReef));
+        NamedCommands.registerCommand("Wait for Left Reef Alignment", new WaitUntilCommand(visionSubsystem.isRobotAlignedToLeftReef()));
 
-        
+//FIX
         NamedCommands.registerCommand("Align to Right Reef", new InstantCommand(() ->
             driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
             .withVelocityX(0.0)
@@ -291,7 +291,7 @@ public class RobotContainer {
 
         placerSubsystem.setDefaultCommand(
             new InstantCommand(() -> placerSubsystem.setBothMotors(
-                MathUtil.applyDeadband(-operatorController.getRightY() * .5, .1)),
+                MathUtil.applyDeadband(-operatorController.getRightY() * .25, .1)),
                 placerSubsystem)
         );
 

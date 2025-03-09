@@ -120,7 +120,7 @@ public final class Constants {
     public static final int placerBeamBreakID = 1;
     
     public static final double placerFrontMotorSpeed = 0.2;
-    public static final double placerBackMotorSpeed = 0.1; // .125
+    public static final double placerBackMotorSpeed = 0.1; // .1
     public static final double placerAlgaeSpeed = 0.4;
     public static final double placerCollectAlgaeSpeed = 0.6;
   }
@@ -167,7 +167,8 @@ public final class Constants {
   }
 
   public static class VisionConstants {
-    public static final double placerOffsetToRobotCenter = 0.0;
+    public static final double rightSideTargetingPlacerOffsetToRobotCenter = 0.013; // may need more tuning
+    public static final double leftSideTargetingPlacerOffsetToRobotCenter = 0.05; 
     
     public static final double rotation_kP = 0.1;
     public static final double rotation_kI = 0.0;

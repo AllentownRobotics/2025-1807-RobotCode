@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.762548676099949,
-        "y": 1.821014843795016
+        "x": 2.5935,
+        "y": 1.9969999999999992
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.6855,
-        "y": 2.962249999999999
+        "x": 3.5295000000000005,
+        "y": 3.2059999999999995
       },
       "prevControl": {
-        "x": 2.7225777751795643,
-        "y": 2.023730586440773
+        "x": 2.6617499999999996,
+        "y": 2.0554999999999994
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "ElevatorToL4",
-      "waypointRelativePos": 0.65,
+      "waypointRelativePos": 0.75,
       "endWaypointRelativePos": null,
       "command": {
         "type": "sequential",

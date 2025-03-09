@@ -11,6 +11,18 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Align to Left Reef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait for Left Reef Alignment"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 0.2
@@ -73,6 +85,18 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Align to Left Reef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Wait for Left Reef Alignment"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 0.2
@@ -107,6 +131,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {

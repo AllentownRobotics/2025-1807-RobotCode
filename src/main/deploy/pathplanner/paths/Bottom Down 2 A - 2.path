@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7495000000000003,
-        "y": 2.1042499999999995
+        "x": 2.87625,
+        "y": 2.0164999999999997
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.3930000000000002,
-        "y": 3.0402500000000003
+        "x": 3.9195000000000007,
+        "y": 3.0987499999999994
       },
       "prevControl": {
-        "x": 2.5350000000000015,
-        "y": 1.98725
+        "x": 2.9932500000000006,
+        "y": 2.114
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "ElevatorToL4",
-      "waypointRelativePos": 0.6,
+      "waypointRelativePos": 0.75,
       "endWaypointRelativePos": null,
       "command": {
         "type": "parallel",
@@ -55,12 +55,6 @@
           ]
         }
       }
-    },
-    {
-      "name": "ElevatorWaitForL4",
-      "waypointRelativePos": 0.8,
-      "endWaypointRelativePos": null,
-      "command": null
     }
   ],
   "globalConstraints": {

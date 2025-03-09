@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.75375,
-        "y": 2.94275
+        "x": 3.6757500000000003,
+        "y": 3.3912499999999994
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1134387620895394,
-        "y": 2.2716841640762677
+        "x": 3.0354387620895396,
+        "y": 2.720184164076267
       },
       "isLocked": false,
       "linkedName": null
@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 3.016079930168793,
-        "y": 2.0447540912578237
+        "y": 2.044754091257824
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,9 +34,14 @@
   "eventMarkers": [
     {
       "name": "CollectFromHopper",
-      "waypointRelativePos": 0.9,
+      "waypointRelativePos": 0.8,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "CollectFromHopper"
+        }
+      }
     }
   ],
   "globalConstraints": {

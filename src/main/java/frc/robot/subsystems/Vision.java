@@ -63,24 +63,14 @@ public class Vision extends SubsystemBase {
     rightXTranslationOffset = frontLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[0];
     rightZTranslationOffset = frontLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[2];
 
-    rightXTranslationOffsetToPlacer = rightXTranslationOffset + VisionConstants.placerOffsetToRobotCenter;
-
-    /*
-    if(Math.abs(rightXTranslationOffsetToPlacer) <= VisionConstants.alignmentDeadzone) {
-      rightXTranslationOffsetToPlacer = 0;
-    } */
+    rightXTranslationOffsetToPlacer = rightXTranslationOffset + VisionConstants.rightSideTargetingPlacerOffsetToRobotCenter;
 
     //left side reef targeting
     leftRotationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[4];
     leftXTranslationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[0];
     leftZTranslationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[2];
 
-    leftXTranslationOffsetToPlacer = leftXTranslationOffset + 0.05;
-
-    /*
-    if(Math.abs(leftXTranslationOffsetToPlacer) <= VisionConstants.alignmentDeadzone) {
-      leftXTranslationOffsetToPlacer = 0;
-    } */
+    leftXTranslationOffsetToPlacer = leftXTranslationOffset + VisionConstants.leftSideTargetingPlacerOffsetToRobotCenter;
 
     //SmartDashboard.putNumber("Right Rotation Offset", rightRotationOffset);
     SmartDashboard.putNumber("rightXTranslationOffset", rightXTranslationOffset);
@@ -114,16 +104,16 @@ public class Vision extends SubsystemBase {
     return -translationController.calculate(leftXTranslationOffsetToPlacer, 0);
   }
 
-  public boolean isRobotAlignedToLeftReef() {
-    if (rightXTranslationOffsetToPlacer <= 0.05) {
-      return true;
+  public BooleanSupplier isRobotAlignedToLeftReef() {
+    if (Math.abs(leftXTranslationOffsetToPlacer) <= 0.05) {
+      return () -> true;
     } else {
-      return false;
+      return () -> false;
     }
   }
 
   public boolean isRobotAlignedToRightReef() {
-    if (rightXTranslationOffsetToPlacer <= 0.05) {
+    if (Math.abs(rightXTranslationOffsetToPlacer) <= 0.05) {
       return true;
     } else {
       return false;
