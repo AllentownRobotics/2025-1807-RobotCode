@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Align to Left Reef"
@@ -19,13 +25,31 @@
         {
           "type": "named",
           "data": {
-            "name": "Wait for Left Reef Alignment"
+            "name": "debug"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.2
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorToL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorWaitForL4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {
@@ -88,12 +112,6 @@
           "type": "named",
           "data": {
             "name": "Align to Left Reef"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Wait for Left Reef Alignment"
           }
         },
         {

@@ -132,7 +132,7 @@ public final class Constants {
 
   // Blinkin Constants
   public static class BlinkinConstants {
-    public static final int blinkinID = 10;
+    public static final int blinkinID = 0;
     
     public enum LEDPattern {
       OFF,
@@ -170,19 +170,43 @@ public final class Constants {
     public static final double rightSideTargetingPlacerOffsetToRobotCenter = 0.013; // may need more tuning
     public static final double leftSideTargetingPlacerOffsetToRobotCenter = 0.05; 
     
-    public static final double rotation_kP = 0.1;
+    public static final double rotation_kP = 0.25;
     public static final double rotation_kI = 0.0;
     public static final double rotation_kD = 0.05;
 
     public static final double translation_kP = 0.75; // was .25
-    public static final double translation_kI = 0.0;
-    public static final double translation_kD = 0.0;
+    public static final double translation_kI = 0.05;
+    public static final double translation_kD = 0.15;
     
     public static final double rotationTargetingSpeed = 0.75; // rotations per second
 
     public static final double translationTargetingSpeed = 5.41; // meters per second
 
     public static final double alignmentDeadzone = 0;
+
+    //limelight configs relative to center bottom of the robot
+
+    public static final double hopperLLForward = 0.047498;
+    public static final double hopperLLRight = 0.27305;
+    public static final double hopperLLUp = 0.702818;
+    public static final double hopperLLRoll = 0;
+    public static final double hopperLLPitch = -29;
+    public static final double hopperLLYaw = 5;
+
+    public static final double frontLLForward = 0;
+    public static final double frontLLRight = 0;
+    public static final double frontLLUp = 0;
+    public static final double frontLLRoll = 0;
+    public static final double frontLLPitch = 0;
+    public static final double frontLLYaw = 0;
+
+    public static final double backLLForward = 0;
+    public static final double backLLRight = 0;
+    public static final double backLLUp = 0;
+    public static final double backLLRoll = 0;
+    public static final double backLLPitch = 0;
+    public static final double backLLYaw = 0;
+
   }
 
 }

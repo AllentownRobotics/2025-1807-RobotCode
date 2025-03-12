@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -57,11 +59,11 @@ public class RobotContainer {
             .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    /*private final SwerveRequest.FieldCentric limelightFieldCentric = new SwerveRequest.FieldCentric()
-            .withDeadband(0.1)
-            .withRotationalDeadband(0.1)
-            .withDriveRequestType(DriveRequestType.Velocity);
-*/
+    private final SwerveRequest.FieldCentric slowDriveFieldCentric = new SwerveRequest.FieldCentric()
+            .withDeadband(slowDriveSpeed * 0.1)
+            .withRotationalDeadband(slowAngularRate * 0.1)
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
 
     private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
             .withDeadband(MaxSpeed * 0.0).withRotationalDeadband(MaxAngularRate * 0.05)
@@ -126,25 +128,26 @@ public class RobotContainer {
         NamedCommands.registerCommand("LEDPatternClimbCompleteBlue", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_BLUE), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternClimbComplete", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE), blinkinSubsystem));
 
-//FIX
-        NamedCommands.registerCommand("Align to Left Reef", new InstantCommand(() ->
+        NamedCommands.registerCommand("debug", new PrintCommand("Aligned at: " + visionSubsystem.getTX()));
+
+        NamedCommands.registerCommand("Align to Left Reef", new RunCommand(() ->
             driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getLeftXTranslationPID())
             .withVelocityX(0.0)
             .withRotationalRate(0.0)
-            )
+            ).until(visionSubsystem::isRobotAlignedToLeftReef)
         );
 
-        NamedCommands.registerCommand("Wait for Left Reef Alignment", new WaitUntilCommand(visionSubsystem.isRobotAlignedToLeftReef()));
+        NamedCommands.registerCommand("Wait for Left Reef Alignment", new WaitUntilCommand(visionSubsystem::isRobotAlignedToLeftReef));
 
-//FIX
-        NamedCommands.registerCommand("Align to Right Reef", new InstantCommand(() ->
+
+        NamedCommands.registerCommand("Align to Right Reef", new RunCommand(() ->
             driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
             .withVelocityX(0.0)
             .withRotationalRate(0.0)
-            )
+            ).until(visionSubsystem::isRobotAlignedToRightReef)
         );
 
-        NamedCommands.registerCommand("Wait for Left Reef Alignment", new WaitUntilCommand(visionSubsystem::isRobotAlignedToRightReef));
+        NamedCommands.registerCommand("Wait for Right Reef Alignment", new WaitUntilCommand(visionSubsystem::isRobotAlignedToRightReef));
 
 
 
@@ -186,22 +189,26 @@ public class RobotContainer {
                 driveFieldCentric.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            )        );
+            )
+        );
 
+//TEST
         // slow drive CMD
         driverController.leftBumper().whileTrue(
             drivetrain.applyRequest(() ->
-            driveFieldCentric.withVelocityX(-driverController.getLeftY() * slowDriveSpeed) // Drive forward with negative Y (forward)
+            slowDriveFieldCentric.withVelocityX(-driverController.getLeftY() * slowDriveSpeed) // Drive forward with negative Y (forward)
                 .withVelocityY(-driverController.getLeftX() * slowDriveSpeed) // Drive left with negative X (left)
                 .withRotationalRate(-driverController.getRightX() * slowAngularRate) // Drive counterclockwise with negative X (left)
-            )   
+            )
         );
-
-        driverController.x().whileTrue(drivetrain.applyRequest(() -> brake)); // x lock
         
+        // x lock
+        driverController.x().whileTrue(drivetrain.applyRequest(() -> brake));
+        
+        // point wheels in a specific direction
         driverController.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
-        ));
+        point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
+        )); 
         
 
         // align translationally with left reef peg using hopper limelight
@@ -209,8 +216,9 @@ public class RobotContainer {
             drivetrain.applyRequest(() ->
             driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getLeftXTranslationPID())
             .withVelocityX(0.0)
-            .withRotationalRate(0.0)
-            )
+            .withRotationalRate(0)
+        //VisionConstants.rotationTargetingSpeed * visionSubsystem.getLeftRotationPID()
+            ).until(visionSubsystem::isRobotAlignedToLeftReef)
         );
 
         // align translationally with right reef peg using front middle limelight
@@ -219,8 +227,8 @@ public class RobotContainer {
             driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
             .withVelocityX(0.0)
             .withRotationalRate(0.0)
-            )
-            );
+            ).until(visionSubsystem::isRobotAlignedToRightReef)
+        );
 /*
         // align rotationally left
         driverController.povLeft().whileTrue(
@@ -230,7 +238,7 @@ public class RobotContainer {
             .withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getLeftRotationPID())
             )
         );
-
+/*
         // align rotationally right
         driverController.povRight().whileTrue(
             drivetrain.applyRequest(() ->
@@ -241,7 +249,7 @@ public class RobotContainer {
         );
 */
 
-        // reset the field-centric heading on left bumper press
+        // reset the field-centric heading on start press
         driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
@@ -298,7 +306,7 @@ public class RobotContainer {
         operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
         operatorController.rightTrigger().whileTrue(new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed));
         //operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem)); // TRAIF -- might remove if joystick binding works?
-        operatorController.start().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward
+        //operatorController.start().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward
         
     }
 

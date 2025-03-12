@@ -9,6 +9,7 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -88,32 +89,39 @@ public class Vision extends SubsystemBase {
     
   }
     
+  public double getTX(){
+    return leftXTranslationOffset;
+  }
+
   public double getRightRotationPID() {
     return -rotationController.calculate(rightRotationOffset, 0);
   }
 
   public double getRightXTranslationPID() {
-    return -translationController.calculate(rightXTranslationOffsetToPlacer, 0);
+    return translationController.calculate(rightXTranslationOffsetToPlacer, 0);
   }
 
   public double getLeftRotationPID() {
-    return rotationController.calculate(leftRotationOffset, 0);
+    return -rotationController.calculate(leftRotationOffset, 0);
   }
 
   public double getLeftXTranslationPID() {
-    return -translationController.calculate(leftXTranslationOffsetToPlacer, 0);
+    return translationController.calculate(leftXTranslationOffsetToPlacer, Units.inchesToMeters(0)); // old: 13.526
+    //center of robot to placer
   }
 
-  public BooleanSupplier isRobotAlignedToLeftReef() {
-    if (Math.abs(leftXTranslationOffsetToPlacer) <= 0.05) {
-      return () -> true;
+  public boolean isRobotAlignedToLeftReef() {
+    if ((Math.abs(leftXTranslationOffsetToPlacer) <= 0.05) 
+    //&& (Math.abs(leftRotationOffset) <= 2.00)
+    ) {
+      return true;
     } else {
-      return () -> false;
+      return false;
     }
   }
 
   public boolean isRobotAlignedToRightReef() {
-    if (Math.abs(rightXTranslationOffsetToPlacer) <= 0.05) {
+    if ((Math.abs(rightXTranslationOffsetToPlacer) <= 0.05) && (Math.abs(rightRotationOffset) <= 2.00)) {
       return true;
     } else {
       return false;
