@@ -121,6 +121,14 @@ public class Vision extends SubsystemBase {
     SmartDashboard.putNumber("aprilTagYaw",aprilTagTelemetry[2]);
   }
 
+  public boolean canSeeAprilTag(){
+    if(frontMiddleLimeLight.getAprilTagID() > -1 || hopperLimeLight.getAprilTagID() > -1){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   /**Returns an array that contains the translations and rotation that the robot has to make to allign with the left rod of the reef.<p>
    * Returns a double array containing the x, z, and yaw translations needed to allign with left rod.<p>
    * Order of array returned is: [X translation, Z translation, Yaw rotation].

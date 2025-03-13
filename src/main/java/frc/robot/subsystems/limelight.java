@@ -13,7 +13,7 @@ import frc.robot.Constants.limlightCoordinateSystemConstants;
 public class LimeLight extends SubsystemBase {
   /** Creates a new limeLight. */
   NetworkTable table;
-  NetworkTableEntry AprilTagId,infoAboutAprilTagDegreesOfFreedom,cameraSet,cameraPosition;
+  NetworkTableEntry AprilTagId,infoAboutAprilTagDegreesOfFreedom,cameraSet,cameraPosition,limeLightLED;
   /**Primary in view AprilTag ID */
   double aprilTagId;
   /**contains the position of the april tag in the coordinate system of the robot, 
@@ -41,6 +41,7 @@ public class LimeLight extends SubsystemBase {
     this.infoAboutAprilTagDegreesOfFreedom = table.getEntry("targetpose_robotspace");
     this.cameraSet = table.getEntry("camerapose_robotspace_set");
     this.cameraPosition = table.getEntry("camerapose_robotspace");
+    this.limeLightLED = table.getEntry("ledMode");
    
     cameraPose[limlightCoordinateSystemConstants.xPosition]=0;
     cameraPose[limlightCoordinateSystemConstants.yPosition]=0;
@@ -98,6 +99,22 @@ public class LimeLight extends SubsystemBase {
     setPitch(cameraPoseArray[limlightCoordinateSystemConstants.pitch]);
     setYaw(cameraPoseArray[limlightCoordinateSystemConstants.yaw]);
     setRoll(cameraPoseArray[limlightCoordinateSystemConstants.roll]);
+  }
+
+  public void turnOnLED(){
+    limeLightLED.setDouble(3);
+  }
+  
+  public void turnOffLED(){
+    limeLightLED.setDouble(1);
+  }
+
+  public void blinkLED(){
+    limeLightLED.setDouble(2);
+  }
+
+  public void defaultLED(){
+    limeLightLED.setDouble(0);
   }
 
 

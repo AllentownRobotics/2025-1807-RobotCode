@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AlignCMD;
 import frc.robot.commands.TargetingDriveCMD;
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
@@ -115,8 +116,8 @@ public class RobotContainer {
 
         driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.enableSlowMode()));
         driverController.leftBumper().onFalse(drivetrain.runOnce(() -> drivetrain.disableSlowMode()));
-        driverController.leftTrigger().whileTrue(new TargetingDriveCMD(drivetrain, visionSystem, "LeftReef"));
-        driverController.rightTrigger().whileTrue(new TargetingDriveCMD(drivetrain, visionSystem, "RightReef"));
+        driverController.leftTrigger().whileTrue(new AlignCMD(drivetrain, visionSystem, "LeftReef", driverController));
+        driverController.rightTrigger().whileTrue(new AlignCMD(drivetrain, visionSystem, "RightReef", driverController));
         
         drivetrain.registerTelemetry(logger::telemeterize);
 

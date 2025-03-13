@@ -8,8 +8,10 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.TunerConstants;
 import frc.robot.Constants.allignmentValues;
+import frc.robot.commands.DrivetrainCMDs.DriveCMD;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Drivetrain.CommandSwerveDrivetrain;
 
@@ -18,6 +20,7 @@ public class TargetingDriveCMD extends Command {
 
   SwerveRequest.RobotCentric drive;
   CommandSwerveDrivetrain drivetrain;
+  CommandXboxController controller;
   Vision vision;
   double xMotion;//in meters
   double zMotion;//in meters
@@ -25,8 +28,9 @@ public class TargetingDriveCMD extends Command {
   double[] allignmentMovement;
 
   /** Creates a new DriveCMD. */
-  public TargetingDriveCMD(CommandSwerveDrivetrain drivetrain, Vision vision, String alignTo) {
+  public TargetingDriveCMD(CommandSwerveDrivetrain drivetrain, Vision vision, String alignTo, CommandXboxController controller) {
     this.drivetrain = drivetrain;
+    this.controller = controller;
 
     if(alignTo == "RightCoralStation"){
       allignmentMovement = vision.getRightCoralStationAllignmentValues();
@@ -41,7 +45,7 @@ public class TargetingDriveCMD extends Command {
     }
 
     xMotion = allignmentMovement[0];
-    zMotion = allignmentMovement[1];
+    zMotion = Math.abs(allignmentMovement[1]);
     yawMotion = allignmentMovement[2];
     
     drive = new SwerveRequest.RobotCentric()
@@ -59,9 +63,13 @@ public class TargetingDriveCMD extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      drive.withVelocityX((xMotion)/allignmentValues.timeToTarget)
-      .withVelocityY((zMotion)/allignmentValues.timeToTarget)
-      .withRotationalRate((yawMotion*Math.PI/180)/allignmentValues.timeToTarget);
+      if(vision.canSeeAprilTag()){
+        drive.withVelocityX((xMotion)/allignmentValues.timeToTarget)
+        .withVelocityY((zMotion)/allignmentValues.timeToTarget)
+        .withRotationalRate((yawMotion*Math.PI/180)/allignmentValues.timeToTarget);
+      } else {
+        DriveCMD driveCMD = new DriveCMD(drivetrain, controller);
+      }
 
   }
 
