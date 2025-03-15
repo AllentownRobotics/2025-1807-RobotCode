@@ -15,8 +15,8 @@ public class Placer extends SubsystemBase {
 
   private Kraken frontMotor;
   private Kraken rearMotor;
-  private DigitalInput beamBreak;
-  private boolean previousPlacerCoralState;
+  private DigitalInput placerBeamBreak;
+  public boolean previousPlacerCoralState;
 
   /** Creates a new Placer. */
   public Placer() {
@@ -24,7 +24,7 @@ public class Placer extends SubsystemBase {
     // instantiating hardware
     frontMotor = new Kraken(PlacerConstants.placerFrontMotorID);
     rearMotor = new Kraken(PlacerConstants.placerRearMotorID);
-    beamBreak = new DigitalInput(PlacerConstants.placerBeamBreakID);
+    placerBeamBreak = new DigitalInput(PlacerConstants.placerBeamBreakID);
 
 
     // configuring motors
@@ -79,6 +79,6 @@ public class Placer extends SubsystemBase {
    *  Returns false when beam is obstructed and true when beam is unobstructed
    */
   public boolean isCoralInPlacer() {
-    return !beamBreak.get();
+    return !placerBeamBreak.get();
   }
 }

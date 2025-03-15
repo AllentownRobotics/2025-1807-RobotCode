@@ -26,12 +26,12 @@ public class Blinkin extends SubsystemBase {
       patternMap.put(BlinkinConstants.LEDPattern.IDLE, BlinkinConstants.idle);
       patternMap.put(BlinkinConstants.LEDPattern.ALERT_HUMAN_PLAYER, BlinkinConstants.alertHumanPlayer);
       patternMap.put(BlinkinConstants.LEDPattern.ALIGNED_WITH_REEF, BlinkinConstants.alignedWithReef);
-      patternMap.put(BlinkinConstants.LEDPattern.CELEBRATE, BlinkinConstants.celebrate);
-      patternMap.put(BlinkinConstants.LEDPattern.CORAL_COLLECTED, BlinkinConstants.defaultColor); //TRAIF -- needs own color
+      //patternMap.put(BlinkinConstants.LEDPattern.CELEBRATE, BlinkinConstants.celebrate);
+      //patternMap.put(BlinkinConstants.LEDPattern.CORAL_COLLECTED, BlinkinConstants.defaultColor); //TRAIF -- needs own color
       patternMap.put(BlinkinConstants.LEDPattern.CORAL_INDEXED, BlinkinConstants.defaultColor); //TRAIF -- needs own color
-      patternMap.put(BlinkinConstants.LEDPattern.CORAL_PLACING, BlinkinConstants.defaultColor); //TRAIF -- needs own color
-      patternMap.put(BlinkinConstants.LEDPattern.CORAL_PLACED, BlinkinConstants.defaultColor); //TRAIF -- needs own color
-      patternMap.put(BlinkinConstants.LEDPattern.ELEVATOR_AT_DESIRED_POSITION, BlinkinConstants.elevatorAtDesiredPosition);
+      //patternMap.put(BlinkinConstants.LEDPattern.CORAL_PLACING, BlinkinConstants.defaultColor); //TRAIF -- needs own color
+      //patternMap.put(BlinkinConstants.LEDPattern.CORAL_PLACED, BlinkinConstants.defaultColor); //TRAIF -- needs own color
+      //patternMap.put(BlinkinConstants.LEDPattern.ELEVATOR_AT_DESIRED_POSITION, BlinkinConstants.elevatorAtDesiredPosition);
       patternMap.put(BlinkinConstants.LEDPattern.CLIMBING, BlinkinConstants.climbing);
       patternMap.put(BlinkinConstants.LEDPattern.CLIMB_COMPLETE, BlinkinConstants.climbUndecided);
       patternMap.put(BlinkinConstants.LEDPattern.CLIMB_COMPLETE_RED, BlinkinConstants.climbLava);
@@ -39,9 +39,9 @@ public class Blinkin extends SubsystemBase {
     }
 
     //create a general statement for making a color 
-    public void setPattern(double pattern){
+    /*public void testSetColor(double pattern){
       blinkin.set(pattern);
-    }
+    }*/
 
     //set LED color pattern based on robot state
     public void setPattern(BlinkinConstants.LEDPattern statePattern){
@@ -55,10 +55,10 @@ public class Blinkin extends SubsystemBase {
         pattern = patternMap.get(statePattern);
         Optional<Alliance> alliance = DriverStation.getAlliance();
         if (alliance.isPresent()){
-          if(alliance.get()== Alliance.Red){
+          if(alliance.get() == Alliance.Red){
            pattern = patternMap.get(BlinkinConstants.LEDPattern.CLIMB_COMPLETE_RED);
           }
-          if(alliance.get()== Alliance.Blue){
+          if(alliance.get() == Alliance.Blue){
             pattern = patternMap.get(BlinkinConstants.LEDPattern.CLIMB_COMPLETE_BLUE);
           }
         }

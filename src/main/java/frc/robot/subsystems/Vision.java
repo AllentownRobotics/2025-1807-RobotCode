@@ -4,9 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
-
-import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
@@ -33,11 +30,6 @@ public class Vision extends SubsystemBase {
 
   PIDController rotationController;
   PIDController translationController;
-
-  boolean alignedLeft = false;
-  boolean alignedRight = false;
-
-  //public boolean linedUpEnough;
 
   /** Creates a new Vision. */
   public Vision() {
@@ -88,7 +80,8 @@ public class Vision extends SubsystemBase {
     SmartDashboard.putNumber("left translation pid output", getLeftXTranslationPID());
     
   }
-    
+
+//test
   public double getTX(){
     return leftXTranslationOffset;
   }

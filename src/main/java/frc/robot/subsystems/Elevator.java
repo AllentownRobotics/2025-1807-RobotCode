@@ -49,17 +49,6 @@ public class Elevator extends SubsystemBase {
   public Elevator() {
 
     appliedRoutine = elevatorSysIDRoutine;
-    
-    /*if(Robot.isSimulation()) {
-      new ElevatorSim(
-        DCMotor.getKrakenX60(2),
-        ElevatorConstants.elevatorGearing,
-        ElevatorConstants.carriageMass,
-        ElevatorConstants.elevatorSprocketRadius,
-        ElevatorConstants.minHeightMeters,
-        ElevatorConstants.maxHeightMeters,
-        true,
-        ElevatorConstants.startingHeightMeters);*/
 
     leftMotor = new Kraken(ElevatorConstants.leftMotorID);
     rightMotor = new Kraken(ElevatorConstants.rightMotorID);

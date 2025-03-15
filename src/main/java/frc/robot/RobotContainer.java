@@ -21,9 +21,12 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import com.pathplanner.lib.auto.NamedCommands;
+
+import frc.robot.Constants.BlinkinConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PlacerConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.BlinkinConstants.LEDPattern;
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementCMD;
@@ -128,7 +131,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("LEDPatternClimbCompleteBlue", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_BLUE), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternClimbComplete", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE), blinkinSubsystem));
 
-        NamedCommands.registerCommand("debug", new PrintCommand("Aligned at: " + visionSubsystem.getTX()));
+        //NamedCommands.registerCommand("debug", new PrintCommand("Aligned at: " + visionSubsystem.getTX()));\
+
+// still messed up
 
         NamedCommands.registerCommand("Align to Left Reef", new RunCommand(() ->
             driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getLeftXTranslationPID())
@@ -139,7 +144,6 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("Wait for Left Reef Alignment", new WaitUntilCommand(visionSubsystem::isRobotAlignedToLeftReef));
 
-
         NamedCommands.registerCommand("Align to Right Reef", new RunCommand(() ->
             driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
             .withVelocityX(0.0)
@@ -149,6 +153,7 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("Wait for Right Reef Alignment", new WaitUntilCommand(visionSubsystem::isRobotAlignedToRightReef));
 
+// messed up stuff ends here
 
 
         NamedCommands.registerCommand("BackUp2Inches",
@@ -290,6 +295,24 @@ public class RobotContainer {
 
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
         operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));
+
+        /*
+        call leds to be red in every constructor instead
+
+        blinkinSubsystem.setDefaultCommand(new InstantCommand(() ->
+            blinkinSubsystem.setPattern(LEDPattern.IDLE),
+            blinkinSubsystem
+        ));*/
+
+
+        operatorController.start().whileTrue(new InstantCommand(() ->
+            blinkinSubsystem.setPattern(LEDPattern.ALERT_HUMAN_PLAYER),
+            blinkinSubsystem
+        ));
+
+        operatorController.start().whileFalse(new InstantCommand(() ->
+            blinkinSubsystem.setPattern(LEDPattern.IDLE)
+        ));
 
         // TEST THESE
 
