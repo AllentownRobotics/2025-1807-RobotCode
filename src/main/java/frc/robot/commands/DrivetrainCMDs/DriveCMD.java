@@ -9,8 +9,8 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.TunerConstants;
-import frc.robot.subsystems.Drivetrain.CommandSwerveDrivetrain;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DriveCMD extends Command {
@@ -25,8 +25,8 @@ public class DriveCMD extends Command {
     this.controller = controller;
 
     drive = new SwerveRequest.FieldCentric()
-    .withDeadband(TunerConstants.maxDriveSpeed * 0.1).withRotationalDeadband(TunerConstants.maxDriveAngularRate * 0.1) // Add a 10% deadband
-    .withDriveRequestType(DriveRequestType.Velocity); // Use closed-loop control for drive motors
+    .withDeadband(RobotContainer.MaxSpeed * 0.1).withRotationalDeadband(RobotContainer.MaxAngularRate * 0.1) // Add a 10% deadband
+    .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
@@ -39,7 +39,13 @@ public class DriveCMD extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (drivetrain.isSlowModeEnabled())
+
+    drivetrain.applyRequest(() -> 
+    drive.withVelocityX(-controller.getLeftY() * RobotContainer.MaxSpeed) // Drive forward with negative Y (forward)
+    .withVelocityY(-controller.getLeftX() * RobotContainer.MaxSpeed) // Drive left with negative X (left)
+    .withRotationalRate(-controller.getRightX() * RobotContainer.MaxAngularRate));
+
+    /*if (drivetrain.isSlowModeEnabled())
     {
       drive.withVelocityX(controller.getLeftX() * TunerConstants.slowDriveSpeed)
       .withVelocityY(controller.getLeftY() * TunerConstants.slowDriveSpeed)
@@ -48,7 +54,7 @@ public class DriveCMD extends Command {
       drive.withVelocityX(controller.getLeftX() * TunerConstants.maxDriveSpeed)
       .withVelocityY(controller.getLeftY() * TunerConstants.maxDriveSpeed)
       .withRotationalRate(controller.getRightX() * TunerConstants.maxDriveAngularRate);
-    }
+    }*/
 
   }
 

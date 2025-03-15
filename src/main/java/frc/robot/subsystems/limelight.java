@@ -8,12 +8,12 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.limlightCoordinateSystemConstants;
+import frc.robot.Constants.limelightCoordinateSystemConstants;
 
-public class LimeLight extends SubsystemBase {
-  /** Creates a new limeLight. */
+public class Limelight extends SubsystemBase {
+  /** Creates a new Limelight. */
   NetworkTable table;
-  NetworkTableEntry AprilTagId,infoAboutAprilTagDegreesOfFreedom,cameraSet,cameraPosition,limeLightLED;
+  NetworkTableEntry AprilTagId, infoAboutAprilTagDegreesOfFreedom, cameraSet, cameraPosition, LimelightLED;
   /**Primary in view AprilTag ID */
   double aprilTagId;
   /**contains the position of the april tag in the coordinate system of the robot, 
@@ -23,7 +23,7 @@ public class LimeLight extends SubsystemBase {
   double[] InfoAboutAprilTagDegreesOfFreedom;
   /**empty list that is populted with values to be returned, can be used in multiple places to see how to use see the getTopDownAprilTagPosition method */
   double[] returnArray;
-  String limelightName;
+  String LimelightName;
   double[] cameraPose = new double[6];
   double[] cameraPositionArray;
   int[] primaryAprilTagIDs = new int[22];
@@ -32,47 +32,47 @@ public class LimeLight extends SubsystemBase {
   boolean priorityAprilTagsSet = false;
   
   
-  /**<p>creates a new limelight</p>*/
-  public LimeLight(String hostName) {
-    this.limelightName = "limelight-" + hostName;
+  /**<p>creates a new Limelight</p>*/
+  public Limelight(String hostName) {
+    this.LimelightName = "Limelight-" + hostName;
   
-    this.table = NetworkTableInstance.getDefault().getTable(limelightName);
+    this.table = NetworkTableInstance.getDefault().getTable(LimelightName);
     this.AprilTagId = table.getEntry("tid");
     this.infoAboutAprilTagDegreesOfFreedom = table.getEntry("targetpose_robotspace");
     this.cameraSet = table.getEntry("camerapose_robotspace_set");
     this.cameraPosition = table.getEntry("camerapose_robotspace");
-    this.limeLightLED = table.getEntry("ledMode");
+    this.LimelightLED = table.getEntry("ledMode");
    
-    cameraPose[limlightCoordinateSystemConstants.xPosition]=0;
-    cameraPose[limlightCoordinateSystemConstants.yPosition]=0;
-    cameraPose[limlightCoordinateSystemConstants.zPosition]=0;
-    cameraPose[limlightCoordinateSystemConstants.pitch]=0;
-    cameraPose[limlightCoordinateSystemConstants.yaw]=0;
-    cameraPose[limlightCoordinateSystemConstants.roll]=0;
+    cameraPose[limelightCoordinateSystemConstants.xPosition]=0;
+    cameraPose[limelightCoordinateSystemConstants.yPosition]=0;
+    cameraPose[limelightCoordinateSystemConstants.zPosition]=0;
+    cameraPose[limelightCoordinateSystemConstants.pitch]=0;
+    cameraPose[limelightCoordinateSystemConstants.yaw]=0;
+    cameraPose[limelightCoordinateSystemConstants.roll]=0;
   }
   
   // list order: x,y,z,pitch,yaw,roll
   /**sets the Limelights X position in the robots coordinate system */
   public void setX(double xPosition){
-    cameraPose[limlightCoordinateSystemConstants.yPosition]=xPosition; //x is changed to y so acessing y
+    cameraPose[limelightCoordinateSystemConstants.yPosition]=xPosition; //x is changed to y so acessing y
     cameraSet.setDoubleArray(cameraPose);
   }
 
   /**sets the Limelights Y position in the robots coordinate system */
   public void setY(double yPosition){
-    cameraPose[limlightCoordinateSystemConstants.zPosition]=yPosition; // y is changed to z so accessing s
+    cameraPose[limelightCoordinateSystemConstants.zPosition]=yPosition; // y is changed to z so accessing s
     cameraSet.setDoubleArray(cameraPose);
   }
 
   /**sets the Limelights Z position in the robots coordinate system */
   public void setZ(double zPosition){
-    cameraPose[limlightCoordinateSystemConstants.xPosition]=zPosition; //z is changed to x so accessing x
+    cameraPose[limelightCoordinateSystemConstants.xPosition]=zPosition; //z is changed to x so accessing x
     cameraSet.setDoubleArray(cameraPose);
   }
 
   /**sets the pitch of the Limelight in the robots coordinate system */
   public void setPitch(double pitch){
-    cameraPose[limlightCoordinateSystemConstants.yaw]=pitch; //pitch is rot. around x axis, x is changed to y, rotating around y is yaw
+    cameraPose[limelightCoordinateSystemConstants.yaw]=pitch; //pitch is rot. around x axis, x is changed to y, rotating around y is yaw
     cameraSet.setDoubleArray(cameraPose);
   }
 
@@ -84,7 +84,7 @@ public class LimeLight extends SubsystemBase {
 
   /**sets the roll of the Limelight in the robots coordinate system */
   public void setRoll(double roll){
-    cameraPose[limlightCoordinateSystemConstants.pitch]=roll; //roll is rot. around z axis, z is changed to x, rot. around x is pitch
+    cameraPose[limelightCoordinateSystemConstants.pitch]=roll; //roll is rot. around z axis, z is changed to x, rot. around x is pitch
     cameraSet.setDoubleArray(cameraPose);
   }
 
@@ -93,60 +93,60 @@ public class LimeLight extends SubsystemBase {
    * X position, Y position, Z position, Pitch, Yaw, Roll
    */
   public void setAllDegreesOfFreedom(double[] cameraPoseArray){
-    setX(cameraPoseArray[limlightCoordinateSystemConstants.xPosition]);
-    setY(cameraPoseArray[limlightCoordinateSystemConstants.yPosition]);
-    setZ(cameraPoseArray[limlightCoordinateSystemConstants.zPosition]);
-    setPitch(cameraPoseArray[limlightCoordinateSystemConstants.pitch]);
-    setYaw(cameraPoseArray[limlightCoordinateSystemConstants.yaw]);
-    setRoll(cameraPoseArray[limlightCoordinateSystemConstants.roll]);
+    setX(cameraPoseArray[limelightCoordinateSystemConstants.xPosition]);
+    setY(cameraPoseArray[limelightCoordinateSystemConstants.yPosition]);
+    setZ(cameraPoseArray[limelightCoordinateSystemConstants.zPosition]);
+    setPitch(cameraPoseArray[limelightCoordinateSystemConstants.pitch]);
+    setYaw(cameraPoseArray[limelightCoordinateSystemConstants.yaw]);
+    setRoll(cameraPoseArray[limelightCoordinateSystemConstants.roll]);
   }
 
   public void turnOnLED(){
-    limeLightLED.setDouble(3);
+    LimelightLED.setDouble(3);
   }
   
   public void turnOffLED(){
-    limeLightLED.setDouble(1);
+    LimelightLED.setDouble(1);
   }
 
   public void blinkLED(){
-    limeLightLED.setDouble(2);
+    LimelightLED.setDouble(2);
   }
 
   public void defaultLED(){
-    limeLightLED.setDouble(0);
+    LimelightLED.setDouble(0);
   }
 
 
   
   public double getAprilTagX(){
     InfoAboutAprilTagDegreesOfFreedom = infoAboutAprilTagDegreesOfFreedom.getDoubleArray(new double[6]);
-    return InfoAboutAprilTagDegreesOfFreedom[limlightCoordinateSystemConstants.yPosition]; //x is changed to y
+    return InfoAboutAprilTagDegreesOfFreedom[limelightCoordinateSystemConstants.yPosition]; //x is changed to y
   }
 
   public double getAprilTagY(){
     InfoAboutAprilTagDegreesOfFreedom = infoAboutAprilTagDegreesOfFreedom.getDoubleArray(new double[6]);
-    return InfoAboutAprilTagDegreesOfFreedom[limlightCoordinateSystemConstants.zPosition];//y is changed to z
+    return InfoAboutAprilTagDegreesOfFreedom[limelightCoordinateSystemConstants.zPosition];//y is changed to z
   }
 
   public double getAprilTagZ(){
     InfoAboutAprilTagDegreesOfFreedom = infoAboutAprilTagDegreesOfFreedom.getDoubleArray(new double[6]);
-    return InfoAboutAprilTagDegreesOfFreedom[limlightCoordinateSystemConstants.xPosition];//z is changed to x
+    return InfoAboutAprilTagDegreesOfFreedom[limelightCoordinateSystemConstants.xPosition];//z is changed to x
   }
 
   public double getAprilTagPitch(){
     InfoAboutAprilTagDegreesOfFreedom = infoAboutAprilTagDegreesOfFreedom.getDoubleArray(new double[6]);
-    return InfoAboutAprilTagDegreesOfFreedom[limlightCoordinateSystemConstants.yaw];// pitch is rot. around x, x is changed to y, rot around y is yaw
+    return InfoAboutAprilTagDegreesOfFreedom[limelightCoordinateSystemConstants.yaw];// pitch is rot. around x, x is changed to y, rot around y is yaw
   }
 
   public double getAprilTagYaw(){
     InfoAboutAprilTagDegreesOfFreedom = infoAboutAprilTagDegreesOfFreedom.getDoubleArray(new double[6]);
-    return InfoAboutAprilTagDegreesOfFreedom[limlightCoordinateSystemConstants.roll];// yaw is rot. around y, y is changed to z, rot. around z is roll
+    return InfoAboutAprilTagDegreesOfFreedom[limelightCoordinateSystemConstants.roll];// yaw is rot. around y, y is changed to z, rot. around z is roll
   }
 
   public double getAprilTagRoll(){
     InfoAboutAprilTagDegreesOfFreedom = infoAboutAprilTagDegreesOfFreedom.getDoubleArray(new double[6]);
-    return InfoAboutAprilTagDegreesOfFreedom[limlightCoordinateSystemConstants.pitch];// roll is rot. around z, z is changed to x, rot. around x is pitch
+    return InfoAboutAprilTagDegreesOfFreedom[limelightCoordinateSystemConstants.pitch];// roll is rot. around z, z is changed to x, rot. around x is pitch
   }
 
   public double getAprilTagID(){

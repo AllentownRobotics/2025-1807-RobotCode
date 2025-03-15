@@ -26,14 +26,14 @@ public class RobotCoralState extends SubsystemBase {
     // This method will be called once per scheduler run
     // sets the boolean robot contains coral by checking if the hoper had the coral, and the robot had no other coral, if the placer beam is broken then it sets the state to 2
     // and if the placer beam is not broken and the placer beam has been broken before that, it seta the robot to not contain coral.
-    if(hopperSubsystem.isCoralCollected()&&coralState==0){
+    if(hopperSubsystem.isCoralCollected() && coralState == 0){
       robotContainsCoral = true;
       coralState=1;
     }
     if(!placer.isCoralInPlacer()){
       coralState=2;
     }
-    if(coralState==2&&placer.isCoralInPlacer()){
+    if(coralState == 2&& placer.isCoralInPlacer()){
       coralState=0;
       robotContainsCoral = false;
     }

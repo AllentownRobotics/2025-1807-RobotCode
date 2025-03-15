@@ -2,31 +2,37 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.PlacerCMDs;
+package frc.robot.commands.check;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Placer;
+import frc.robot.subsystems.Vision;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class PlacerSetFrontReverseCMD extends Command {
+public class TargetRightReef extends Command {
+  Vision vision;
+  double xalignmentValue;
+  double zalignmentValue;
+  double yawalignmentValue;
+  //DriveTrain drivetrain;
 
-  Placer placer;
-  double speed;
-
-  /** Sets the speed of the front placer motor. */
-  public PlacerSetFrontReverseCMD(Placer placer, double speed) {
-
-    this.placer = placer;
-    this.speed = speed;
+  /** Creates a new TargetRightReef. */
+  public TargetRightReef(Vision vision/*,DriveTrain driveTrain */) {
+    this.vision = vision;
+    //this.driveTrain = driveTrain;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(placer);
+    addRequirements(vision/*,driveTrain*/);
+  }
+
+  public void target(){
+    xalignmentValue = vision.getRightalignmentValues()[0];
+    zalignmentValue = vision.getRightalignmentValues()[1];
+    yawalignmentValue = vision.getRightalignmentValues()[2];
+    //driveTrain.drive(xalignmentValue, zalignmentValue, yawalignmentValue);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    placer.setFrontMotorReverse(speed);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

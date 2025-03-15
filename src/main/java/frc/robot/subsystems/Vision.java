@@ -6,18 +6,19 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.allignmentValues;
-import frc.robot.TunerConstants;
+import frc.robot.Constants.AlignmentValues;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.RobotContainer;
 
 public class Vision extends SubsystemBase {
   /**telemetry system from the drive train */
-  Telemetry telemetry = new Telemetry(TunerConstants.maxDriveSpeed);
-  /**limelight on the front of the elevator, used to allign with the reef*/
-  LimeLight frontMiddleLimeLight = new LimeLight("front");
-  /** limelight on top of the hopper, facing the same firection as the front limelight to allign with the reef*/
-  LimeLight hopperLimeLight = new LimeLight("hopper");
-  /**limelight on the back of the robot, <p> used to allign with coral station during autonomous */
-  LimeLight backViewLimeLight= new LimeLight("back");
+  Telemetry telemetry = new Telemetry(RobotContainer.MaxSpeed);
+  /**Limelight on the front of the elevator, used to align with the reef*/
+  Limelight frontMiddleLimelight = new Limelight("front");
+  /** Limelight on top of the hopper, facing the same firection as the front Limelight to align with the reef*/
+  Limelight hopperLimelight = new Limelight("hopper");
+  /**Limelight on the back of the robot, <p> used to align with coral station during autonomous */
+  Limelight backViewLimelight= new Limelight("back");
   /**robot coral state, used to determine if the robot contains coral to determine which camera to use for targeting*/
   RobotCoralState containsCoral = new RobotCoralState();
 
@@ -33,23 +34,31 @@ public class Vision extends SubsystemBase {
   double[] aprilTagTelemetryReset = new double[3];
 
   /**empty list that is populated and returned when accessing the targeting methods */
-  double[] targetingAllignmentReturn = new double[3];
+  double[] targetingalignmentReturn = new double[3];
   /** Creates a new Vision System. */
   public Vision() {
-    frontMiddleLimeLight.setX(0.0041);
-    frontMiddleLimeLight.setY(0.158166);
-    frontMiddleLimeLight.setZ(0.2579);
-    frontMiddleLimeLight.setPitch( 63);
-    hopperLimeLight.setYaw(5);
-    hopperLimeLight.setX(0.27305);
-    hopperLimeLight.setY(0.702818);
-    hopperLimeLight.setZ(0.047498);
-    hopperLimeLight.setPitch(-29);
 
-    backViewLimeLight.setZ(-0.150368);
-    backViewLimeLight.setY(-0.997458);
-    backViewLimeLight.setPitch(52);
-    backViewLimeLight.setYaw(180);//back limelight is facing backwards, so turning it around
+// CONFIRM VALUES IN LIMELIGHT ONLINE CAMERA
+    frontMiddleLimelight.setX(VisionConstants.frontLLRight);
+    frontMiddleLimelight.setY(VisionConstants.frontLLForward);
+    frontMiddleLimelight.setZ(VisionConstants.frontLLUp);
+    frontMiddleLimelight.setPitch(VisionConstants.frontLLPitch);
+    frontMiddleLimelight.setYaw(VisionConstants.frontLLYaw);
+    frontMiddleLimelight.setRoll(VisionConstants.frontLLRoll);
+
+    hopperLimelight.setX(VisionConstants.hopperLLRight);
+    hopperLimelight.setY(VisionConstants.hopperLLForward);
+    hopperLimelight.setZ(VisionConstants.hopperLLUp);
+    hopperLimelight.setPitch(VisionConstants.hopperLLPitch);
+    hopperLimelight.setYaw(VisionConstants.hopperLLYaw);
+    hopperLimelight.setRoll(VisionConstants.hopperLLRoll);
+
+    backViewLimelight.setX(VisionConstants.backLLRight);
+    backViewLimelight.setY(VisionConstants.backLLForward);
+    backViewLimelight.setZ(VisionConstants.backLLUp);
+    backViewLimelight.setPitch(VisionConstants.backLLPitch);
+    backViewLimelight.setYaw(VisionConstants.backLLYaw);//back Limelight is facing backwards, so turning it around
+    backViewLimelight.setRoll(VisionConstants.backLLRoll);
   }
 
   private void resetTemporaryTelemetry(){
@@ -60,14 +69,14 @@ public class Vision extends SubsystemBase {
     temporaryTelemetry[2] = 0;
   }
 
-  private void resetAprilTagTelemetry(String limeLightName){
+  private void resetAprilTagTelemetry(String LimelightName){
     resetTemporaryTelemetry();
-    if(limeLightName == "front"){
-      aprilTagTelemetryReset = frontMiddleLimeLight.getTopDownAprilTagPosition();
-    }else if(limeLightName == "hopper"){
-      aprilTagTelemetryReset = hopperLimeLight.getTopDownAprilTagPosition();
-    }else if(limeLightName == "back"){
-      aprilTagTelemetryReset = backViewLimeLight.getTopDownAprilTagPosition();
+    if(LimelightName == "front"){
+      aprilTagTelemetryReset = frontMiddleLimelight.getTopDownAprilTagPosition();
+    }else if(LimelightName == "hopper"){
+      aprilTagTelemetryReset = hopperLimelight.getTopDownAprilTagPosition();
+    }else if(LimelightName == "back"){
+      aprilTagTelemetryReset = backViewLimelight.getTopDownAprilTagPosition();
     }
   }
 
@@ -80,20 +89,20 @@ public class Vision extends SubsystemBase {
 
   private void resetAprilTagPosition(){
     if(!manualOverride){
-     if(frontMiddleLimeLight.getAprilTagID() > -1 && containsCoral.robotContainsCoral()){
-        //if the front limelight sees an aprilTag and the robot contains coral, reset the telemetry to the front limelight sees
+     if(frontMiddleLimelight.getAprilTagID() > -1 && containsCoral.robotContainsCoral()){
+        //if the front Limelight sees an aprilTag and the robot contains coral, reset the telemetry to the front Limelight sees
         resetAprilTagTelemetry("front");
       } else 
-     if(hopperLimeLight.getAprilTagID() > -1 && containsCoral.robotContainsCoral()){
-        //if the hopper limelight sees an aprilTag and the robot contains coral, reset the telemetry to what the the hopper limelight sees
+     if(hopperLimelight.getAprilTagID() > -1 && containsCoral.robotContainsCoral()){
+        //if the hopper Limelight sees an aprilTag and the robot contains coral, reset the telemetry to what the the hopper Limelight sees
         resetAprilTagTelemetry("hopper");
       } 
-      if(backViewLimeLight.getAprilTagID() > -1 && !containsCoral.robotContainsCoral()){
-        //if the back limelight sees an aprilTag and the robot does not contain coral, reset the telemetry to what the back limelight sees
+      if(backViewLimelight.getAprilTagID() > -1 && !containsCoral.robotContainsCoral()){
+        //if the back Limelight sees an aprilTag and the robot does not contain coral, reset the telemetry to what the back Limelight sees
         resetAprilTagTelemetry("back");
       }
     } else {
-      //if the manual override is enabled, reset the telemetry to what the back limelight sees
+      //if the manual override is enabled, reset the telemetry to what the back Limelight sees
       resetAprilTagTelemetry("back");
     }
   }
@@ -122,95 +131,95 @@ public class Vision extends SubsystemBase {
   }
 
   public boolean canSeeAprilTag(){
-    if(frontMiddleLimeLight.getAprilTagID() > -1 || hopperLimeLight.getAprilTagID() > -1){
+    if(frontMiddleLimelight.getAprilTagID() > -1 || hopperLimelight.getAprilTagID() > -1){
       return true;
     } else {
       return false;
     }
   }
 
-  /**Returns an array that contains the translations and rotation that the robot has to make to allign with the left rod of the reef.<p>
-   * Returns a double array containing the x, z, and yaw translations needed to allign with left rod.<p>
+  /**Returns an array that contains the translations and rotation that the robot has to make to align with the left rod of the reef.<p>
+   * Returns a double array containing the x, z, and yaw translations needed to align with left rod.<p>
    * Order of array returned is: [X translation, Z translation, Yaw rotation].
    */
-  public double[] getLeftAllignmentValues(){
+  public double[] getLeftalignmentValues(){
     //reset the position of the last seen aprilTag so that if it currently sees an aprilTag, it will use this information instead of the last seen aprilTag
     resetAprilTagPosition();
     setTemporaryTelementery();
     setAprilTagTelemetry();
-    //populates the targetAllignmentReturn with the values that the robot has to move to be alligned to the left rod on the reef
-    targetingAllignmentReturn[0] = allignmentValues.leftRodAllignmentX - aprilTagTelemetry[0];
-    targetingAllignmentReturn[1] = allignmentValues.leftRodAllignmentZ - aprilTagTelemetry[1];
-    targetingAllignmentReturn[2] = allignmentValues.leftRodAllignmentYaw - aprilTagTelemetry[2];
-    return targetingAllignmentReturn;
+    //populates the targetalignmentReturn with the values that the robot has to move to be aligned to the left rod on the reef
+    targetingalignmentReturn[0] = AlignmentValues.leftRodAlignmentX - aprilTagTelemetry[0];
+    targetingalignmentReturn[1] = AlignmentValues.leftRodAlignmentZ - aprilTagTelemetry[1];
+    targetingalignmentReturn[2] = AlignmentValues.leftRodAlignmentYaw - aprilTagTelemetry[2];
+    return targetingalignmentReturn;
   }
 
-  /**Returns an array that contains the translations and rotation that the robot has to make to allign with the right rod of the reef.<p>
-   * Returns a double array containing the x, z, and yaw translations needed to allign with right rod.<p>
+  /**Returns an array that contains the translations and rotation that the robot has to make to align with the right rod of the reef.<p>
+   * Returns a double array containing the x, z, and yaw translations needed to align with right rod.<p>
    * Order of array returned is: [X translation, Z translation, Yaw rotation].
    */
-  public double[] getRightAllignmentValues(){
+  public double[] getRightalignmentValues(){
     //resets the position of the last seen aprilTag so that if it currently sees an aprilTag, it will use this information instead of the last seen aprilTag
     resetAprilTagPosition();
     setTemporaryTelementery();
     setAprilTagTelemetry();
-    //populated the targetAllignmentReturn with the values that the robot has to move to be alligned to the right rod of the reef
-    targetingAllignmentReturn[0] = allignmentValues.rightRodAllignmentX - aprilTagTelemetry[0];
-    targetingAllignmentReturn[1] = allignmentValues.rightRodAllignmentZ - aprilTagTelemetry[1];
-    targetingAllignmentReturn[2] = allignmentValues.rightRodAllignmentYaw - aprilTagTelemetry[2];
-    return targetingAllignmentReturn;
+    //populated the targetalignmentReturn with the values that the robot has to move to be aligned to the right rod of the reef
+    targetingalignmentReturn[0] = AlignmentValues.rightRodAlignmentX - aprilTagTelemetry[0];
+    targetingalignmentReturn[1] = AlignmentValues.rightRodAlignmentZ - aprilTagTelemetry[1];
+    targetingalignmentReturn[2] = AlignmentValues.rightRodAlignmentYaw - aprilTagTelemetry[2];
+    return targetingalignmentReturn;
   }
 
-  /**Returns an array that contains the translations and rotation that the robot has to make to allign with the left coral station.<p>
-   * Returns a double array containing the x, z, and yaw translations needed to allign with left coral station.<p>
+  /**Returns an array that contains the translations and rotation that the robot has to make to align with the left coral station.<p>
+   * Returns a double array containing the x, z, and yaw translations needed to align with left coral station.<p>
    * Order of array returned is: [X translation, Z translation, Yaw rotation].
    */
-  public double[] getLeftCoralStationAllignmentValues(){
+  public double[] getLeftCoralStationalignmentValues(){
     //resets the position of the last seen aprilTag so that if it currently sees an aprilTag, it will use this information instead of the last seen aprilTag
     resetAprilTagPosition();
     setTemporaryTelementery();
     setAprilTagTelemetry();
-    //populated the targetAllignmentReturn with the values that the robot has to move to be alligned to the left side of the coral station
-    targetingAllignmentReturn[0] = allignmentValues.leftCoralStationAllignmentX - aprilTagTelemetry[0];
-    targetingAllignmentReturn[1] = allignmentValues.leftCoralStationAllignmentZ - aprilTagTelemetry[1];
-    targetingAllignmentReturn[2] = allignmentValues.leftCoralStationAllignmentYaw - aprilTagTelemetry[2];
-    return targetingAllignmentReturn;
+    //populated the targetalignmentReturn with the values that the robot has to move to be aligned to the left side of the coral station
+    targetingalignmentReturn[0] = AlignmentValues.leftCoralStationAlignmentX - aprilTagTelemetry[0];
+    targetingalignmentReturn[1] = AlignmentValues.leftCoralStationAlignmentZ - aprilTagTelemetry[1];
+    targetingalignmentReturn[2] = AlignmentValues.leftCoralStationAlignmentYaw - aprilTagTelemetry[2];
+    return targetingalignmentReturn;
   }
 
-  /**Returns an array that contains the translations and rotation that the robot has to make to allign with the center coral station.<p>
-   * Returns a double array containing the x, z, and yaw translations needed to allign with center coral station.<p>
+  /**Returns an array that contains the translations and rotation that the robot has to make to align with the center coral station.<p>
+   * Returns a double array containing the x, z, and yaw translations needed to align with center coral station.<p>
    * Order of array returned is: [X translation, Z translation, Yaw rotation].
    */
-  public double[] getCenterCoralStationAllignmentValues(){
+  public double[] getCenterCoralStationalignmentValues(){
     //resets the position of the last seen aprilTag so that if it currently sees an aprilTag, it will use this information instead of the last seen aprilTag
     resetAprilTagPosition();
     setTemporaryTelementery();
     setAprilTagTelemetry();
-    //populated the targetAllignmentReturn with the values that the robot has to move to be alligned to the center of the coral station
-    targetingAllignmentReturn[0] = allignmentValues.centerCoralStationAllignmentX - aprilTagTelemetry[0];
-    targetingAllignmentReturn[1] = allignmentValues.centerCoralStationAllignmentZ - aprilTagTelemetry[1];
-    targetingAllignmentReturn[2] = allignmentValues.centerCoralStationAllignmentYaw - aprilTagTelemetry[2];
-    return targetingAllignmentReturn;
+    //populated the targetalignmentReturn with the values that the robot has to move to be aligned to the center of the coral station
+    targetingalignmentReturn[0] = AlignmentValues.centerCoralStationAlignmentX - aprilTagTelemetry[0];
+    targetingalignmentReturn[1] = AlignmentValues.centerCoralStationAlignmentZ - aprilTagTelemetry[1];
+    targetingalignmentReturn[2] = AlignmentValues.centerCoralStationAlignmentYaw - aprilTagTelemetry[2];
+    return targetingalignmentReturn;
   }
 
-  /**Returns an array that contains the translations and rotation that the robot has to make to allign with the right coral station.<p>
-   * Returns a double array containing the x, z, and yaw translations needed to allign with right coral station.<p>
+  /**Returns an array that contains the translations and rotation that the robot has to make to align with the right coral station.<p>
+   * Returns a double array containing the x, z, and yaw translations needed to align with right coral station.<p>
    * Order of array returned is: [X translation, Z translation, Yaw rotation].
    */
-  public double[] getRightCoralStationAllignmentValues(){
+  public double[] getRightCoralStationalignmentValues(){
     //resets the position of the last seen aprilTag so that if it currently sees an aprilTag, it will use this information instead of the last seen aprilTag
     resetAprilTagPosition();
     setTemporaryTelementery();
     setAprilTagTelemetry();
-    //populated the targetAllignmentReturn with the values that the robot has to move to be alligned to the right side of the coral station
-    targetingAllignmentReturn[0] = allignmentValues.rightCoralStationAllignmentX - aprilTagTelemetry[0];
-    targetingAllignmentReturn[1] = allignmentValues.rightCoralStationAllignmentZ - aprilTagTelemetry[1];
-    targetingAllignmentReturn[2] = allignmentValues.rightCoralStationAllignmentYaw - aprilTagTelemetry[2];
-    return targetingAllignmentReturn;
+    //populated the targetalignmentReturn with the values that the robot has to move to be aligned to the right side of the coral station
+    targetingalignmentReturn[0] = AlignmentValues.rightCoralStationAlignmentX - aprilTagTelemetry[0];
+    targetingalignmentReturn[1] = AlignmentValues.rightCoralStationAlignmentZ - aprilTagTelemetry[1];
+    targetingalignmentReturn[2] = AlignmentValues.rightCoralStationAlignmentYaw - aprilTagTelemetry[2];
+    return targetingalignmentReturn;
   }
 
-  /**used for determining if the x,z, and yaw are alligned and if the robot itself is alligned as a whole */
-  boolean allignedX, allignedZ, allignedYaw, allignedFull = false;
+  /**used for determining if the x,z, and yaw are aligned and if the robot itself is aligned as a whole */
+  boolean alignedX, alignedZ, alignedYaw, alignedFull = false;
 
   @Override
   public void periodic() {
@@ -219,27 +228,27 @@ public class Vision extends SubsystemBase {
     resetAprilTagPosition();
     setTemporaryTelementery();
     setAprilTagTelemetry();
-    //determine if the robot is alligned in the x, z, and yaw directions
-    if(Math.abs(getLeftAllignmentValues()[0]) < 0.1016 || Math.abs(getRightAllignmentValues()[0]) < 0.1016){
-      allignedX = true;
+    //determine if the robot is aligned in the x, z, and yaw directions
+    if(Math.abs(getLeftalignmentValues()[0]) < 0.1016 || Math.abs(getRightalignmentValues()[0]) < 0.1016){
+      alignedX = true;
     }
-    if(Math.abs(getLeftAllignmentValues()[1]) < 0.1016 || Math.abs(getRightAllignmentValues()[1]) < 0.1016){
-      allignedZ = true;
+    if(Math.abs(getLeftalignmentValues()[1]) < 0.1016 || Math.abs(getRightalignmentValues()[1]) < 0.1016){
+      alignedZ = true;
     }
-    if(Math.abs(getLeftAllignmentValues()[2]) < 2 || Math.abs(getRightAllignmentValues()[2]) < 2){
-      allignedYaw = true;
+    if(Math.abs(getLeftalignmentValues()[2]) < 2 || Math.abs(getRightalignmentValues()[2]) < 2){
+      alignedYaw = true;
     }
-    if(allignedX && allignedZ && allignedYaw){
-      allignedFull = true;
+    if(alignedX && alignedZ && alignedYaw){
+      alignedFull = true;
     }
 
-    SmartDashboard.putBoolean("Alligned", allignedFull);
+    SmartDashboard.putBoolean("aligned", alignedFull);
     displayAprilTagTelemetry();
-    SmartDashboard.putNumber("x change for left", getLeftAllignmentValues()[0]);
-    SmartDashboard.putNumber("z change for left", getLeftAllignmentValues()[1]);
-    SmartDashboard.putNumber("yaw change for left", getLeftAllignmentValues()[2]);
-    SmartDashboard.putNumber("x change for right", getRightAllignmentValues()[0]);
-    SmartDashboard.putNumber("z change for right", getRightAllignmentValues()[1]);
-    SmartDashboard.putNumber("yaw change for right", getRightAllignmentValues()[2]);
+    SmartDashboard.putNumber("x change for left", getLeftalignmentValues()[0]);
+    SmartDashboard.putNumber("z change for left", getLeftalignmentValues()[1]);
+    SmartDashboard.putNumber("yaw change for left", getLeftalignmentValues()[2]);
+    SmartDashboard.putNumber("x change for right", getRightalignmentValues()[0]);
+    SmartDashboard.putNumber("z change for right", getRightalignmentValues()[1]);
+    SmartDashboard.putNumber("yaw change for right", getRightalignmentValues()[2]);
   }
 }

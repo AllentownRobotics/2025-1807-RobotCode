@@ -25,7 +25,6 @@ public class Climb extends SubsystemBase {
   private DigitalInput cageContactLimitSwitch, fullyRetractedLimitSwitch; // fully retracted is for the "all the way out" state
   private Kraken rightClimbMotor, leftClimbMotor;
   private CANcoder climbCANcoder;
-  private double desiredAngle;
   private boolean wasCageContacted;
   private boolean wasClimbRetracted;
 

@@ -16,14 +16,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import com.pathplanner.lib.auto.NamedCommands;
+
+import frc.robot.Constants.BlinkinConstants.LEDPattern;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PlacerConstants;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementCMD;
@@ -33,7 +32,6 @@ import frc.robot.commands.ElevatorCMDs.ElevatorToL2CMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToL3CMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToL4CMD;
 import frc.robot.commands.PlacerCMDs.CollectFromHopperCMD;
-import frc.robot.commands.PlacerCMDs.EjectAlgaeFromReefCMD;
 import frc.robot.commands.PlacerCMDs.PlaceCMD;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Blinkin;
@@ -48,7 +46,7 @@ import frc.robot.subsystems.Vision;
 public class RobotContainer {
 
     public static final double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    public static final double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     private double slowDriveSpeed = MaxSpeed * 0.25; // TRAIF
     private double slowAngularRate = MaxAngularRate * 0.25; // TRAIF -- move to constants
@@ -128,28 +126,6 @@ public class RobotContainer {
         NamedCommands.registerCommand("LEDPatternClimbCompleteBlue", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_BLUE), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternClimbComplete", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE), blinkinSubsystem));
 
-        NamedCommands.registerCommand("debug", new PrintCommand("Aligned at: " + visionSubsystem.getTX()));
-
-        NamedCommands.registerCommand("Align to Left Reef", new RunCommand(() ->
-            driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getLeftXTranslationPID())
-            .withVelocityX(0.0)
-            .withRotationalRate(0.0)
-            ).until(visionSubsystem::isRobotAlignedToLeftReef)
-        );
-
-        NamedCommands.registerCommand("Wait for Left Reef Alignment", new WaitUntilCommand(visionSubsystem::isRobotAlignedToLeftReef));
-
-
-        NamedCommands.registerCommand("Align to Right Reef", new RunCommand(() ->
-            driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
-            .withVelocityX(0.0)
-            .withRotationalRate(0.0)
-            ).until(visionSubsystem::isRobotAlignedToRightReef)
-        );
-
-        NamedCommands.registerCommand("Wait for Right Reef Alignment", new WaitUntilCommand(visionSubsystem::isRobotAlignedToRightReef));
-
-
 
         NamedCommands.registerCommand("BackUp2Inches",
           drivetrain.applyRequest(() -> driveRobotCentric.withVelocityY(0.0).withVelocityX(-1.0).withRotationalRate(0.0)).withTimeout(0.25)); // TRAIF -- will this work?
@@ -211,24 +187,6 @@ public class RobotContainer {
         )); 
         
 
-        // align translationally with left reef peg using hopper limelight
-        driverController.leftTrigger().whileTrue(
-            drivetrain.applyRequest(() ->
-            driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getLeftXTranslationPID())
-            .withVelocityX(0.0)
-            .withRotationalRate(0)
-        //VisionConstants.rotationTargetingSpeed * visionSubsystem.getLeftRotationPID()
-            ).until(visionSubsystem::isRobotAlignedToLeftReef)
-        );
-
-        // align translationally with right reef peg using front middle limelight
-        driverController.rightTrigger().whileTrue(
-            drivetrain.applyRequest(() ->
-            driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
-            .withVelocityX(0.0)
-            .withRotationalRate(0.0)
-            ).until(visionSubsystem::isRobotAlignedToRightReef)
-        );
 /*
         // align rotationally left
         driverController.povLeft().whileTrue(
@@ -290,6 +248,17 @@ public class RobotContainer {
 
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
         operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));
+
+
+        operatorController.start().whileTrue(new InstantCommand(() ->
+            blinkinSubsystem.setPattern(LEDPattern.ALERT_HUMAN_PLAYER),
+            blinkinSubsystem
+        ));
+
+        operatorController.start().whileFalse(new InstantCommand(() ->
+            blinkinSubsystem.setPattern(LEDPattern.IDLE),
+            blinkinSubsystem
+        ));
 
         // TEST THESE
 

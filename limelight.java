@@ -10,9 +10,9 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.apriltag.AprilTag; // Replace 'some.package' with the actual package name
-public class limelight extends SubsystemBase {
+public class Limelight extends SubsystemBase {
   
-  NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight-rear");
+  NetworkTable table = NetworkTableInstance.getDefault().getTable("Limelight-rear");
 NetworkTableEntry Id = table.getEntry("tid");
   NetworkTableEntry tx = table.getEntry("tx");
 NetworkTableEntry ty = table.getEntry("ty");
@@ -23,7 +23,7 @@ NetworkTableEntry ty = table.getEntry("ty");
   static long id;
   static double[] Info;
   double test = 0;
-  public limelight() {
+  public Limelight() {
 
     
 

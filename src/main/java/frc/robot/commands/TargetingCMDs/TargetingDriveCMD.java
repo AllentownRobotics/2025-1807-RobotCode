@@ -2,18 +2,18 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.TargetingCMDs;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.TunerConstants;
-import frc.robot.Constants.allignmentValues;
+import frc.robot.RobotContainer;
+import frc.robot.Constants.AlignmentValues;
 import frc.robot.commands.DrivetrainCMDs.DriveCMD;
 import frc.robot.subsystems.Vision;
-import frc.robot.subsystems.Drivetrain.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class TargetingDriveCMD extends Command {
@@ -25,7 +25,7 @@ public class TargetingDriveCMD extends Command {
   double xMotion;//in meters
   double zMotion;//in meters
   double yawMotion;//in degrees
-  double[] allignmentMovement;
+  double[] alignmentMovement;
 
   /** Creates a new DriveCMD. */
   public TargetingDriveCMD(CommandSwerveDrivetrain drivetrain, Vision vision, String alignTo, CommandXboxController controller) {
@@ -33,24 +33,24 @@ public class TargetingDriveCMD extends Command {
     this.controller = controller;
 
     if(alignTo == "RightCoralStation"){
-      allignmentMovement = vision.getRightCoralStationAllignmentValues();
+      alignmentMovement = vision.getRightCoralStationalignmentValues();
     }else if(alignTo == "LeftCoralStation"){
-      allignmentMovement = vision.getLeftCoralStationAllignmentValues();
+      alignmentMovement = vision.getLeftCoralStationalignmentValues();
     }else if(alignTo == "RightReef"){
-      allignmentMovement = vision.getRightAllignmentValues();
+      alignmentMovement = vision.getRightalignmentValues();
     }else if(alignTo == "LeftReef"){
-      allignmentMovement = vision.getLeftAllignmentValues();
+      alignmentMovement = vision.getLeftalignmentValues();
     } else if(alignTo == "CenterCoralStation"){
-      allignmentMovement = vision.getCenterCoralStationAllignmentValues();
+      alignmentMovement = vision.getCenterCoralStationalignmentValues();
     }
 
-    xMotion = allignmentMovement[0];
-    zMotion = Math.abs(allignmentMovement[1]);
-    yawMotion = allignmentMovement[2];
+    xMotion = alignmentMovement[0];
+    zMotion = Math.abs(alignmentMovement[1]);
+    yawMotion = alignmentMovement[2];
     
     drive = new SwerveRequest.RobotCentric()
-    .withDeadband(TunerConstants.maxDriveSpeed * 0.1).withRotationalDeadband(TunerConstants.maxDriveAngularRate * 0.1) // Add a 10% deadband
-    .withDriveRequestType(DriveRequestType.Velocity); // Use closed-loop control for drive motors
+    .withDeadband(RobotContainer.MaxSpeed * 0.1).withRotationalDeadband(RobotContainer.MaxAngularRate * 0.1) // Add a 10% deadband
+    .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
@@ -64,9 +64,9 @@ public class TargetingDriveCMD extends Command {
   @Override
   public void execute() {
       if(vision.canSeeAprilTag()){
-        drive.withVelocityX((xMotion)/allignmentValues.timeToTarget)
-        .withVelocityY((zMotion)/allignmentValues.timeToTarget)
-        .withRotationalRate((yawMotion*Math.PI/180)/allignmentValues.timeToTarget);
+        drive.withVelocityX((xMotion)/AlignmentValues.timeToTarget)
+        .withVelocityY((zMotion)/AlignmentValues.timeToTarget)
+        .withRotationalRate((yawMotion*Math.PI/180)/AlignmentValues.timeToTarget);
       } else {
         DriveCMD driveCMD = new DriveCMD(drivetrain, controller);
       }

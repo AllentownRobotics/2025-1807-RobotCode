@@ -2,20 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.check;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Vision;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class TargetLeftCoralStation extends Command {
+public class TargetLeftReef extends Command {
   Vision vision;
+  double xalignmentValue;
+  double zalignmentValue;
+  double yawalignmentValue;
   //DriveTrain drivetrain;
-  double xAllignmentValue;
-  double zAllignmentValue;
-  double yawAllignmentValue;
-  /** Creates a new TargetLeftCoralStation. */
-  public TargetLeftCoralStation(Vision vision/*,DriveTrain driveTrain */) {
+
+  /** Creates a new TargetLeftReef. */
+  public TargetLeftReef(Vision vision/*,DriveTrain driveTrain */) {
     this.vision = vision;
     //this.driveTrain = driveTrain;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -23,10 +24,10 @@ public class TargetLeftCoralStation extends Command {
   }
 
   public void target(){
-    xAllignmentValue = vision.getLeftCoralStationAllignmentValues()[0];
-    zAllignmentValue = vision.getLeftCoralStationAllignmentValues()[1];
-    yawAllignmentValue = vision.getLeftCoralStationAllignmentValues()[2];
-    //driveTrain.drive(xAllignmentValue, zAllignmentValue, yawAllignmentValue);
+    xalignmentValue = vision.getLeftalignmentValues()[0];
+    zalignmentValue = vision.getLeftalignmentValues()[1];
+    yawalignmentValue = vision.getLeftalignmentValues()[2];
+    //driveTrain.drive(xalignmentValue, zalignmentValue, yawalignmentValue);
   }
 
   // Called when the command is initially scheduled.

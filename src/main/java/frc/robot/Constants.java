@@ -184,11 +184,15 @@ public final class Constants {
 
     public static final double alignmentDeadzone = 0;
 
-    //limelight configs relative to center bottom of the robot
+    // limelight configs (center of lens) relative to center bottom of the robot (bottom of the wheels?)
+    // camera view: robot pose in target space
 
-    public static final double hopperLLForward = 0.047498;
-    public static final double hopperLLRight = 0.27305;
-    public static final double hopperLLUp = 0.702818;
+    // forward, right, and up are in meters
+    // roll, pitch, and yaw are in degrees
+
+    public static final double hopperLLForward = -0.0466188298;
+    public static final double hopperLLRight =  0.2996714606;
+    public static final double hopperLLUp = 0.7356746526;
     public static final double hopperLLRoll = 0;
     public static final double hopperLLPitch = -29;
     public static final double hopperLLYaw = 5;
@@ -200,13 +204,50 @@ public final class Constants {
     public static final double frontLLPitch = 0;
     public static final double frontLLYaw = 0;
 
-    public static final double backLLForward = 0;
-    public static final double backLLRight = 0;
-    public static final double backLLUp = 0;
+    public static final double backLLForward = -0.1616859098;
+    public static final double backLLRight = 0.0248326148;
+    public static final double backLLUp = 1.0262344474;
     public static final double backLLRoll = 0;
-    public static final double backLLPitch = 0;
-    public static final double backLLYaw = 0;
+    public static final double backLLPitch = 34;
+    public static final double backLLYaw = -180;
 
   }
+
+// IMPORTED LIMELIGHT CONSTANTS
+  
+  public static class limelightCoordinateSystemConstants {
+    public static final int xPosition = 0;
+    public static final int yPosition = 1;
+    public static final int zPosition = 2;
+    public static final int pitch = 3;
+    public static final int yaw = 4;
+    public static final int roll = 5;
+  }
+
+  public static class AlignmentValues {
+    //All values are translations and rotations from the robot to the center of the neerest AprilTag.
+    public static final double timeToTarget = 5;//in seconds
+
+    public static final double rightRodAlignmentX = 0.3302-0.054;
+    public static final double rightRodAlignmentZ = 0.02;
+    public static final double rightRodAlignmentYaw = 0;
+
+    public static final double leftRodAlignmentX = 0.0127;
+    public static final double leftRodAlignmentZ = 0.02;
+    public static final double leftRodAlignmentYaw = 0;
+
+    public static final double leftCoralStationAlignmentX = -0.6604;
+    public static final double leftCoralStationAlignmentZ = 0.439801;
+    public static final double leftCoralStationAlignmentYaw = 0;
+
+    public static final double centerCoralStationAlignmentX = 0;
+    public static final double centerCoralStationAlignmentZ = 0.439801;
+    public static final double centerCoralStationAlignmentYaw = 0;
+
+    public static final double rightCoralStationAlignmentX = 0.6096;
+    public static final double rightCoralStationAlignmentZ = 0.439801;
+    public static final double rightCoralStationAlignmentYaw = 0;
+  }
+
 
 }
