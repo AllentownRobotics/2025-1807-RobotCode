@@ -25,7 +25,6 @@ public class Climb extends SubsystemBase {
   private DigitalInput cageContactLimitSwitch, fullyRetractedLimitSwitch; // fully retracted is for the "all the way out" state
   private Kraken rightClimbMotor, leftClimbMotor;
   private CANcoder climbCANcoder;
-  private double desiredAngle;
   private boolean wasCageContacted;
   private boolean wasClimbRetracted;
 
@@ -114,6 +113,7 @@ public class Climb extends SubsystemBase {
 
   @Override
   public void periodic() {
+  // This method will be called once per scheduler run
 
     //Displays whether cage contact limit switch has been tripped
     boolean isCageLimitSwitchSet = cageContactLimitSwitch.get();
@@ -129,6 +129,5 @@ public class Climb extends SubsystemBase {
       wasClimbRetracted = isClimbFullyRetracted;
     }
     
-    // This method will be called once per scheduler run
   }
 }

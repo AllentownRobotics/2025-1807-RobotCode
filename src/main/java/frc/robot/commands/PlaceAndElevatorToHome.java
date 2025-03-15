@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.PlacerConstants;
@@ -21,7 +20,10 @@ public class PlaceAndElevatorToHome extends SequentialCommandGroup {
   Elevator elevator;
 
   /** Creates a new PlaceAndElevatorToHome. */
-  public PlaceAndElevatorToHome() {
+  public PlaceAndElevatorToHome(Placer placer, Elevator elevator) {
+    this.placer = placer;
+    this.elevator = elevator;
+
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(

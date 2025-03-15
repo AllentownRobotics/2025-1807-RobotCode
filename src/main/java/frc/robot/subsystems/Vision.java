@@ -5,8 +5,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -46,7 +44,6 @@ public class Vision extends SubsystemBase {
     translationController = new PIDController(VisionConstants.translation_kP, VisionConstants.translation_kI, VisionConstants.translation_kD);
   }
 
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -81,11 +78,6 @@ public class Vision extends SubsystemBase {
     
   }
 
-//test
-  public double getTX(){
-    return leftXTranslationOffset;
-  }
-
   public double getRightRotationPID() {
     return -rotationController.calculate(rightRotationOffset, 0);
   }
@@ -99,7 +91,7 @@ public class Vision extends SubsystemBase {
   }
 
   public double getLeftXTranslationPID() {
-    return translationController.calculate(leftXTranslationOffsetToPlacer, Units.inchesToMeters(0)); // old: 13.526
+    return translationController.calculate(leftXTranslationOffsetToPlacer, 0); // old: 13.526
     //center of robot to placer
   }
 

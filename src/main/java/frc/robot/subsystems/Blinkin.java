@@ -28,7 +28,7 @@ public class Blinkin extends SubsystemBase {
       patternMap.put(BlinkinConstants.LEDPattern.ALIGNED_WITH_REEF, BlinkinConstants.alignedWithReef);
       //patternMap.put(BlinkinConstants.LEDPattern.CELEBRATE, BlinkinConstants.celebrate);
       //patternMap.put(BlinkinConstants.LEDPattern.CORAL_COLLECTED, BlinkinConstants.defaultColor); //TRAIF -- needs own color
-      patternMap.put(BlinkinConstants.LEDPattern.CORAL_INDEXED, BlinkinConstants.defaultColor); //TRAIF -- needs own color
+      patternMap.put(BlinkinConstants.LEDPattern.CORAL_INDEXED, BlinkinConstants.indexedCoral); //TRAIF -- needs own color
       //patternMap.put(BlinkinConstants.LEDPattern.CORAL_PLACING, BlinkinConstants.defaultColor); //TRAIF -- needs own color
       //patternMap.put(BlinkinConstants.LEDPattern.CORAL_PLACED, BlinkinConstants.defaultColor); //TRAIF -- needs own color
       //patternMap.put(BlinkinConstants.LEDPattern.ELEVATOR_AT_DESIRED_POSITION, BlinkinConstants.elevatorAtDesiredPosition);
@@ -36,6 +36,10 @@ public class Blinkin extends SubsystemBase {
       patternMap.put(BlinkinConstants.LEDPattern.CLIMB_COMPLETE, BlinkinConstants.climbUndecided);
       patternMap.put(BlinkinConstants.LEDPattern.CLIMB_COMPLETE_RED, BlinkinConstants.climbLava);
       patternMap.put(BlinkinConstants.LEDPattern.CLIMB_COMPLETE_BLUE, BlinkinConstants.climbOcean);
+
+
+      // sets red on startup
+      blinkin.set(BlinkinConstants.idle);
     }
 
     //create a general statement for making a color 

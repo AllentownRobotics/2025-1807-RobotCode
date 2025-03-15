@@ -27,6 +27,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PlacerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.BlinkinConstants.LEDPattern;
+import frc.robot.commands.PlaceAndElevatorToHome;
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementCMD;
@@ -36,7 +37,6 @@ import frc.robot.commands.ElevatorCMDs.ElevatorToL2CMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToL3CMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToL4CMD;
 import frc.robot.commands.PlacerCMDs.CollectFromHopperCMD;
-import frc.robot.commands.PlacerCMDs.EjectAlgaeFromReefCMD;
 import frc.robot.commands.PlacerCMDs.PlaceCMD;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Blinkin;
@@ -53,8 +53,8 @@ public class RobotContainer {
     public static final double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-    private double slowDriveSpeed = MaxSpeed * 0.25; // TRAIF
-    private double slowAngularRate = MaxAngularRate * 0.25; // TRAIF -- move to constants
+    private double slowDriveSpeed = MaxSpeed * TunerConstants.slowDriveScalingConstant;
+    private double slowAngularRate = MaxAngularRate * TunerConstants.slowDriveScalingConstant;
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric()
@@ -133,7 +133,7 @@ public class RobotContainer {
 
         //NamedCommands.registerCommand("debug", new PrintCommand("Aligned at: " + visionSubsystem.getTX()));\
 
-// still messed up
+// still messed up starts here
 
         NamedCommands.registerCommand("Align to Left Reef", new RunCommand(() ->
             driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getLeftXTranslationPID())
@@ -154,7 +154,6 @@ public class RobotContainer {
         NamedCommands.registerCommand("Wait for Right Reef Alignment", new WaitUntilCommand(visionSubsystem::isRobotAlignedToRightReef));
 
 // messed up stuff ends here
-
 
         NamedCommands.registerCommand("BackUp2Inches",
           drivetrain.applyRequest(() -> driveRobotCentric.withVelocityY(0.0).withVelocityX(-1.0).withRotationalRate(0.0)).withTimeout(0.25)); // TRAIF -- will this work?
@@ -221,8 +220,10 @@ public class RobotContainer {
             drivetrain.applyRequest(() ->
             driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getLeftXTranslationPID())
             .withVelocityX(0.0)
-            .withRotationalRate(0)
-        //VisionConstants.rotationTargetingSpeed * visionSubsystem.getLeftRotationPID()
+            .withRotationalRate( 
+                0.0
+                //VisionConstants.rotationTargetingSpeed * visionSubsystem.getLeftRotationPID()
+                )
             ).until(visionSubsystem::isRobotAlignedToLeftReef)
         );
 
@@ -231,7 +232,10 @@ public class RobotContainer {
             drivetrain.applyRequest(() ->
             driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
             .withVelocityX(0.0)
-            .withRotationalRate(0.0)
+            .withRotationalRate(
+                0.0
+                //VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID()
+                )
             ).until(visionSubsystem::isRobotAlignedToRightReef)
         );
 /*
@@ -259,17 +263,6 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        /*
-        // align rotationally with right reef peg
-        driverController.y().whileTrue(
-            drivetrain.applyRequest(() ->
-            driveRobotCentric.withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID())
-            .withVelocityX(0.0)
-            .withVelocityY(0.0)
-            )
-        ); 
-        */
-
 /*
 * __________________________________ OPERATOR CONTROLLER __________________________________
 */
@@ -296,14 +289,6 @@ public class RobotContainer {
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
         operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));
 
-        /*
-        call leds to be red in every constructor instead
-
-        blinkinSubsystem.setDefaultCommand(new InstantCommand(() ->
-            blinkinSubsystem.setPattern(LEDPattern.IDLE),
-            blinkinSubsystem
-        ));*/
-
 
         operatorController.start().whileTrue(new InstantCommand(() ->
             blinkinSubsystem.setPattern(LEDPattern.ALERT_HUMAN_PLAYER),
@@ -327,7 +312,9 @@ public class RobotContainer {
         );
 
         operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
-        operatorController.rightTrigger().whileTrue(new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed));
+        operatorController.rightTrigger().whileTrue(new PlaceAndElevatorToHome(placerSubsystem, elevatorSubsystem));
+        //operatorController.rightTrigger().whileTrue(new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed));
+        
         //operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem)); // TRAIF -- might remove if joystick binding works?
         //operatorController.start().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward
         

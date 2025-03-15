@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
+import frc.robot.generated.TunerConstants;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -164,6 +165,7 @@ public final class Constants {
     public static final double off = 0.99;//black
     public static final double idle = -0.17;//breath red
     public static final double celebrate = -0.97; //rainbow party palette}
+    public static final double indexedCoral = 0.83;
   }
 
   public static class VisionConstants {

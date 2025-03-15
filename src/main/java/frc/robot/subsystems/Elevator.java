@@ -154,13 +154,13 @@ public class Elevator extends SubsystemBase {
     leftMotor.getMotorTemperature();
     rightMotor.getMotorTemperature();
 
-    /*if (isLowerLimitReached() == true) {
-      leftMotor.setMotorSpeed(0); //replace these numbers to spin the motors away from the limit switch
+    if (isLowerLimitReached() == true) {
+      leftMotor.setDesiredEncoderPosition(ElevatorConstants.homePosition + 1);
     }
 
     if (isUpperLimitReached() == true) {
-      leftMotor.setMotorSpeed(-.1); //replace these numbers to spin the motors away from the limit switch
-    }*/
+      leftMotor.setDesiredEncoderPosition(ElevatorConstants.L4Position - 1);
+    }
 
     // change state only when state changes
     SmartDashboard.putNumber("elevator encoder desired position", desiredSetpoint);
