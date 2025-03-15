@@ -18,6 +18,12 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+  public void robotInit() {
+    // WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+    // add elastic layout file to deploy folder of robot code, this line gives the file to the robot
+  }
+
+  @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run(); 
   }

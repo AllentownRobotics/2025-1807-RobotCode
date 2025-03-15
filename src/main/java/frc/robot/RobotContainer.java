@@ -308,6 +308,9 @@ public class RobotContainer {
         //operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem)); // TRAIF -- might remove if joystick binding works?
         //operatorController.start().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward
         
+        if (hopperSubsystem.isCoralCollected()) {
+            new CollectFromHopperCMD(placerSubsystem);
+        }
     }
 
     public Command getAutonomousCommand() {
