@@ -154,13 +154,13 @@ public class Elevator extends SubsystemBase {
     leftMotor.getMotorTemperature();
     rightMotor.getMotorTemperature();
 
-    if (isLowerLimitReached() == true) {
+    /*if (isLowerLimitReached() == true) {
       leftMotor.setDesiredEncoderPosition(ElevatorConstants.homePosition + 1);
     }
 
     if (isUpperLimitReached() == true) {
       leftMotor.setDesiredEncoderPosition(ElevatorConstants.L4Position - 1);
-    }
+    }*/
 
     // change state only when state changes
     SmartDashboard.putNumber("elevator encoder desired position", desiredSetpoint);
@@ -171,6 +171,8 @@ public class Elevator extends SubsystemBase {
 
     SmartDashboard.putNumber("right elevator draw", rightMotor.getSupplyCurrent());
     SmartDashboard.putNumber("left elevator draw", leftMotor.getSupplyCurrent());
+
+    SmartDashboard.putNumber("left motor position", leftMotor.getPosition());
     
   }
 

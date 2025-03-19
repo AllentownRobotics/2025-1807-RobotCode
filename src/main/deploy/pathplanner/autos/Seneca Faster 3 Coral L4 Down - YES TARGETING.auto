@@ -23,12 +23,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "debug"
-          }
-        },
-        {
           "type": "wait",
           "data": {
             "waitTime": 2.0

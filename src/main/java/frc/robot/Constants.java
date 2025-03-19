@@ -93,7 +93,7 @@ public final class Constants {
     public static final double ELEVATOR_SFF = 0; // static feedforward
     public static final double ELEVATOR_VFF = 0; // velocity feedforward
     public static final double ELEVATOR_AFF = 0; // acceleration feedforward
-    public static final double ELEVATOR_GFF = 0.296; // gravity feedforward
+    public static final double ELEVATOR_GFF = 0.296; // gravity feedforward 0.296
     public static final double ELEVATOR_MIN_OUTPUT = -1;
     public static final double ELEVATOR_MAX_OUTPUT = 1;
     
@@ -210,7 +210,7 @@ public final class Constants {
     public static final double backLLRight = 0.0248326148;
     public static final double backLLUp = 1.0262344474;
     public static final double backLLRoll = 0;
-    public static final double backLLPitch = 34;
+    public static final double backLLPitch = 50;
     public static final double backLLYaw = -180;
 
   }
