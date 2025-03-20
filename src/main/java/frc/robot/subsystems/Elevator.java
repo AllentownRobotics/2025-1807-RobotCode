@@ -96,6 +96,10 @@ public class Elevator extends SubsystemBase {
     return appliedRoutine.dynamic(direction);
   }
 
+  public void rightMotorSpin() {
+    leftMotor.setMotorSpeed(.01);
+  }
+
   /** Stop elevator (emergency feature). */
   public void stopElevator() {
     leftMotor.stopMotor();

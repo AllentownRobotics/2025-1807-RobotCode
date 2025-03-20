@@ -186,7 +186,7 @@ public final class Constants {
 
     public static final double alignmentDeadzone = 0;
 
-    // limelight configs (center of lens) relative to center bottom of the robot (bottom of the wheels?)
+    // limelight configs (center of lens) relative to center bottom of the robot (bottom of the wheels)
     // camera view: robot pose in target space
 
     // forward, right, and up are in meters
@@ -199,12 +199,12 @@ public final class Constants {
     public static final double hopperLLPitch = -29;
     public static final double hopperLLYaw = 5;
 
-    public static final double frontLLForward = 0;
-    public static final double frontLLRight = 0;
-    public static final double frontLLUp = 0;
+    public static final double frontLLForward = 0.168;
+    public static final double frontLLRight = -0.234;
+    public static final double frontLLUp = 0.306;
     public static final double frontLLRoll = 0;
     public static final double frontLLPitch = 0;
-    public static final double frontLLYaw = 0;
+    public static final double frontLLYaw = 137.5;
 
     public static final double backLLForward = -0.1616859098;
     public static final double backLLRight = 0.0248326148;

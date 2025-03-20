@@ -4,7 +4,12 @@
 
 package frc.robot.subsystems;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,6 +34,12 @@ public class Vision extends SubsystemBase {
   PIDController rotationController;
   PIDController translationController;
 
+  Pose2d frontPose;
+  Pose2d hopperPose;
+
+  boolean frontTv;
+  boolean hopperTv;
+
   /** Creates a new Vision. */
   public Vision() {
 
@@ -42,11 +53,15 @@ public class Vision extends SubsystemBase {
 
     rotationController = new PIDController(VisionConstants.rotation_kP, VisionConstants.rotation_kI, VisionConstants.rotation_kD);
     translationController = new PIDController(VisionConstants.translation_kP, VisionConstants.translation_kI, VisionConstants.translation_kD);
+  
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    frontTv = frontLimelightTable.getEntry("tv").getBoolean(false);
+    hopperTv = hopperLimelightTable.getEntry("tv").getBoolean(false);
 
     // right side reef targeting
     rightRotationOffset = frontLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[4];
@@ -55,12 +70,18 @@ public class Vision extends SubsystemBase {
 
     rightXTranslationOffsetToPlacer = rightXTranslationOffset + VisionConstants.rightSideTargetingPlacerOffsetToRobotCenter;
 
+    frontPose = new Pose2d(new Translation2d(rightXTranslationOffset, rightZTranslationOffset),
+                                  Rotation2d.fromDegrees(rightRotationOffset));
+
     //left side reef targeting
     leftRotationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[4];
     leftXTranslationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[0];
     leftZTranslationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[2];
 
     leftXTranslationOffsetToPlacer = leftXTranslationOffset + VisionConstants.leftSideTargetingPlacerOffsetToRobotCenter;
+
+    hopperPose = new Pose2d(new Translation2d(leftXTranslationOffset, leftZTranslationOffset),
+                                    Rotation2d.fromDegrees(leftRotationOffset));
 
     //SmartDashboard.putNumber("Right Rotation Offset", rightRotationOffset);
     SmartDashboard.putNumber("rightXTranslationOffset", rightXTranslationOffset);
@@ -76,6 +97,31 @@ public class Vision extends SubsystemBase {
     //SmartDashboard.putNumber("left rotation pid output", getLeftRotationPID());
     SmartDashboard.putNumber("left translation pid output", getLeftXTranslationPID());
     
+  }
+
+  public boolean isTargetInFront() {
+    return frontTv || hopperTv;
+  }
+
+  public Optional<Pose2d> frontPoseTargetSpace() {
+    if(!isTargetInFront()) {
+      return Optional.empty();
+    }
+
+    int frontExists = frontTv ? 1 : 0;
+    int hopperExists = hopperTv ? 1 : 0;
+
+    Pose2d newFrontPose = frontPose.times(frontExists);
+    Pose2d newHopperPose = hopperPose.times(hopperExists);
+
+    Translation2d translationPoseFront = newFrontPose.getTranslation();
+    Rotation2d rotationPoseFront = newFrontPose.getRotation();
+
+    Translation2d translationPoseHopper = newHopperPose.getTranslation();
+    Rotation2d rotationPoseHopper = newHopperPose.getRotation();
+
+    return Optional.of(new Pose2d(translationPoseFront.plus(translationPoseHopper).div(frontExists + hopperExists),
+                        rotationPoseFront.plus(rotationPoseHopper).div(frontExists + hopperExists)));
   }
 
   public double getRightRotationPID() {

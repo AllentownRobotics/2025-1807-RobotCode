@@ -33,6 +33,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.BlinkinConstants.LEDPattern;
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
+import frc.robot.commands.DriveCMDs.TargetTranslationCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToHomeCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToL1CMD;
@@ -182,14 +183,14 @@ public class RobotContainer {
         // Run Drivetrain SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
 
-        driverController.povLeft().onTrue(Commands.runOnce(SignalLogger::start));
+        /*driverController.povLeft().onTrue(Commands.runOnce(SignalLogger::start));
         driverController.povRight().onTrue(Commands.runOnce(SignalLogger::stop));
 
         driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-        
+        */
 
 
         // Note that X is defined as forward according to WPILib convention,
@@ -222,6 +223,7 @@ public class RobotContainer {
         point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
         )); 
         
+        //driverController.leftTrigger().whileTrue(new TargetTranslationCMD(visionSubsystem, 0));
 
         // align translationally with left reef peg using hopper limelight
         driverController.leftTrigger().whileTrue(
@@ -238,7 +240,7 @@ public class RobotContainer {
         // align translationally with right reef peg using front middle limelight
         driverController.rightTrigger().whileTrue(
             drivetrain.applyRequest(() ->
-            driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
+            driveRobotCentric.withVelocityY(-VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
             .withVelocityX(0.0)
             .withRotationalRate(
                 0.0
@@ -267,7 +269,7 @@ public class RobotContainer {
 */
 
         // reset the field-centric heading on start press
-        //driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -296,6 +298,8 @@ public class RobotContainer {
 
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
         operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));
+
+        operatorController.rightStick().whileTrue(Commands.run(elevatorSubsystem::rightMotorSpin, elevatorSubsystem));
 
 
         operatorController.start().whileTrue(new InstantCommand(() ->
