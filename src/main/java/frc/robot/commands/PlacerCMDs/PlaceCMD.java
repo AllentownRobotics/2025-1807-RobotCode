@@ -5,7 +5,6 @@
 package frc.robot.commands.PlacerCMDs;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Placer;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -44,7 +43,6 @@ public class PlaceCMD extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //return !placer.isCoralInPlacer(); // test this!!!
-    return false;
+    return !placer.isCoralInPlacer();
   }
 }

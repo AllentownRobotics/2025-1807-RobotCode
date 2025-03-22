@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
-import frc.robot.generated.TunerConstants;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -98,7 +97,7 @@ public final class Constants {
     public static final double ELEVATOR_MAX_OUTPUT = 1;
     
     // elevator setpoints (inches)
-    public static final double homePosition = 0;
+    public static final double homePosition = -2;
     public static final double L1Position = 19;
     public static final double L2Position = 28;
     public static final double L3Position = 44;
@@ -120,8 +119,8 @@ public final class Constants {
     public static final int placerRearMotorID = 22;
     public static final int placerBeamBreakID = 1;
     
-    public static final double placerFrontMotorSpeed = 0.2;
-    public static final double placerBackMotorSpeed = 0.17;
+    public static final double placerFrontMotorSpeed = 0.3; // .2
+    public static final double placerBackMotorSpeed = 0.15; // .17
     public static final double placerAlgaeSpeed = 0.4;
     public static final double placerCollectAlgaeSpeed = 0.6;
   }
@@ -136,49 +135,51 @@ public final class Constants {
     public static final int blinkinID = 0;
     
     public enum LEDPattern {
-      OFF,
-      IDLE,
-      ALERT_HUMAN_PLAYER,
-      ALIGNED_WITH_REEF,
-      CELEBRATE,
-      CORAL_COLLECTED,
-      CORAL_INDEXED,
-      CORAL_PLACING,
-      CORAL_PLACED,
-      ELEVATOR_AT_DESIRED_POSITION,
-      CLIMBING,
-      CLIMB_COMPLETE_RED,
-      CLIMB_COMPLETE_BLUE,
-      CLIMB_COMPLETE
+      OFF(off),
+      IDLE(defaultColor),
+      ALERT_HUMAN_PLAYER(alertHumanPlayer),
+      ALIGNED_WITH_REEF(alignedWithReef),
+      CELEBRATE(celebrate),
+      CORAL_INDEXED(indexedCoral),
+      ELEVATOR_AT_DESIRED_POSITION(elevatorAtDesiredPosition),
+      CLIMB_COMPLETE(off),
+      CLIMB_COMPLETE_RED(climbLava),
+      CLIMB_COMPLETE_BLUE(climbOcean);
+
+      public final double value;
+      private LEDPattern(double val){
+        value = val;
+      }
     }
 
     // light codes
     public static final double defaultColor = 0.59; // dark red
     public static final double alertHumanPlayer = -0.05; // strobe white (flashing)
     public static final double climbing = -0.57; //fire large
-    public static final double humanPlayerStation = -0.05; // strobe white (flashing)
     public static final double climbOcean = -0.95; // rainbow ocean palette
     public static final double climbLava = -0.93; // rainbow lava palette
     public static final double climbUndecided = -0.91;//rainbow forest palette
-    public static final double alignedWithReef = 0.35; // strobe color 2 (green)
+    public static final double alignedWithReef = 0.77; // color 2 (green)
     public static final double elevatorAtDesiredPosition = -0.85; //shot red
     public static final double off = 0.99;//black
     public static final double idle = -0.17;//breath red
     public static final double celebrate = -0.97; //rainbow party palette}
-    public static final double indexedCoral = 0.83;
+    public static final double indexedCoral = 0.93;
   }
 
   public static class VisionConstants {
-    public static final double rightSideTargetingPlacerOffsetToRobotCenter = 0.013; // may need more tuning
-    public static final double leftSideTargetingPlacerOffsetToRobotCenter = 0.05; 
-    
-    public static final double rotation_kP = 0.25;
-    public static final double rotation_kI = 0.0;
-    public static final double rotation_kD = 0.05;
 
-    public static final double translation_kP = 0.75; // was .25
-    public static final double translation_kI = 0.05;
-    public static final double translation_kD = 0.15;
+    public static final double targetingLeftTranslationOffset = -0.33;
+    public static final double targetingRightTranslationOffset = -0.005;
+    public static final double targetingFrontBackTranslationOffset = -0.425;
+    
+    public static final double rotation_kP = 2.27;
+    public static final double rotation_kI = 0.0;
+    public static final double rotation_kD = 0.35;
+
+    public static final double translation_kP = 3.0;
+    public static final double translation_kI = 0.2;
+    public static final double translation_kD = 0.625;
     
     public static final double rotationTargetingSpeed = 0.75; // rotations per second
 

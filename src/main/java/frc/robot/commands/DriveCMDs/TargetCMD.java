@@ -16,7 +16,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.BlinkinConstants.LEDPattern;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
 
@@ -24,8 +27,10 @@ import frc.robot.subsystems.Vision;
 public class TargetCMD extends Command {
   Vision limelight;
   double offset;
+  Blinkin blinkin;
 
-  PIDController controller;
+  PIDController sideToSideController;
+  PIDController frontToBackController;
   PIDController rotationController;
   CommandXboxController driverController;
 
@@ -37,11 +42,12 @@ public class TargetCMD extends Command {
   double slowAngularRate;
 
   /** Creates a new TargetCMD. */
-  public TargetCMD(Vision limelight, CommandSwerveDrivetrain drivetrain, CommandXboxController driverController, double offset) {
+  public TargetCMD(Vision limelight, CommandSwerveDrivetrain drivetrain, Blinkin blinkin, CommandXboxController driverController, double offset) {
     this.limelight = limelight;
     this.drivetrain = drivetrain;
     this.driverController = driverController;
     this.offset = offset;
+    this.blinkin = blinkin;
     
     double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -59,16 +65,20 @@ public class TargetCMD extends Command {
             .withRotationalDeadband(slowAngularRate * 0.1)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    controller = new PIDController(3, 0.2, 0.625);
-    rotationController = new PIDController(2.27, 0, 0.35);
+    sideToSideController = new PIDController(VisionConstants.translation_kP, VisionConstants.translation_kI, VisionConstants.translation_kD);
+    frontToBackController = new PIDController(VisionConstants.translation_kP, VisionConstants.translation_kI, VisionConstants.translation_kD);
+    rotationController = new PIDController(VisionConstants.rotation_kP, VisionConstants.rotation_kI, VisionConstants.rotation_kD);
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drivetrain);
+    addRequirements(drivetrain, blinkin);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    sideToSideController.reset();
+    frontToBackController.reset();
+    rotationController.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -79,14 +89,21 @@ public class TargetCMD extends Command {
     if (pose.isPresent()) {
       SmartDashboard.putNumber("Optional translation Pose", pose.get().getX());
       SmartDashboard.putNumber("Optional rotation Pose", pose.get().getRotation().getRadians());
-      SmartDashboard.putNumber("PID translation Value", controller.calculate(pose.get().getX(), offset));
+      SmartDashboard.putNumber("optional back front translation pose", pose.get().getY());
+      SmartDashboard.putNumber("PID front back translation value", frontToBackController.calculate(pose.get().getY(), VisionConstants.targetingFrontBackTranslationOffset));
+      SmartDashboard.putNumber("PID left right translation value", sideToSideController.calculate(pose.get().getX(), offset));
       SmartDashboard.putNumber("PID rotation", rotationController.calculate(pose.get().getRotation().getRadians(), 0));
-      
+    
       drivetrain.applyRequest(() ->
         drive
-        .withVelocityY(-controller.calculate(pose.get().getX(), offset))
+        .withVelocityX(frontToBackController.calculate(pose.get().getY(), VisionConstants.targetingFrontBackTranslationOffset))
+        .withVelocityY(-sideToSideController.calculate(pose.get().getX(), offset))
         .withRotationalRate(-rotationController.calculate(pose.get().getRotation().getRadians(), 0))
       ).execute();
+
+      if(Math.abs(offset - pose.get().getX()) <= 0.05) {
+        blinkin.setPattern(LEDPattern.ALIGNED_WITH_REEF);
+      }
 
         } else {
       drivetrain.applyRequest(() ->
@@ -94,7 +111,6 @@ public class TargetCMD extends Command {
           .withVelocityY(-driverController.getLeftX() * slowDriveSpeed) // Drive left with negative X (left)
           .withRotationalRate(-driverController.getRightX() * slowAngularRate) // Drive counterclockwise with negative X (left)
       ).execute();
-
 
     }
 

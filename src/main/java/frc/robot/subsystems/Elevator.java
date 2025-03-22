@@ -9,7 +9,6 @@ import static edu.wpi.first.units.Units.Volts;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.hardware.CANcoder;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -136,7 +135,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean isUpperLimitReached() {
-    return upperLimitSwitch.get();
+    return !upperLimitSwitch.get();
   }
 
   public BooleanSupplier isAtPosition(double targetPosition) {
@@ -158,13 +157,15 @@ public class Elevator extends SubsystemBase {
     leftMotor.getMotorTemperature();
     rightMotor.getMotorTemperature();
 
-    /*if (isLowerLimitReached() == true) {
-      leftMotor.setDesiredEncoderPosition(ElevatorConstants.homePosition + 1);
-    }
+    // if (isLowerLimitReached() == true) {
+    //   leftMotor.setDesiredEncoderPosition(ElevatorConstants.homePosition + 1);
+    // }
 
-    if (isUpperLimitReached() == true) {
+
+    // prevents coral in hopper from triggering limit switch and making elevator auto go up
+    if (!isUpperLimitReached() && getElevatorPositionInInches() >= 15) {
       leftMotor.setDesiredEncoderPosition(ElevatorConstants.L4Position - 1);
-    }*/
+    }
 
     // change state only when state changes
     SmartDashboard.putNumber("elevator encoder desired position", desiredSetpoint);
@@ -172,6 +173,8 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putBoolean("elevator max limit", !isUpperLimitReached());
     SmartDashboard.putNumber("elevator height", getElevatorPositionInInches());
     SmartDashboard.putNumber("elevator encoder height", elevatorEncoder.getPosition().getValueAsDouble());
+
+    SmartDashboard.putBoolean("upper elevator limit condition", isUpperLimitReached());
 
     SmartDashboard.putNumber("right elevator draw", rightMotor.getSupplyCurrent());
     SmartDashboard.putNumber("left elevator draw", leftMotor.getSupplyCurrent());

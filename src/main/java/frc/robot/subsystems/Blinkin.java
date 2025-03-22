@@ -32,7 +32,6 @@ public class Blinkin extends SubsystemBase {
       //patternMap.put(BlinkinConstants.LEDPattern.CORAL_PLACING, BlinkinConstants.defaultColor); //TRAIF -- needs own color
       //patternMap.put(BlinkinConstants.LEDPattern.CORAL_PLACED, BlinkinConstants.defaultColor); //TRAIF -- needs own color
       //patternMap.put(BlinkinConstants.LEDPattern.ELEVATOR_AT_DESIRED_POSITION, BlinkinConstants.elevatorAtDesiredPosition);
-      patternMap.put(BlinkinConstants.LEDPattern.CLIMBING, BlinkinConstants.climbing);
       patternMap.put(BlinkinConstants.LEDPattern.CLIMB_COMPLETE, BlinkinConstants.climbUndecided);
       patternMap.put(BlinkinConstants.LEDPattern.CLIMB_COMPLETE_RED, BlinkinConstants.climbLava);
       patternMap.put(BlinkinConstants.LEDPattern.CLIMB_COMPLETE_BLUE, BlinkinConstants.climbOcean);
@@ -52,7 +51,7 @@ public class Blinkin extends SubsystemBase {
       double pattern;
       
       //get color patterns from map
-      pattern = patternMap.get(statePattern);
+      pattern = statePattern.value;
 
       //if the climb complete pattern was requested, customise it by alliance color
       if (statePattern == BlinkinConstants.LEDPattern.CLIMB_COMPLETE){

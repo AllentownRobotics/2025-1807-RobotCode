@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -14,7 +13,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.VisionConstants;
 
 public class Vision extends SubsystemBase {
   NetworkTable frontLimelightTable;
@@ -23,16 +21,13 @@ public class Vision extends SubsystemBase {
 
   double rightRotationOffset;
   double rightXTranslationOffset;
+  double rightYTranslationOffset;
   double rightZTranslationOffset;
-  double rightXTranslationOffsetToPlacer;
 
   double leftRotationOffset;
   double leftXTranslationOffset;
+  double leftYTranslationOffset;
   double leftZTranslationOffset;
-  double leftXTranslationOffsetToPlacer;
-
-  PIDController rotationController;
-  PIDController translationController;
 
   Pose2d frontPose;
   Pose2d hopperPose;
@@ -51,9 +46,6 @@ public class Vision extends SubsystemBase {
     hopperLimelightTable.getEntry("priorityid").setNumber(-1);
     rearLimelightTable.getEntry("priorityid").setNumber(-1);
 
-    rotationController = new PIDController(VisionConstants.rotation_kP, VisionConstants.rotation_kI, VisionConstants.rotation_kD);
-    translationController = new PIDController(VisionConstants.translation_kP, VisionConstants.translation_kI, VisionConstants.translation_kD);
-  
   }
 
   @Override
@@ -63,40 +55,33 @@ public class Vision extends SubsystemBase {
     frontTv = frontLimelightTable.getEntry("tv").getInteger(0) > 0;
     hopperTv = hopperLimelightTable.getEntry("tv").getInteger(0) > 0;
 
-    // right side reef targeting
+    // right side reef values
     rightRotationOffset = frontLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[4];
     rightXTranslationOffset = frontLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[0];
+    rightYTranslationOffset = frontLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[1];
     rightZTranslationOffset = frontLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[2];
-
-    rightXTranslationOffsetToPlacer = rightXTranslationOffset + VisionConstants.rightSideTargetingPlacerOffsetToRobotCenter;
 
     frontPose = new Pose2d(new Translation2d(rightXTranslationOffset, rightZTranslationOffset),
                                   Rotation2d.fromDegrees(rightRotationOffset));
 
-    //left side reef targeting
+    //left side reef values
     leftRotationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[4];
     leftXTranslationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[0];
+    leftYTranslationOffset = frontLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[1];
     leftZTranslationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[2];
-
-    leftXTranslationOffsetToPlacer = leftXTranslationOffset + VisionConstants.leftSideTargetingPlacerOffsetToRobotCenter;
 
     hopperPose = new Pose2d(new Translation2d(leftXTranslationOffset, leftZTranslationOffset),
                                     Rotation2d.fromDegrees(leftRotationOffset));
 
-    //SmartDashboard.putNumber("Right Rotation Offset", rightRotationOffset);
+    SmartDashboard.putNumber("right rotation offset", rightRotationOffset);
     SmartDashboard.putNumber("rightXTranslationOffset", rightXTranslationOffset);
+    SmartDashboard.putNumber("rightYTranslationOffset", rightYTranslationOffset);
     SmartDashboard.putNumber("rightZTranslationOffset", rightZTranslationOffset);
-    SmartDashboard.putNumber("rightXTranslationOffsetToPlacer", rightXTranslationOffsetToPlacer);
-    //SmartDashboard.putNumber("right rotation pid output", getRightRotationPID());
-    SmartDashboard.putNumber("right translation pid output", getRightXTranslationPID());
 
-    //SmartDashboard.putNumber("Left Rotation Offset", leftRotationOffset);
+    SmartDashboard.putNumber("left rotation offset", leftRotationOffset);
     SmartDashboard.putNumber("leftXTranslationOffset", leftXTranslationOffset);
+    SmartDashboard.putNumber("leftYTranslationOffset", leftYTranslationOffset);
     SmartDashboard.putNumber("leftZTranslationOffset", leftZTranslationOffset);
-    SmartDashboard.putNumber("leftXTranslationOffsetToPlacer", leftXTranslationOffsetToPlacer);
-    //SmartDashboard.putNumber("left rotation pid output", getLeftRotationPID());
-    SmartDashboard.putNumber("left translation pid output", getLeftXTranslationPID());
-    
   }
 
   public boolean isTargetInFront() {
@@ -124,42 +109,19 @@ public class Vision extends SubsystemBase {
                         rotationPoseFront.plus(rotationPoseHopper).div(frontExists + hopperExists)));
   }
 
-
-  
-
-  public double getRightRotationPID() {
-    return -rotationController.calculate(rightRotationOffset, 0);
-  }
-
-  public double getRightXTranslationPID() {
-    return translationController.calculate(rightXTranslationOffsetToPlacer, 0);
-  }
-
-  public double getLeftRotationPID() {
-    return -rotationController.calculate(leftRotationOffset, 0);
-  }
-
-  public double getLeftXTranslationPID() {
-    return translationController.calculate(leftXTranslationOffsetToPlacer, 0); // old: 13.526
-    //center of robot to placer
-  }
-
-  public boolean isRobotAlignedToLeftReef() {
-    if ((Math.abs(leftXTranslationOffsetToPlacer) <= 0.05) 
-    //&& (Math.abs(leftRotationOffset) <= 2.00)
-    ) {
-      return true;
-    } else {
+  public boolean isNearPoseFrontTargetSpace(Pose2d pose) {
+    
+    if(!isTargetInFront()) {
       return false;
     }
-  }
 
-  public boolean isRobotAlignedToRightReef() {
-    if ((Math.abs(rightXTranslationOffsetToPlacer) <= 0.05) && (Math.abs(rightRotationOffset) <= 2.00)) {
-      return true;
-    } else {
-      return false;
-    }
+    Pose2d visionPose = frontPoseTargetSpace().get();
+    double distance = pose.getTranslation().getDistance(visionPose.getTranslation());
+    
+    double angle = Math.abs(pose.getRotation().getDegrees() - visionPose.getRotation().getDegrees());
+
+    return distance <= 0.05 && angle <= 1.5;
+    
   }
 
 }

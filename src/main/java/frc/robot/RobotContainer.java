@@ -6,28 +6,23 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import com.pathplanner.lib.auto.NamedCommands;
-
-import frc.robot.Constants.BlinkinConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PlacerConstants;
 import frc.robot.Constants.VisionConstants;
@@ -125,42 +120,27 @@ public class RobotContainer {
         NamedCommands.registerCommand("LEDPatternAlertHumanPlayer", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.ALERT_HUMAN_PLAYER), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternAlignedWithReef", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.ALIGNED_WITH_REEF), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternCelebrate", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CELEBRATE), blinkinSubsystem));
-        NamedCommands.registerCommand("LEDPatternCoralCollected", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_COLLECTED), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternCoralIndexed", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_INDEXED), blinkinSubsystem));
-        NamedCommands.registerCommand("LEDPatternCoralPlacing", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_PLACING), blinkinSubsystem));
-        NamedCommands.registerCommand("LEDPatternCoralPlaced", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CORAL_PLACED), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternElevatorAtPosition", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.ELEVATOR_AT_DESIRED_POSITION), blinkinSubsystem));
-        NamedCommands.registerCommand("LEDPatternClimbing", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMBING), blinkinSubsystem));
+        NamedCommands.registerCommand("LEDPatternClimbing", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternClimbCompleteRed", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_RED), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternClimbCompleteBlue", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_BLUE), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternClimbComplete", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE), blinkinSubsystem));
 
-        //NamedCommands.registerCommand("debug", new PrintCommand("Aligned at: " + visionSubsystem.getTX()));\
+        NamedCommands.registerCommand("TargetReefLeftPeg", new TargetCMD(visionSubsystem, drivetrain, blinkinSubsystem, driverController,
+            VisionConstants.targetingLeftTranslationOffset).until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
+                VisionConstants.targetingLeftTranslationOffset, VisionConstants.targetingFrontBackTranslationOffset),
+                Rotation2d.fromDegrees(0)))));
 
-// still messed up starts here
-
-        NamedCommands.registerCommand("Align to Left Reef", new RunCommand(() ->
-            driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getLeftXTranslationPID())
-            .withVelocityX(0.0)
-            .withRotationalRate(0.0)
-            ).until(visionSubsystem::isRobotAlignedToLeftReef)
-        );
-
-        NamedCommands.registerCommand("Wait for Left Reef Alignment", new WaitUntilCommand(visionSubsystem::isRobotAlignedToLeftReef));
-
-        NamedCommands.registerCommand("Align to Right Reef", new RunCommand(() ->
-            driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
-            .withVelocityX(0.0)
-            .withRotationalRate(0.0)
-            ).until(visionSubsystem::isRobotAlignedToRightReef)
-        );
-
-        NamedCommands.registerCommand("Wait for Right Reef Alignment", new WaitUntilCommand(visionSubsystem::isRobotAlignedToRightReef));
-
-// messed up stuff ends here
+        NamedCommands.registerCommand("TargetReefRightPeg", new TargetCMD(visionSubsystem, drivetrain, blinkinSubsystem, driverController,
+            VisionConstants.targetingRightTranslationOffset).until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
+                VisionConstants.targetingRightTranslationOffset, VisionConstants.targetingFrontBackTranslationOffset),
+                Rotation2d.fromDegrees(0)))));
 
         NamedCommands.registerCommand("BackUp2Inches",
-          drivetrain.applyRequest(() -> driveRobotCentric.withVelocityY(0.0).withVelocityX(-1.0).withRotationalRate(0.0)).withTimeout(0.25)); // TRAIF -- will this work?
+          drivetrain.applyRequest(() -> driveRobotCentric.withVelocityY(0.0)
+            .withVelocityX(-1.0).withRotationalRate(0.0))
+            .withTimeout(0.25)); // TRAIF -- will this work?
 
         //Named autos here
         autoChooser = AutoBuilder.buildAutoChooser("NAME SELECTED AUTO HERE");
@@ -219,55 +199,18 @@ public class RobotContainer {
         driverController.x().whileTrue(drivetrain.applyRequest(() -> brake));
         
         // point wheels in a specific direction
-        driverController.b().whileTrue(drivetrain.applyRequest(() ->
-        point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
+        driverController.b().whileTrue(drivetrain.applyRequest(
+            () -> point.withModuleDirection(
+                new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
         )); 
         
-        driverController.leftTrigger().whileTrue(new TargetCMD(visionSubsystem, drivetrain, driverController, -0.33)); // old -13.526
-        driverController.rightTrigger().whileTrue(new TargetCMD(visionSubsystem, drivetrain, driverController, -0.06));
+        driverController.leftTrigger().whileTrue(
+            new TargetCMD(visionSubsystem, drivetrain, blinkinSubsystem, driverController,
+                VisionConstants.targetingLeftTranslationOffset));
 
-        // align translationally with left reef peg using hopper limelight
-        // driverController.leftTrigger().whileTrue(
-        //     drivetrain.applyRequest(() ->
-        //     driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getLeftXTranslationPID())
-        //     .withVelocityX(0.0)
-        //     .withRotationalRate( 
-        //         0.0
-        //         //VisionConstants.rotationTargetingSpeed * visionSubsystem.getLeftRotationPID()
-        //         )
-        //     ).until(visionSubsystem::isRobotAlignedToLeftReef)
-        // );
-
-        // align translationally with right reef peg using front middle limelight
-        // driverController.rightTrigger().whileTrue(
-        //     drivetrain.applyRequest(() ->
-        //     driveRobotCentric.withVelocityY(-VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
-        //     .withVelocityX(0.0)
-        //     .withRotationalRate(
-        //         0.0
-        //         //VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID()
-        //         )
-        //     ).until(visionSubsystem::isRobotAlignedToRightReef)
-        // );
-
-        // // align rotationally left
-        // driverController.povLeft().whileTrue(
-        //     drivetrain.applyRequest(() ->
-        //     driveRobotCentric.withVelocityY(0)
-        //     .withVelocityX(0.0)
-        //     .withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getLeftRotationPID())
-        //     )
-        // );
-
-        // // align rotationally right
-        // driverController.povRight().whileTrue(
-        //     drivetrain.applyRequest(() ->
-        //     driveRobotCentric.withVelocityY(0)
-        //     .withVelocityX(0.0)
-        //     .withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID())
-        //     )
-        // );
-
+        driverController.rightTrigger().whileTrue(
+            new TargetCMD(visionSubsystem, drivetrain, blinkinSubsystem, driverController,
+                VisionConstants.targetingRightTranslationOffset));
 
         // reset the field-centric heading on start press
         driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
@@ -300,33 +243,32 @@ public class RobotContainer {
         operatorController.leftBumper().whileTrue(new ClimbOutCMD(climbSubsystem));
         operatorController.rightBumper().whileTrue(new ClimbInCMD(climbSubsystem));
 
-        operatorController.rightStick().whileTrue(Commands.run(elevatorSubsystem::rightMotorSpin, elevatorSubsystem));
+        operatorController.start().whileTrue(Commands.run(
+            () -> blinkinSubsystem.setPattern(
+                LEDPattern.ALERT_HUMAN_PLAYER), blinkinSubsystem));
 
-        //make this happen when A is pressed
-        operatorController.start().whileTrue(new InstantCommand(() ->
-            blinkinSubsystem.setPattern(LEDPattern.ALERT_HUMAN_PLAYER),
-            blinkinSubsystem
-        ));
+        blinkinSubsystem.setDefaultCommand(Commands.runOnce(
+            () -> blinkinSubsystem.setPattern(
+                LEDPattern.IDLE), blinkinSubsystem));
 
-        operatorController.start().whileFalse(new InstantCommand(() ->
-            blinkinSubsystem.setPattern(LEDPattern.IDLE)
-        ));
-
-        placerSubsystem.setDefaultCommand(
-            new InstantCommand(() -> placerSubsystem.setBothMotors(
+        placerSubsystem.setDefaultCommand(Commands.run(
+            () -> placerSubsystem.setFrontMotor(
                 MathUtil.applyDeadband(-operatorController.getRightY() * .25, .1)),
                 placerSubsystem)
         );
 
+        new Trigger(placerSubsystem::isCoralInPlacer).whileTrue(Commands.run(
+            () -> blinkinSubsystem.setPattern(LEDPattern.CORAL_INDEXED), blinkinSubsystem));
+
         operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
-        operatorController.rightTrigger().whileTrue(new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed));
+
+        operatorController.rightTrigger().onTrue(
+            new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed)
+                .andThen(Commands.waitSeconds(0.75))
+                .andThen(new ElevatorToHomeCMD(elevatorSubsystem)));
         
-        //operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem)); // TRAIF -- might remove if joystick binding works?
-        //operatorController.start().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward
-        
-        if (hopperSubsystem.isCoralCollected()) {
-            new CollectFromHopperCMD(placerSubsystem);
-        }
+        new Trigger(hopperSubsystem::isCoralCollected).onTrue(
+            new CollectFromHopperCMD(placerSubsystem));
     }
 
     public Command getAutonomousCommand() {
