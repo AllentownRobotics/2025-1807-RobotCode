@@ -74,7 +74,7 @@ public final class Constants {
     public static final double climbInnerAngle = 0; // 90 degree angle inward
     public static final double climbLockAngle = 0;
     public static final double ClimbDesiredAngle = 0;
-    public static final double climbSpeed = 0.5;
+    public static final double climbSpeed = 1;
   }
 
   // Elevator Constants
@@ -98,7 +98,7 @@ public final class Constants {
     public static final double ELEVATOR_MAX_OUTPUT = 1;
     
     // elevator setpoints (inches)
-    public static final double homePosition = -2;
+    public static final double homePosition = 0;
     public static final double L1Position = 19;
     public static final double L2Position = 28;
     public static final double L3Position = 44;
@@ -204,7 +204,7 @@ public final class Constants {
     public static final double frontLLUp = 0.306;
     public static final double frontLLRoll = 0;
     public static final double frontLLPitch = 0;
-    public static final double frontLLYaw = 137.5;
+    public static final double frontLLYaw = 42.5;
 
     public static final double backLLForward = -0.1616859098;
     public static final double backLLRight = 0.0248326148;

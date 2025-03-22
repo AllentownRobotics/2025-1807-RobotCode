@@ -44,6 +44,7 @@ public class PlaceCMD extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !placer.isCoralInPlacer(); // test this!!!
+    //return !placer.isCoralInPlacer(); // test this!!!
+    return false;
   }
 }

@@ -13,6 +13,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,7 +34,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.BlinkinConstants.LEDPattern;
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
-import frc.robot.commands.DriveCMDs.TargetTranslationCMD;
+import frc.robot.commands.DriveCMDs.TargetCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToHomeCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToL1CMD;
@@ -55,7 +56,7 @@ import frc.robot.subsystems.Vision;
 public class RobotContainer {
 
     public static final double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    public double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     private double slowDriveSpeed = MaxSpeed * TunerConstants.slowDriveScalingConstant;
     private double slowAngularRate = MaxAngularRate * TunerConstants.slowDriveScalingConstant;
@@ -70,7 +71,6 @@ public class RobotContainer {
             .withDeadband(slowDriveSpeed * 0.1)
             .withRotationalDeadband(slowAngularRate * 0.1)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-
 
     private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
             .withDeadband(MaxSpeed * 0.0).withRotationalDeadband(MaxAngularRate * 0.05)
@@ -223,50 +223,51 @@ public class RobotContainer {
         point.withModuleDirection(new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
         )); 
         
-        //driverController.leftTrigger().whileTrue(new TargetTranslationCMD(visionSubsystem, 0));
+        driverController.leftTrigger().whileTrue(new TargetCMD(visionSubsystem, drivetrain, driverController, -0.33)); // old -13.526
+        driverController.rightTrigger().whileTrue(new TargetCMD(visionSubsystem, drivetrain, driverController, -0.06));
 
         // align translationally with left reef peg using hopper limelight
-        driverController.leftTrigger().whileTrue(
-            drivetrain.applyRequest(() ->
-            driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getLeftXTranslationPID())
-            .withVelocityX(0.0)
-            .withRotationalRate( 
-                0.0
-                //VisionConstants.rotationTargetingSpeed * visionSubsystem.getLeftRotationPID()
-                )
-            ).until(visionSubsystem::isRobotAlignedToLeftReef)
-        );
+        // driverController.leftTrigger().whileTrue(
+        //     drivetrain.applyRequest(() ->
+        //     driveRobotCentric.withVelocityY(VisionConstants.translationTargetingSpeed * visionSubsystem.getLeftXTranslationPID())
+        //     .withVelocityX(0.0)
+        //     .withRotationalRate( 
+        //         0.0
+        //         //VisionConstants.rotationTargetingSpeed * visionSubsystem.getLeftRotationPID()
+        //         )
+        //     ).until(visionSubsystem::isRobotAlignedToLeftReef)
+        // );
 
         // align translationally with right reef peg using front middle limelight
-        driverController.rightTrigger().whileTrue(
-            drivetrain.applyRequest(() ->
-            driveRobotCentric.withVelocityY(-VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
-            .withVelocityX(0.0)
-            .withRotationalRate(
-                0.0
-                //VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID()
-                )
-            ).until(visionSubsystem::isRobotAlignedToRightReef)
-        );
-/*
-        // align rotationally left
-        driverController.povLeft().whileTrue(
-            drivetrain.applyRequest(() ->
-            driveRobotCentric.withVelocityY(0)
-            .withVelocityX(0.0)
-            .withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getLeftRotationPID())
-            )
-        );
-/*
-        // align rotationally right
-        driverController.povRight().whileTrue(
-            drivetrain.applyRequest(() ->
-            driveRobotCentric.withVelocityY(0)
-            .withVelocityX(0.0)
-            .withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID())
-            )
-        );
-*/
+        // driverController.rightTrigger().whileTrue(
+        //     drivetrain.applyRequest(() ->
+        //     driveRobotCentric.withVelocityY(-VisionConstants.translationTargetingSpeed * visionSubsystem.getRightXTranslationPID())
+        //     .withVelocityX(0.0)
+        //     .withRotationalRate(
+        //         0.0
+        //         //VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID()
+        //         )
+        //     ).until(visionSubsystem::isRobotAlignedToRightReef)
+        // );
+
+        // // align rotationally left
+        // driverController.povLeft().whileTrue(
+        //     drivetrain.applyRequest(() ->
+        //     driveRobotCentric.withVelocityY(0)
+        //     .withVelocityX(0.0)
+        //     .withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getLeftRotationPID())
+        //     )
+        // );
+
+        // // align rotationally right
+        // driverController.povRight().whileTrue(
+        //     drivetrain.applyRequest(() ->
+        //     driveRobotCentric.withVelocityY(0)
+        //     .withVelocityX(0.0)
+        //     .withRotationalRate(VisionConstants.rotationTargetingSpeed * visionSubsystem.getRightRotationPID())
+        //     )
+        // );
+
 
         // reset the field-centric heading on start press
         driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
@@ -301,7 +302,7 @@ public class RobotContainer {
 
         operatorController.rightStick().whileTrue(Commands.run(elevatorSubsystem::rightMotorSpin, elevatorSubsystem));
 
-
+        //make this happen when A is pressed
         operatorController.start().whileTrue(new InstantCommand(() ->
             blinkinSubsystem.setPattern(LEDPattern.ALERT_HUMAN_PLAYER),
             blinkinSubsystem
@@ -311,12 +312,6 @@ public class RobotContainer {
             blinkinSubsystem.setPattern(LEDPattern.IDLE)
         ));
 
-        // TEST THESE
-
-        /*placerSubsystem.setDefaultCommand(
-            new PlaceCMD(placerSubsystem, operatorController.getRightY(), operatorController.getRightY())
-        );*/ // TRAIF -- use suppliers instead of getting boolean on startup
-
         placerSubsystem.setDefaultCommand(
             new InstantCommand(() -> placerSubsystem.setBothMotors(
                 MathUtil.applyDeadband(-operatorController.getRightY() * .25, .1)),
@@ -325,7 +320,6 @@ public class RobotContainer {
 
         operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
         operatorController.rightTrigger().whileTrue(new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed));
-        //operatorController.rightTrigger().whileTrue(new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed));
         
         //operatorController.y().whileTrue(new ReverseFrontWheelsCMD(placerSubsystem)); // TRAIF -- might remove if joystick binding works?
         //operatorController.start().whileTrue(new EjectAlgaeFromReefCMD(placerSubsystem)); // this spins both sets of placer wheels forward

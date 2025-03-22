@@ -60,8 +60,8 @@ public class Vision extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    frontTv = frontLimelightTable.getEntry("tv").getBoolean(false);
-    hopperTv = hopperLimelightTable.getEntry("tv").getBoolean(false);
+    frontTv = frontLimelightTable.getEntry("tv").getInteger(0) > 0;
+    hopperTv = hopperLimelightTable.getEntry("tv").getInteger(0) > 0;
 
     // right side reef targeting
     rightRotationOffset = frontLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[4];
@@ -123,6 +123,9 @@ public class Vision extends SubsystemBase {
     return Optional.of(new Pose2d(translationPoseFront.plus(translationPoseHopper).div(frontExists + hopperExists),
                         rotationPoseFront.plus(rotationPoseHopper).div(frontExists + hopperExists)));
   }
+
+
+  
 
   public double getRightRotationPID() {
     return -rotationController.calculate(rightRotationOffset, 0);
