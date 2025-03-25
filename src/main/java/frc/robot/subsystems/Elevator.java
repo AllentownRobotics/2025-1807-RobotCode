@@ -163,9 +163,9 @@ public class Elevator extends SubsystemBase {
 
 
     // prevents coral in hopper from triggering limit switch and making elevator auto go up
-    if (!isUpperLimitReached() && getElevatorPositionInInches() >= 15) {
-      leftMotor.setDesiredEncoderPosition(ElevatorConstants.L4Position - 1);
-    }
+    // if (!isUpperLimitReached() && getElevatorPositionInInches() >= 60) {
+    //   leftMotor.setDesiredEncoderPosition(ElevatorConstants.L4Position - 1);
+    // }
 
     // change state only when state changes
     SmartDashboard.putNumber("elevator encoder desired position", desiredSetpoint);

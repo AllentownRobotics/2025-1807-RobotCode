@@ -7,43 +7,49 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Starter Up Center"
+            "pathName": "Down 1 "
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ElevatorToL4"
+            "name": "TargetReefLeft"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Down 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Down 3"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ElevatorWaitForL4"
+            "name": "TargetReefLeft"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 1.0
+            "pathName": "Down 4"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "PlaceToL4"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
+            "pathName": "Down 5"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ElevatorToHome"
+            "name": "TargetReefRight"
           }
         }
       ]

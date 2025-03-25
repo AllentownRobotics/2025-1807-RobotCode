@@ -14,11 +14,14 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -93,6 +96,7 @@ public class RobotContainer {
 
     public RobotContainer() {
 
+        
         /*  You must register your commands with NamedCommands (i.e. with pathplanner) so that they can be used
             by Event Markers in a path or as a command in an Auto.  Commands not registered will be ignored (TRAIF -- need to verify). */
 
@@ -113,7 +117,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("ElevatorWaitforHome", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.homePosition)));
 
  
-        NamedCommands.registerCommand("HopperWaitForCoralCollected", new WaitUntilCommand(() -> hopperSubsystem.isCoralCollected())); // TRAIF -- does this work?
+        //NamedCommands.registerCommand("HopperWaitForCoralCollected", new WaitUntilCommand(() -> hopperSubsystem.isCoralCollected())); // TRAIF -- does this work?
 
         NamedCommands.registerCommand("LEDPatternOff", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.OFF), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternIdle", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.IDLE), blinkinSubsystem));
@@ -127,12 +131,14 @@ public class RobotContainer {
         NamedCommands.registerCommand("LEDPatternClimbCompleteBlue", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE_BLUE), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternClimbComplete", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.CLIMB_COMPLETE), blinkinSubsystem));
 
-        NamedCommands.registerCommand("TargetReefLeftPeg", new TargetCMD(visionSubsystem, drivetrain, blinkinSubsystem, driverController,
+        //NamedCommands.registerCommand("testinghopper", new HopperTest(hopperSubsystem).andThen(new CollectFromHopperCMD(placerSubsystem)));
+
+        NamedCommands.registerCommand("TargetReefLeft", new TargetCMD(visionSubsystem, drivetrain, blinkinSubsystem, driverController,
             VisionConstants.targetingLeftTranslationOffset).until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
                 VisionConstants.targetingLeftTranslationOffset, VisionConstants.targetingFrontBackTranslationOffset),
                 Rotation2d.fromDegrees(0)))));
 
-        NamedCommands.registerCommand("TargetReefRightPeg", new TargetCMD(visionSubsystem, drivetrain, blinkinSubsystem, driverController,
+        NamedCommands.registerCommand("TargetReefRight", new TargetCMD(visionSubsystem, drivetrain, blinkinSubsystem, driverController,
             VisionConstants.targetingRightTranslationOffset).until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
                 VisionConstants.targetingRightTranslationOffset, VisionConstants.targetingFrontBackTranslationOffset),
                 Rotation2d.fromDegrees(0)))));
@@ -257,18 +263,23 @@ public class RobotContainer {
                 placerSubsystem)
         );
 
-        new Trigger(placerSubsystem::isCoralInPlacer).whileTrue(Commands.run(
-            () -> blinkinSubsystem.setPattern(LEDPattern.CORAL_INDEXED), blinkinSubsystem));
+         new Trigger(placerSubsystem::isCoralInPlacer).whileTrue(Commands.run(
+             () -> blinkinSubsystem.setPattern(LEDPattern.CORAL_INDEXED), blinkinSubsystem));
 
         operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
 
-        operatorController.rightTrigger().onTrue(
+        operatorController.rightTrigger().onTrue
+        (
             new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed)
-                .andThen(Commands.waitSeconds(0.75))
-                .andThen(new ElevatorToHomeCMD(elevatorSubsystem)));
-        
-        new Trigger(hopperSubsystem::isCoralCollected).onTrue(
-            new CollectFromHopperCMD(placerSubsystem));
+                //.andThen(Commands.waitSeconds(0.75))
+                //.andThen(new ElevatorToHomeCMD(elevatorSubsystem))
+                )
+                ;
+    
+
+        // new Trigger(hopperSubsystem::isCoralCollected).onTrue(
+        //      new CollectFromHopperCMD(placerSubsystem));
+
     }
 
     public Command getAutonomousCommand() {

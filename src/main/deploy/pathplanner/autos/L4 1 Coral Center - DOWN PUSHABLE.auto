@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Starter Up Center"
+            "pathName": "Middle 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TargetReefRight"
           }
         },
         {
