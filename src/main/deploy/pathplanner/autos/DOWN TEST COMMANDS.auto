@@ -68,6 +68,12 @@
         {
           "type": "named",
           "data": {
+            "name": "HopperWaitForCoralCollected"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "CollectFromHopper"
           }
         },
@@ -81,6 +87,109 @@
           "type": "named",
           "data": {
             "name": "TargetReefLeft"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorToL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorWaitForL4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PlaceToL4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorToHome"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Down 4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HopperWaitForCoralCollected"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CollectFromHopper"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Down 5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TargetReefRight"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorToL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorWaitForL4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PlaceToL4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
           }
         }
       ]

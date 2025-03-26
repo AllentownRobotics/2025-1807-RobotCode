@@ -117,7 +117,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("ElevatorWaitforHome", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.homePosition)));
 
  
-        //NamedCommands.registerCommand("HopperWaitForCoralCollected", new WaitUntilCommand(() -> hopperSubsystem.isCoralCollected())); // TRAIF -- does this work?
+        NamedCommands.registerCommand("HopperWaitForCoralCollected", new WaitUntilCommand(() -> hopperSubsystem.isCoralCollected())); // TRAIF -- does this work?
 
         NamedCommands.registerCommand("LEDPatternOff", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.OFF), blinkinSubsystem));
         NamedCommands.registerCommand("LEDPatternIdle", new InstantCommand(() -> blinkinSubsystem.setPattern(Constants.BlinkinConstants.LEDPattern.IDLE), blinkinSubsystem));
@@ -133,12 +133,16 @@ public class RobotContainer {
 
         //NamedCommands.registerCommand("testinghopper", new HopperTest(hopperSubsystem).andThen(new CollectFromHopperCMD(placerSubsystem)));
 
-        NamedCommands.registerCommand("TargetReefLeft", new TargetCMD(visionSubsystem, drivetrain, blinkinSubsystem, driverController,
+        NamedCommands.registerCommand("TargetReefLeft", new TargetCMD(visionSubsystem, drivetrain,
+        //blinkinSubsystem,
+        driverController,
             VisionConstants.targetingLeftTranslationOffset).until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
                 VisionConstants.targetingLeftTranslationOffset, VisionConstants.targetingFrontBackTranslationOffset),
                 Rotation2d.fromDegrees(0)))));
 
-        NamedCommands.registerCommand("TargetReefRight", new TargetCMD(visionSubsystem, drivetrain, blinkinSubsystem, driverController,
+        NamedCommands.registerCommand("TargetReefRight", new TargetCMD(visionSubsystem, drivetrain,
+        //blinkinSubsystem,
+        driverController,
             VisionConstants.targetingRightTranslationOffset).until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
                 VisionConstants.targetingRightTranslationOffset, VisionConstants.targetingFrontBackTranslationOffset),
                 Rotation2d.fromDegrees(0)))));
@@ -156,6 +160,15 @@ public class RobotContainer {
         NamedCommands.registerCommand("lower elevator to home", new ElevatorToHomeCMD(elevatorSubsystem));
 
         SmartDashboard.putData(autoChooser);
+
+        SmartDashboard.putData(CommandScheduler.getInstance());
+        SmartDashboard.putData(blinkinSubsystem);
+        SmartDashboard.putData(climbSubsystem);
+        //SmartDashboard.putData(drivetrain);
+        SmartDashboard.putData(elevatorSubsystem);
+        SmartDashboard.putData(hopperSubsystem);
+        SmartDashboard.putData(placerSubsystem);
+        SmartDashboard.putData(visionSubsystem);
 
         configureBindings();
     }
@@ -211,11 +224,15 @@ public class RobotContainer {
         )); 
         
         driverController.leftTrigger().whileTrue(
-            new TargetCMD(visionSubsystem, drivetrain, blinkinSubsystem, driverController,
+            new TargetCMD(visionSubsystem, drivetrain,
+            //blinkinSubsystem,
+            driverController,
                 VisionConstants.targetingLeftTranslationOffset));
 
         driverController.rightTrigger().whileTrue(
-            new TargetCMD(visionSubsystem, drivetrain, blinkinSubsystem, driverController,
+            new TargetCMD(visionSubsystem, drivetrain,
+            //blinkinSubsystem,
+            driverController,
                 VisionConstants.targetingRightTranslationOffset));
 
         // reset the field-centric heading on start press
@@ -263,8 +280,8 @@ public class RobotContainer {
                 placerSubsystem)
         );
 
-         new Trigger(placerSubsystem::isCoralInPlacer).whileTrue(Commands.run(
-             () -> blinkinSubsystem.setPattern(LEDPattern.CORAL_INDEXED), blinkinSubsystem));
+        // new Trigger(placerSubsystem::isCoralInPlacer).whileTrue(Commands.run(
+        //     () -> blinkinSubsystem.setPattern(LEDPattern.CORAL_INDEXED), blinkinSubsystem));
 
         operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
 
@@ -273,8 +290,7 @@ public class RobotContainer {
             new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed)
                 //.andThen(Commands.waitSeconds(0.75))
                 //.andThen(new ElevatorToHomeCMD(elevatorSubsystem))
-                )
-                ;
+                );
     
 
         // new Trigger(hopperSubsystem::isCoralCollected).onTrue(

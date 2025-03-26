@@ -13,6 +13,7 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
@@ -83,6 +84,8 @@ public class Elevator extends SubsystemBase {
     desiredSetpoint = ElevatorConstants.homePosition;
     elevatorEncoder.setPosition(0);
     leftMotor.setDesiredEncoderPosition(desiredSetpoint);
+
+
     
     SignalLogger.start();
   }
@@ -168,11 +171,11 @@ public class Elevator extends SubsystemBase {
     // }
 
     // change state only when state changes
-    SmartDashboard.putNumber("elevator encoder desired position", desiredSetpoint);
+    SmartDashboard.putNumber("elevator desired position", desiredSetpoint);
     SmartDashboard.putBoolean("elevator min limit", !isLowerLimitReached());
     SmartDashboard.putBoolean("elevator max limit", !isUpperLimitReached());
     SmartDashboard.putNumber("elevator height", getElevatorPositionInInches());
-    SmartDashboard.putNumber("elevator encoder height", elevatorEncoder.getPosition().getValueAsDouble());
+    //SmartDashboard.putNumber("elevator encoder height", elevatorEncoder.getPosition().getValueAsDouble());
 
     SmartDashboard.putBoolean("upper elevator limit condition", isUpperLimitReached());
 

@@ -24,9 +24,9 @@ public class Hopper extends SubsystemBase {
     SmartDashboard.putBoolean("Hopper Beam Break State", CoralCollected);
   }
 
-  // public boolean isCoralCollected() {
-  //   return !CoralCollected;
-  // }
+  public boolean isCoralCollected() {
+    return CoralCollected;
+  }
 
   @Override
   // This method will be called once per scheduler run
@@ -35,12 +35,12 @@ public class Hopper extends SubsystemBase {
     boolean hopperStatus = hopperDebouncer.calculate(hopperBeamBreak.get());
 
     // Updates smartdashboard status only when beam break value changes
-    //  if(hopperStatus != CoralCollected) {
-    //   SmartDashboard.putBoolean("Hopper Beam Break State", isCoralCollected());
-    //  }
+     if(hopperStatus != CoralCollected) {
+      SmartDashboard.putBoolean("Hopper Beam Break State", isCoralCollected());
+     }
 
     // Updates CoralCollected value
-    CoralCollected = hopperStatus;
+    CoralCollected = !hopperStatus;
   }
   
 }

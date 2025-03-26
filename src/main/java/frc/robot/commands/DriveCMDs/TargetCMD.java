@@ -27,8 +27,7 @@ import frc.robot.subsystems.Vision;
 public class TargetCMD extends Command {
   Vision limelight;
   double offset;
-  Blinkin blinkin;
-
+  
   PIDController sideToSideController;
   PIDController frontToBackController;
   PIDController rotationController;
@@ -42,12 +41,12 @@ public class TargetCMD extends Command {
   double slowAngularRate;
 
   /** Creates a new TargetCMD. */
-  public TargetCMD(Vision limelight, CommandSwerveDrivetrain drivetrain, Blinkin blinkin, CommandXboxController driverController, double offset) {
+  public TargetCMD(Vision limelight, CommandSwerveDrivetrain drivetrain, CommandXboxController driverController, double offset) {
+
     this.limelight = limelight;
     this.drivetrain = drivetrain;
     this.driverController = driverController;
     this.offset = offset;
-    this.blinkin = blinkin;
     
     double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -70,7 +69,7 @@ public class TargetCMD extends Command {
     rotationController = new PIDController(VisionConstants.rotation_kP, VisionConstants.rotation_kI, VisionConstants.rotation_kD);
 
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drivetrain, blinkin);
+    addRequirements(drivetrain);
   }
 
   // Called when the command is initially scheduled.
@@ -101,9 +100,9 @@ public class TargetCMD extends Command {
         .withRotationalRate(-rotationController.calculate(pose.get().getRotation().getRadians(), 0))
       ).execute();
 
-      if(Math.abs(offset - pose.get().getX()) <= 0.05) {
+      /*if(Math.abs(offset - pose.get().getX()) <= 0.05) {
         blinkin.setPattern(LEDPattern.ALIGNED_WITH_REEF);
-      }
+      }*/
 
         } else {
       drivetrain.applyRequest(() ->

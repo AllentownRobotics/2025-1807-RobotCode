@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Down 1 "
+            "pathName": "Up 1"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "TargetReefLeft"
+            "name": "TargetReefRight"
           }
         },
         {
@@ -25,43 +25,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Down 2"
+            "pathName": "Up 2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "HopperWaitForCoralCollected"
+            "name": "CollectFromHopper"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Down 3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "TargetReefLeft"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Down 4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Down 5"
+            "pathName": "Up 3"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "TargetReefRight"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Up 4"
           }
         }
       ]
