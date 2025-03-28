@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Down 1 "
+            "pathName": "3 Coral Down 1 "
           }
         },
         {
@@ -41,25 +41,19 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "ElevatorToHome"
+                  "pathName": "3 Coral Down 2"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Down 2"
+                  "name": "ElevatorToHome"
                 }
               }
             ]
@@ -72,15 +66,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "CollectFromHopper"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Down 3"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "3 Coral Down 3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CollectFromHopper"
+                }
+              }
+            ]
           }
         },
         {
@@ -114,25 +115,19 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "ElevatorToHome"
+                  "pathName": "3 Coral Down 4"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Down 4"
+                  "name": "ElevatorToHome"
                 }
               }
             ]
@@ -145,15 +140,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "CollectFromHopper"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Down 5"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "3 Coral Down 5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CollectFromHopper"
+                }
+              }
+            ]
           }
         },
         {
@@ -187,9 +189,53 @@
           }
         },
         {
-          "type": "wait",
+          "type": "parallel",
           "data": {
-            "waitTime": 0.25
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "3 Coral Down 6"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorToHome"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HopperWaitForCoralCollected"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "3 Coral Down 7"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CollectFromHopper"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TargetReefRight"
           }
         }
       ]

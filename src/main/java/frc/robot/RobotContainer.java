@@ -108,7 +108,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("PlaceToL1", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed).withTimeout(.5)); // TRAIF figure out and put in Constants.java
         NamedCommands.registerCommand("PlaceToL2", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed).withTimeout(.5)); //TRAIF figure out and put in Constants.java
         NamedCommands.registerCommand("PlaceToL3", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed).withTimeout(.5)); //TRAIF figure out and put in Constants.java
-        NamedCommands.registerCommand("PlaceToL4", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed).withTimeout(.5)); //TRAIF figure out and put in Constants.java
+        NamedCommands.registerCommand("PlaceToL4", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed).withTimeout(.3)); //TRAIF figure out and put in Constants.java
         NamedCommands.registerCommand("CollectFromHopper", new CollectFromHopperCMD(placerSubsystem));
         NamedCommands.registerCommand("ElevatorWaitforL4", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L4Position)));
         NamedCommands.registerCommand("ElevatorWaitforL3", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L3Position)));
@@ -285,7 +285,7 @@ public class RobotContainer {
 
         operatorController.a().whileTrue(new CollectFromHopperCMD(placerSubsystem));
 
-        operatorController.rightTrigger().onTrue
+        operatorController.rightTrigger().whileTrue
         (
             new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed)
                 //.andThen(Commands.waitSeconds(0.75))

@@ -98,10 +98,10 @@ public final class Constants {
     
     // elevator setpoints (inches)
     public static final double homePosition = -2;
-    public static final double L1Position = 19;
-    public static final double L2Position = 28;
-    public static final double L3Position = 44;
-    public static final double L4Position = 68;
+    public static final double L1Position = 18;
+    public static final double L2Position = 27;
+    public static final double L3Position = 43;
+    public static final double L4Position = 65.5;
     public static final double positionTolerance = .1;
     public static final double softLimitMinPosition = 0;
     public static final double softLimitMaxPosition = 0;
@@ -120,7 +120,7 @@ public final class Constants {
     public static final int placerBeamBreakID = 1;
     
     public static final double placerFrontMotorSpeed = 0.3; // .2
-    public static final double placerBackMotorSpeed = 0.15; // .17
+    public static final double placerBackMotorSpeed = 0.12; // .17
     public static final double placerAlgaeSpeed = 0.4;
     public static final double placerCollectAlgaeSpeed = 0.6;
   }
@@ -170,7 +170,7 @@ public final class Constants {
   public static class VisionConstants {
 
     public static final double targetingLeftTranslationOffset = -0.33;
-    public static final double targetingRightTranslationOffset = -0.005;
+    public static final double targetingRightTranslationOffset = -0.01;
     public static final double targetingFrontBackTranslationOffset = -0.425;
     
     public static final double rotation_kP = 2.27;
@@ -185,7 +185,6 @@ public final class Constants {
 
     public static final double translationTargetingSpeed = 5.41; // meters per second
 
-    public static final double alignmentDeadzone = 0;
 
     // limelight configs (center of lens) relative to center bottom of the robot (bottom of the wheels)
     // camera view: robot pose in target space

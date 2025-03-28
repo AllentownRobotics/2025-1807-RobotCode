@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.net.WebServer;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,7 +34,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    // WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+    WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
     // add elastic layout file to deploy folder of robot code, this line gives the file to the robot
   }
 
