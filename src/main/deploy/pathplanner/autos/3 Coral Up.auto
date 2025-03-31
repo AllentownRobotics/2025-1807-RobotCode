@@ -165,27 +165,15 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ElevatorWaitForL4"
-          }
-        },
-        {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.0
           }
         },
         {
           "type": "named",
           "data": {
             "name": "PlaceToL4"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.2
           }
         },
         {

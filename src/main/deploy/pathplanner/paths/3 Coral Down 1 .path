@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.00175,
-        "y": 2.4259999999999993
+        "x": 5.0505,
+        "y": 2.2992499999999993
       },
       "prevControl": {
-        "x": 5.25175,
-        "y": 2.4259999999999993
+        "x": 5.3005,
+        "y": 2.2992499999999993
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,13 +33,13 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "ElevatorToL1",
-      "waypointRelativePos": 0.5,
+      "name": "ElevatorToL2",
+      "waypointRelativePos": 0.3,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "ElevatorToL1"
+          "name": "ElevatorToL2"
         }
       }
     }

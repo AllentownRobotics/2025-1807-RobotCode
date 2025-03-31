@@ -14,17 +14,14 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PlacerConstants;
@@ -32,7 +29,6 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.BlinkinConstants.LEDPattern;
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
-import frc.robot.commands.DriveCMDs.TargetCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToHomeCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToL1CMD;
@@ -41,6 +37,8 @@ import frc.robot.commands.ElevatorCMDs.ElevatorToL3CMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToL4CMD;
 import frc.robot.commands.PlacerCMDs.CollectFromHopperCMD;
 import frc.robot.commands.PlacerCMDs.PlaceCMD;
+import frc.robot.commands.TargetingCMDs.TargetCMD;
+import frc.robot.commands.TargetingCMDs.TargetWithLEDs;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Climb;
@@ -108,7 +106,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("PlaceToL1", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed).withTimeout(.5)); // TRAIF figure out and put in Constants.java
         NamedCommands.registerCommand("PlaceToL2", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed).withTimeout(.5)); //TRAIF figure out and put in Constants.java
         NamedCommands.registerCommand("PlaceToL3", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed).withTimeout(.5)); //TRAIF figure out and put in Constants.java
-        NamedCommands.registerCommand("PlaceToL4", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed).withTimeout(.3)); //TRAIF figure out and put in Constants.java
+        NamedCommands.registerCommand("PlaceToL4", new PlaceCMD(placerSubsystem, PlacerConstants.placerFrontMotorSpeed, PlacerConstants.placerBackMotorSpeed).withTimeout(.5)); //TRAIF figure out and put in Constants.java
         NamedCommands.registerCommand("CollectFromHopper", new CollectFromHopperCMD(placerSubsystem));
         NamedCommands.registerCommand("ElevatorWaitforL4", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L4Position)));
         NamedCommands.registerCommand("ElevatorWaitforL3", new WaitUntilCommand(elevatorSubsystem.isAtPosition(Constants.ElevatorConstants.L3Position)));
@@ -133,16 +131,16 @@ public class RobotContainer {
 
         //NamedCommands.registerCommand("testinghopper", new HopperTest(hopperSubsystem).andThen(new CollectFromHopperCMD(placerSubsystem)));
 
-        NamedCommands.registerCommand("TargetReefLeft", new TargetCMD(visionSubsystem, drivetrain,
-        //blinkinSubsystem,
-        driverController,
+        NamedCommands.registerCommand("TargetReefLeft", new TargetCMD(
+            visionSubsystem, drivetrain,
+            driverController,
             VisionConstants.targetingLeftTranslationOffset).until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
                 VisionConstants.targetingLeftTranslationOffset, VisionConstants.targetingFrontBackTranslationOffset),
                 Rotation2d.fromDegrees(0)))));
 
-        NamedCommands.registerCommand("TargetReefRight", new TargetCMD(visionSubsystem, drivetrain,
-        //blinkinSubsystem,
-        driverController,
+        NamedCommands.registerCommand("TargetReefRight", new TargetCMD(
+            visionSubsystem, drivetrain,
+            driverController,
             VisionConstants.targetingRightTranslationOffset).until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
                 VisionConstants.targetingRightTranslationOffset, VisionConstants.targetingFrontBackTranslationOffset),
                 Rotation2d.fromDegrees(0)))));
@@ -164,7 +162,6 @@ public class RobotContainer {
         SmartDashboard.putData(CommandScheduler.getInstance());
         SmartDashboard.putData(blinkinSubsystem);
         SmartDashboard.putData(climbSubsystem);
-        //SmartDashboard.putData(drivetrain);
         SmartDashboard.putData(elevatorSubsystem);
         SmartDashboard.putData(hopperSubsystem);
         SmartDashboard.putData(placerSubsystem);
@@ -204,7 +201,6 @@ public class RobotContainer {
             )
         );
 
-//TEST
         // slow drive CMD
         driverController.leftBumper().whileTrue(
             drivetrain.applyRequest(() ->
@@ -223,17 +219,29 @@ public class RobotContainer {
                 new Rotation2d(-driverController.getLeftY(), -driverController.getLeftX()))
         )); 
         
+        // driverController.leftTrigger().whileTrue(
+        //     new TargetCMD(visionSubsystem, drivetrain,
+        //     driverController,
+        //         VisionConstants.targetingLeftTranslationOffset));
+
+        // driverController.rightTrigger().whileTrue(
+        //     new TargetCMD(visionSubsystem, drivetrain,
+        //     driverController,
+        //         VisionConstants.targetingRightTranslationOffset));
+
         driverController.leftTrigger().whileTrue(
-            new TargetCMD(visionSubsystem, drivetrain,
-            //blinkinSubsystem,
-            driverController,
-                VisionConstants.targetingLeftTranslationOffset));
+            new TargetWithLEDs(visionSubsystem, drivetrain, 
+            blinkinSubsystem, driverController,
+            operatorController,
+            VisionConstants.targetingLeftTranslationOffset)
+        );
 
         driverController.rightTrigger().whileTrue(
-            new TargetCMD(visionSubsystem, drivetrain,
-            //blinkinSubsystem,
-            driverController,
-                VisionConstants.targetingRightTranslationOffset));
+            new TargetWithLEDs(visionSubsystem, drivetrain,
+            blinkinSubsystem, driverController,
+            operatorController,
+            VisionConstants.targetingRightTranslationOffset)
+        );
 
         // reset the field-centric heading on start press
         driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
@@ -293,6 +301,7 @@ public class RobotContainer {
                 );
     
 
+        // maybe add back??
         // new Trigger(hopperSubsystem::isCoralCollected).onTrue(
         //      new CollectFromHopperCMD(placerSubsystem));
 

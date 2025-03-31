@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.DriveCMDs;
+package frc.robot.commands.TargetingCMDs;
 
 import java.util.Optional;
 
@@ -17,9 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Constants.BlinkinConstants.LEDPattern;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
 
@@ -86,12 +84,12 @@ public class TargetCMD extends Command {
 
     Optional<Pose2d> pose = limelight.frontPoseTargetSpace();
     if (pose.isPresent()) {
-      SmartDashboard.putNumber("Optional translation Pose", pose.get().getX());
-      SmartDashboard.putNumber("Optional rotation Pose", pose.get().getRotation().getRadians());
-      SmartDashboard.putNumber("optional back front translation pose", pose.get().getY());
+      SmartDashboard.putNumber("left right translation Pose", pose.get().getX());
+      SmartDashboard.putNumber("rotation Pose", pose.get().getRotation().getRadians());
+      SmartDashboard.putNumber("front back translation pose", pose.get().getY());
       SmartDashboard.putNumber("PID front back translation value", frontToBackController.calculate(pose.get().getY(), VisionConstants.targetingFrontBackTranslationOffset));
       SmartDashboard.putNumber("PID left right translation value", sideToSideController.calculate(pose.get().getX(), offset));
-      SmartDashboard.putNumber("PID rotation", rotationController.calculate(pose.get().getRotation().getRadians(), 0));
+      SmartDashboard.putNumber("targeting PID rotation", rotationController.calculate(pose.get().getRotation().getRadians(), 0));
     
       drivetrain.applyRequest(() ->
         drive
