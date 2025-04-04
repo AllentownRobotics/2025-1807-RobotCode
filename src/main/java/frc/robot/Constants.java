@@ -24,6 +24,7 @@ public final class Constants {
   public static class OIConstants {
     public static final int driverControllerPort = 0;
     public static final int operatorControllerPort = 1;
+    public static final int testControllerPort = 5;
   }
 
   public static class GlobalConstants {
@@ -60,21 +61,21 @@ public final class Constants {
     public static final double climbSpeed = 1;
     
     // climb motor PID
-    public static final double CLIMB_P = 0.01; // ADJUST ALL
-    public static final double CLIMB_I = 0;
-    public static final double CLIMB_D = 0;
-    public static final double CLIMB_SFF = 0; // static feedforward
-    public static final double CLIMB_VFF = 0; // velocity feedforward
-    public static final double CLIMB_AFF = 0; // acceleration feedforward
-    public static final double CLIMB_GFF = 0;
-    public static final double CLIMB_MIN_OUTPUT = -1;
-    public static final double CLIMB_MAX_OUTPUT = 1;
+    // public static final double CLIMB_P = 0.01;
+    // public static final double CLIMB_I = 0;
+    // public static final double CLIMB_D = 0;
+    // public static final double CLIMB_SFF = 0;
+    // public static final double CLIMB_VFF = 0;
+    // public static final double CLIMB_AFF = 0;
+    // public static final double CLIMB_GFF = 0;
+    // public static final double CLIMB_MIN_OUTPUT = -1;
+    // public static final double CLIMB_MAX_OUTPUT = 1;
     
-    // climb setpoints
-    public static final double climbOuterAngle = 180; // 90 degree angle outward
-    public static final double climbInnerAngle = 0; // 90 degree angle inward
-    public static final double climbLockAngle = 0;
-    public static final double ClimbDesiredAngle = 0;
+    // // climb setpoints
+    // public static final double climbOuterAngle = 180; // 90 degree angle outward
+    // public static final double climbInnerAngle = 0; // 90 degree angle inward
+    // public static final double climbLockAngle = 0;
+    // public static final double ClimbDesiredAngle = 0;
   }
 
   // Elevator Constants
@@ -100,8 +101,8 @@ public final class Constants {
     // elevator setpoints (inches)
     public static final double homePosition = -2;
     public static final double L1Position = 19;
-    public static final double L2Position = 29;
-    public static final double L3Position = 44;
+    public static final double L2Position = 31;
+    public static final double L3Position = 46;
     public static final double L4Position = 67;
     public static final double positionTolerance = .1;
     public static final double softLimitMinPosition = 0;
@@ -129,6 +130,17 @@ public final class Constants {
   // Hopper Constants
   public static class HopperConstants {
     public static final int hopperBeamBreakID = 0;
+  }
+
+
+  // Algae Mech Constants
+  public static class AlgaeMechConstants {
+    public static final int collectorMotorID = 23;
+    public static final int pivotMotorID = 24;
+    public static final int algaeMechCANCoderID = 25;
+
+    public static final double collectSpeed = 0.2;
+    public static final double pivotSpeed = 0.4;
   }
 
   // Blinkin Constants
@@ -170,23 +182,30 @@ public final class Constants {
 
   public static class VisionConstants {
 
-    public static final double targetingLeftTranslationOffset = -0.359;
-    public static final double targetingRightTranslationOffset = -0.01;
-    public static final double targetingFrontBackTranslationOffset = -0.450; //.425
+    public static final double targetingLeftTranslationOffset = -0.3754 + 0.05;
+    public static final double targetingRightTranslationOffset = -0.01 - 0.01;
+    public static final double targetingLeftFrontBackTranslationOffset = -0.43; //-.42
+    public static final double targetingRightFrontBackTranslationOffset = -0.3;
     
-    public static final double rotation_kP = 2.27;
+    public static final double rotation_kP = 2.7; //2.4
     public static final double rotation_kI = 0.0;
-    public static final double rotation_kD = 0.35;
+    public static final double rotation_kD = 0; //.35
 
-    public static final double translation_kP = 3.0;
-    public static final double translation_kI = 0.2;
-    public static final double translation_kD = 0.625;
+    public static final double translation_kP = 3.3;
+    public static final double translation_kI = 0; //0.2
+    public static final double translation_kD = 0; //0.625
+
+    public static final double ytranslation_kP = 2.15;
+    public static final double ytranslation_kI = 0; //0.2
+    public static final double ytranslation_kD = 0; //0.625
     
     public static final double rotationTargetingSpeed = 0.75; // rotations per second
 
     public static final double translationTargetingSpeed = 5.41; // meters per second
 
-    public static final double distanceDeadzone = 0.05;
+    public static final double xDistanceDeadzone = 0.03;
+    public static final double yLeftReefDistanceDeadzone = 0.06;
+    public static final double yRightReefDistanceDeadzone = 0.1;
     public static final double angleDeadzone = 1.5;
 
 
@@ -203,12 +222,12 @@ public final class Constants {
     public static final double hopperLLPitch = -29;
     public static final double hopperLLYaw = 5;
 
-    public static final double frontLLForward = 0.168;
-    public static final double frontLLRight = -0.234;
-    public static final double frontLLUp = 0.306;
+    public static final double frontLLForward = 0.1637538; //0.168
+    public static final double frontLLRight = -0.2289857498; //-0.234
+    public static final double frontLLUp = 0.3057553194; //0.306
     public static final double frontLLRoll = 0;
     public static final double frontLLPitch = 0;
-    public static final double frontLLYaw = 42.5;
+    public static final double frontLLYaw = -42.5;
 
     public static final double backLLForward = -0.1616859098;
     public static final double backLLRight = 0.0248326148;
@@ -216,6 +235,8 @@ public final class Constants {
     public static final double backLLRoll = 0;
     public static final double backLLPitch = 50;
     public static final double backLLYaw = -180;
+
+    // limelight exposure: 351 (mar)
 
   }
 

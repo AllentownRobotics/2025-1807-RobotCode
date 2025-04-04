@@ -23,10 +23,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import com.pathplanner.lib.auto.NamedCommands;
+
+import frc.robot.Constants.AlgaeMechConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PlacerConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.BlinkinConstants.LEDPattern;
+import frc.robot.commands.AlgaeMechCMDs.PivotAlgaeMechCMD;
+import frc.robot.commands.AlgaeMechCMDs.ManipulateAlgaeCMD;
 import frc.robot.commands.ClimbCMDs.ClimbInCMD;
 import frc.robot.commands.ClimbCMDs.ClimbOutCMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorIncrementCMD;
@@ -40,6 +44,7 @@ import frc.robot.commands.PlacerCMDs.PlaceCMD;
 import frc.robot.commands.TargetingCMDs.TargetCMD;
 import frc.robot.commands.TargetingCMDs.TargetWithLEDs;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.AlgaeMech;
 import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -80,6 +85,7 @@ public class RobotContainer {
 
     private final CommandXboxController driverController = new CommandXboxController(OIConstants.driverControllerPort);
     private final CommandXboxController operatorController = new CommandXboxController(OIConstants.operatorControllerPort);
+    private final CommandXboxController testController = new CommandXboxController(OIConstants.testControllerPort);
 
     private final SendableChooser<Command> autoChooser;
 
@@ -89,6 +95,7 @@ public class RobotContainer {
     private final Placer placerSubsystem = new Placer();
     private final Climb climbSubsystem = new Climb();
     private final Hopper hopperSubsystem = new Hopper();
+    private final AlgaeMech algaeSubsystem = new AlgaeMech();
     private final Blinkin blinkinSubsystem = new Blinkin();
     private final Vision visionSubsystem = new Vision();
 
@@ -134,16 +141,18 @@ public class RobotContainer {
         NamedCommands.registerCommand("TargetReefLeft", new TargetCMD(
             visionSubsystem, drivetrain,
             driverController,
-            VisionConstants.targetingLeftTranslationOffset).until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
-                VisionConstants.targetingLeftTranslationOffset, VisionConstants.targetingFrontBackTranslationOffset),
-                Rotation2d.fromDegrees(0)))));
+            VisionConstants.targetingLeftTranslationOffset, VisionConstants.targetingLeftFrontBackTranslationOffset)
+                .until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
+                VisionConstants.targetingLeftTranslationOffset, VisionConstants.targetingLeftFrontBackTranslationOffset),
+                Rotation2d.fromDegrees(0)), VisionConstants.yLeftReefDistanceDeadzone)));
 
         NamedCommands.registerCommand("TargetReefRight", new TargetCMD(
             visionSubsystem, drivetrain,
             driverController,
-            VisionConstants.targetingRightTranslationOffset).until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
-                VisionConstants.targetingRightTranslationOffset, VisionConstants.targetingFrontBackTranslationOffset),
-                Rotation2d.fromDegrees(0)))));
+            VisionConstants.targetingRightTranslationOffset, VisionConstants.targetingRightFrontBackTranslationOffset)
+                .until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
+                VisionConstants.targetingRightTranslationOffset, VisionConstants.targetingRightFrontBackTranslationOffset),
+                Rotation2d.fromDegrees(0)), VisionConstants.yRightReefDistanceDeadzone)));
 
         NamedCommands.registerCommand("BackUp2Inches",
           drivetrain.applyRequest(() -> driveRobotCentric.withVelocityY(0.0)
@@ -164,6 +173,7 @@ public class RobotContainer {
         SmartDashboard.putData(climbSubsystem);
         SmartDashboard.putData(elevatorSubsystem);
         SmartDashboard.putData(hopperSubsystem);
+        SmartDashboard.putData(algaeSubsystem);
         SmartDashboard.putData(placerSubsystem);
         SmartDashboard.putData(visionSubsystem);
 
@@ -233,14 +243,16 @@ public class RobotContainer {
             new TargetWithLEDs(visionSubsystem, drivetrain, 
             blinkinSubsystem, driverController,
             operatorController,
-            VisionConstants.targetingLeftTranslationOffset)
+            VisionConstants.targetingLeftTranslationOffset,
+            VisionConstants.targetingLeftFrontBackTranslationOffset)
         );
 
         driverController.rightTrigger().whileTrue(
             new TargetWithLEDs(visionSubsystem, drivetrain,
             blinkinSubsystem, driverController,
             operatorController,
-            VisionConstants.targetingRightTranslationOffset)
+            VisionConstants.targetingRightTranslationOffset,
+            VisionConstants.targetingRightFrontBackTranslationOffset)
         );
 
         // reset the field-centric heading on start press
@@ -304,6 +316,28 @@ public class RobotContainer {
         // maybe add back??
         // new Trigger(hopperSubsystem::isCoralCollected).onTrue(
         //      new CollectFromHopperCMD(placerSubsystem));
+
+        algaeSubsystem.setDefaultCommand(Commands.run(
+            () -> algaeSubsystem.pivotAlgaeMech(
+                MathUtil.applyDeadband(operatorController.getLeftY(), .1)),
+                algaeSubsystem));
+
+        operatorController.leftTrigger().whileTrue(
+            new ManipulateAlgaeCMD(algaeSubsystem, AlgaeMechConstants.collectSpeed)
+        );
+
+        operatorController.back().whileTrue(
+            new ManipulateAlgaeCMD(algaeSubsystem, -AlgaeMechConstants.collectSpeed)
+        );
+        
+/*
+* __________________________________ TEST CONTROLLER __________________________________
+*/
+
+        testController.a().whileTrue(new PivotAlgaeMechCMD(algaeSubsystem, AlgaeMechConstants.pivotSpeed));
+        testController.b().whileTrue(new PivotAlgaeMechCMD(algaeSubsystem, -AlgaeMechConstants.pivotSpeed));
+        testController.x().whileTrue(new ManipulateAlgaeCMD(algaeSubsystem, AlgaeMechConstants.collectSpeed));
+        testController.y().whileTrue(new ManipulateAlgaeCMD(algaeSubsystem, -AlgaeMechConstants.collectSpeed));
 
     }
 

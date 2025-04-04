@@ -136,7 +136,7 @@
         {
           "type": "named",
           "data": {
-            "name": "CollectFromHopper"
+            "name": "HopperWaitForCoralCollected"
           }
         },
         {
@@ -147,6 +147,12 @@
                 "type": "path",
                 "data": {
                   "pathName": "Up 5"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CollectFromHopper"
                 }
               }
             ]

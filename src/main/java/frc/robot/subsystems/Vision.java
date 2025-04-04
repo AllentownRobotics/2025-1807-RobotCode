@@ -18,7 +18,7 @@ import frc.robot.Constants.VisionConstants;
 public class Vision extends SubsystemBase {
   NetworkTable frontLimelightTable;
   NetworkTable hopperLimelightTable;
-  NetworkTable rearLimelightTable;
+  NetworkTable backLimelightTable;
 
   double rightRotationOffset;
   double rightXTranslationOffset;
@@ -32,27 +32,32 @@ public class Vision extends SubsystemBase {
 
   Pose2d frontPose;
   Pose2d hopperPose;
+  //Pose2d backPose;
 
   boolean frontTv;
   boolean hopperTv;
+  //boolean backTv;
   
   /** Creates a new Vision. */
   public Vision() {
     
     frontLimelightTable = NetworkTableInstance.getDefault().getTable("limelight-front");
     hopperLimelightTable = NetworkTableInstance.getDefault().getTable("limelight-hopper");
-    rearLimelightTable = NetworkTableInstance.getDefault().getTable("limelight-back");
+    backLimelightTable = NetworkTableInstance.getDefault().getTable("limelight-back");
     
     frontLimelightTable.getEntry("priorityid").setNumber(-1);
     hopperLimelightTable.getEntry("priorityid").setNumber(-1);
-    rearLimelightTable.getEntry("priorityid").setNumber(-1);
-    
+    backLimelightTable.getEntry("priorityid").setNumber(-1);
     }
-
+    
 
     public boolean isTargetInFront() {
       return frontTv || hopperTv;
     }
+
+    // public boolean isTargetInBack() {
+    //   return backTv;
+    // }
 
     public Optional<Pose2d> frontPoseTargetSpace() {
       if(!isTargetInFront()) {
@@ -76,7 +81,7 @@ public class Vision extends SubsystemBase {
                           rotationPoseFront.plus(rotationPoseHopper).div(frontExists + hopperExists)));
     }
 
-    public boolean isNearPoseFrontTargetSpace(Pose2d pose) {
+    public boolean isNearPoseFrontTargetSpace(Pose2d pose, double ydeadzone) {
       
       if(!isTargetInFront()) {
         return false;
@@ -84,12 +89,55 @@ public class Vision extends SubsystemBase {
 
       Pose2d visionPose = frontPoseTargetSpace().get();
       double distance = pose.getTranslation().getDistance(visionPose.getTranslation());
+      double xdistance = Math.abs(pose.getTranslation().getX() - visionPose.getTranslation().getX());
+      double ydistance = Math.abs(pose.getTranslation().getY() - visionPose.getTranslation().getY());
       
       double angle = Math.abs(pose.getRotation().getDegrees() - visionPose.getRotation().getDegrees());
 
-      return distance <= VisionConstants.distanceDeadzone && angle <= VisionConstants.angleDeadzone;
-      
+      boolean xInRange = (xdistance <= VisionConstants.xDistanceDeadzone);
+      boolean yInRange = (ydistance <= ydeadzone);
+      boolean rotInRange = (angle <= VisionConstants.angleDeadzone);
+
+      boolean isInRange = xInRange && yInRange && rotInRange;
+
+      SmartDashboard.putNumber("x distance from aligned", xdistance);
+      SmartDashboard.putNumber("y distance from aligned", ydistance);
+      SmartDashboard.putNumber("angular distance from aligned", angle);
+
+      SmartDashboard.putBoolean("x in range", xInRange);
+      SmartDashboard.putBoolean("y in range", yInRange);
+      SmartDashboard.putBoolean("rot in range", rotInRange);
+      SmartDashboard.putBoolean("target in range", isInRange);
+      return isInRange;
+
+      //return distance <= 0.15 && angle <= 1.5;
     }
+
+    // public Optional<Pose2d> backPoseTargetSpace() {
+    //   if(!isTargetInBack()) {
+    //     return Optional.empty();
+    //   }
+
+    //   int backExists = backTv ? 1 : 0;
+
+    //   Pose2d newBackPose = backPose.times(backExists);
+
+    //   Translation2d translationPoseBack = newBackPose.getTranslation();
+    //   Rotation2d rotationPoseBack = newBackPose.getRotation();
+
+    //   return Optional.of(new Pose2d(translationPoseBack.div(backExists),
+    //                       rotationPoseBack.div(backExists)));
+    // }
+
+    // public boolean isNearPoseBackTargetSpace(Pose2d pose) {
+
+    //   if(!isTargetInBack()) {
+    //     return false;
+    //   }
+
+    //   Pose2d backVisionPose = backPoseTargetSpace().get();
+    //   double backDistance = pose.getTranslation().getDistance(backVisionPose.getTranslation());
+    // }
 
       @Override
       public void periodic() {
@@ -110,21 +158,21 @@ public class Vision extends SubsystemBase {
         //left side reef values
         leftRotationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[4];
         leftXTranslationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[0];
-        leftYTranslationOffset = frontLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[1];
+        leftYTranslationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[1];
         leftZTranslationOffset = hopperLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[2];
 
         hopperPose = new Pose2d(new Translation2d(leftXTranslationOffset, leftZTranslationOffset),
                                         Rotation2d.fromDegrees(leftRotationOffset));
 
-        // SmartDashboard.putNumber("right rotation offset", rightRotationOffset);
-        // SmartDashboard.putNumber("rightXTranslationOffset", rightXTranslationOffset);
-        // SmartDashboard.putNumber("rightYTranslationOffset", rightYTranslationOffset);
-        // SmartDashboard.putNumber("rightZTranslationOffset", rightZTranslationOffset);
+        SmartDashboard.putNumber("right rotation offset", rightRotationOffset);
+        SmartDashboard.putNumber("rightXTranslationOffset", rightXTranslationOffset);
+        SmartDashboard.putNumber("rightYTranslationOffset", rightYTranslationOffset);
+        SmartDashboard.putNumber("rightZTranslationOffset", rightZTranslationOffset);
 
-        // SmartDashboard.putNumber("left rotation offset", leftRotationOffset);
-        // SmartDashboard.putNumber("leftXTranslationOffset", leftXTranslationOffset);
-        // SmartDashboard.putNumber("leftYTranslationOffset", leftYTranslationOffset);
-        // SmartDashboard.putNumber("leftZTranslationOffset", leftZTranslationOffset);
+        SmartDashboard.putNumber("left rotation offset", leftRotationOffset);
+        SmartDashboard.putNumber("leftXTranslationOffset", leftXTranslationOffset);
+        SmartDashboard.putNumber("leftYTranslationOffset", leftYTranslationOffset);
+        SmartDashboard.putNumber("leftZTranslationOffset", leftZTranslationOffset);
 
       }
     }

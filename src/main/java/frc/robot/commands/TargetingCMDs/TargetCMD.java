@@ -9,6 +9,7 @@ import java.util.Optional;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.AutoBuilderException;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -24,7 +25,8 @@ import frc.robot.subsystems.Vision;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class TargetCMD extends Command {
   Vision limelight;
-  double offset;
+  double leftRightOffset;
+  double frontBackOffset;
   
   PIDController sideToSideController;
   PIDController frontToBackController;
@@ -38,13 +40,17 @@ public class TargetCMD extends Command {
   double slowDriveSpeed;
   double slowAngularRate;
 
+  static Pose2d previousPose = null;
+
   /** Creates a new TargetCMD. */
-  public TargetCMD(Vision limelight, CommandSwerveDrivetrain drivetrain, CommandXboxController driverController, double offset) {
+  public TargetCMD(Vision limelight, CommandSwerveDrivetrain drivetrain, CommandXboxController driverController,
+                    double leftRightOffset, double frontBackOffset) {
 
     this.limelight = limelight;
     this.drivetrain = drivetrain;
     this.driverController = driverController;
-    this.offset = offset;
+    this.leftRightOffset = leftRightOffset;
+    this.frontBackOffset = frontBackOffset;
     
     double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -65,11 +71,11 @@ public class TargetCMD extends Command {
     sideToSideController = new PIDController(VisionConstants.translation_kP, VisionConstants.translation_kI, VisionConstants.translation_kD);
     frontToBackController = new PIDController(VisionConstants.translation_kP, VisionConstants.translation_kI, VisionConstants.translation_kD);
     rotationController = new PIDController(VisionConstants.rotation_kP, VisionConstants.rotation_kI, VisionConstants.rotation_kD);
-
+    
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
   }
-
+  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -81,21 +87,31 @@ public class TargetCMD extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    
     Optional<Pose2d> pose = limelight.frontPoseTargetSpace();
+
+    
     if (pose.isPresent()) {
+      previousPose = pose.get();
+      
+      double frontToBackCalculation = frontToBackController.calculate(pose.get().getY(), frontBackOffset);
+      double sideToSideCalculation = sideToSideController.calculate(pose.get().getX(), leftRightOffset);
+      double rotationCalculation = rotationController.calculate(pose.get().getRotation().getRadians(), 0);
+      
+      SmartDashboard.putString("is using previous pose?", "no");
+
       SmartDashboard.putNumber("left right translation Pose", pose.get().getX());
       SmartDashboard.putNumber("rotation Pose", pose.get().getRotation().getRadians());
       SmartDashboard.putNumber("front back translation pose", pose.get().getY());
-      SmartDashboard.putNumber("PID front back translation value", frontToBackController.calculate(pose.get().getY(), VisionConstants.targetingFrontBackTranslationOffset));
-      SmartDashboard.putNumber("PID left right translation value", sideToSideController.calculate(pose.get().getX(), offset));
-      SmartDashboard.putNumber("targeting PID rotation", rotationController.calculate(pose.get().getRotation().getRadians(), 0));
+      SmartDashboard.putNumber("PID front back translation value", frontToBackCalculation);
+      SmartDashboard.putNumber("PID left right translation value", sideToSideCalculation);
+      SmartDashboard.putNumber("targeting PID rotation", rotationCalculation);
     
       drivetrain.applyRequest(() ->
         drive
-        .withVelocityX(frontToBackController.calculate(pose.get().getY(), VisionConstants.targetingFrontBackTranslationOffset))
-        .withVelocityY(-sideToSideController.calculate(pose.get().getX(), offset))
-        .withRotationalRate(-rotationController.calculate(pose.get().getRotation().getRadians(), 0))
+        .withVelocityX(frontToBackCalculation)
+        .withVelocityY(-sideToSideCalculation)
+        .withRotationalRate(-rotationCalculation)
       ).execute();
 
       /*if(Math.abs(offset - pose.get().getX()) <= 0.05) {
@@ -103,12 +119,22 @@ public class TargetCMD extends Command {
       }*/
 
         } else {
-      drivetrain.applyRequest(() ->
-          driveFieldRelative.withVelocityX(-driverController.getLeftY() * slowDriveSpeed) // Drive forward with negative Y (forward)
-          .withVelocityY(-driverController.getLeftX() * slowDriveSpeed) // Drive left with negative X (left)
-          .withRotationalRate(-driverController.getRightX() * slowAngularRate) // Drive counterclockwise with negative X (left)
-      ).execute();
+      
+          if(previousPose != null) {
+          SmartDashboard.putString("is using previous pose?", "yes");
+          
+          drivetrain.applyRequest(() ->
+          drive
+          .withVelocityX(frontToBackController.calculate(previousPose.getY(), frontBackOffset))
+          .withVelocityY(-sideToSideController.calculate(previousPose.getX(), leftRightOffset))
+          .withRotationalRate(-rotationController.calculate(previousPose.getRotation().getRadians(), 0))
+            //-rotationController.calculate(pose.get().getRotation().getRadians(), 0))
+        ).execute();
 
+          }
+          else {
+            
+          }
     }
 
     SmartDashboard.putBoolean("has pose", pose.isPresent());

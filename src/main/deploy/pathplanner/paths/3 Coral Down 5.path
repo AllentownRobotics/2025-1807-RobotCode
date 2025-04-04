@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.42775,
-        "y": 1.6069999999999993
+        "x": 2.4960000000000004,
+        "y": 1.7239999999999998
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.2565,
-        "y": 2.4259999999999993
+        "x": 3.198,
+        "y": 2.3967499999999995
       },
       "prevControl": {
-        "x": 2.262,
-        "y": 1.470499999999999
+        "x": 2.0864999999999996,
+        "y": 1.5192499999999995
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "ElevatorToL2",
-      "waypointRelativePos": 0.9,
+      "waypointRelativePos": 0.85,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -54,7 +54,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 61.99082329198614
+    "rotation": 59.74356283647068
   },
   "reversed": false,
   "folder": null,

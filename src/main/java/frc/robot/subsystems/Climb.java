@@ -4,19 +4,11 @@
 
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Volts;
-
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.hardware.CANcoder;
 
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants.ClimbConstants;
 import frc.utils.Kraken;
 
@@ -27,18 +19,6 @@ public class Climb extends SubsystemBase {
   private CANcoder climbCANcoder;
   private boolean wasCageContacted;
   private boolean wasClimbRetracted;
-
-  private final SysIdRoutine climbSysIDRoutine = new SysIdRoutine(
-    new Config(
-      null,
-      Voltage.ofBaseUnits(4, Volts),
-      null),
-    new Mechanism(
-      state -> SignalLogger.writeString("sysID State", state.toString()),
-      null,
-      this));
-
-  private SysIdRoutine appliedRoutine = climbSysIDRoutine;
     
   /** Creates a new Climb. */
   public Climb() {
@@ -65,16 +45,6 @@ public class Climb extends SubsystemBase {
     //Creates CANcoder
     leftClimbMotor.addEncoder(climbCANcoder);
 
-    //Motor speed limit
-    //leftClimbMotor.setSoftLimits(0, 0);
-
-    //Motor current limit
-    //leftClimbMotor.setMotorCurrentLimits(0);
-
-    //Sets PID values
-    leftClimbMotor.setPIDValues(ClimbConstants.CLIMB_P, ClimbConstants.CLIMB_I, ClimbConstants.CLIMB_D,
-                                ClimbConstants.CLIMB_SFF, ClimbConstants.CLIMB_VFF, ClimbConstants.CLIMB_AFF, ClimbConstants.CLIMB_GFF);
-
     //Sets motors to break mode initially
     leftClimbMotor.setBrakeMode();
     rightClimbMotor.setBrakeMode();
@@ -86,14 +56,6 @@ public class Climb extends SubsystemBase {
     wasClimbRetracted = fullyRetractedLimitSwitch.get();
     SmartDashboard.putBoolean("Climb fully retracted", fullyRetractedLimitSwitch.get());
 
-  }
-
-    public Command SysIDQuasistatic(SysIdRoutine.Direction direction) {
-    return appliedRoutine.quasistatic(direction);
-  }
-
-  public Command SysIDDynamic(SysIdRoutine.Direction direction) {
-    return appliedRoutine.dynamic(direction);
   }
   
   //Speed at which the motors will go

@@ -13,7 +13,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -28,7 +27,8 @@ import frc.robot.subsystems.Vision;
 public class TargetWithLEDs extends Command {
   Vision limelight;
   Blinkin blinkin;
-  double offset;
+  double leftRightOffset;
+  double frontBackOffset;
   
   PIDController sideToSideController;
   PIDController frontToBackController;
@@ -44,13 +44,16 @@ public class TargetWithLEDs extends Command {
   double slowAngularRate;
 
   /** Creates a new TargetCMD. */
-  public TargetWithLEDs(Vision limelight, CommandSwerveDrivetrain drivetrain, Blinkin blinkin, CommandXboxController driverController, CommandXboxController operatorController, double offset) {
+  public TargetWithLEDs(Vision limelight, CommandSwerveDrivetrain drivetrain,
+                        Blinkin blinkin, CommandXboxController driverController, CommandXboxController operatorController,
+                        double leftRightOffset, double frontBackOffset) {
 
     this.limelight = limelight;
     this.drivetrain = drivetrain;
     this.driverController = driverController;
     this.operatorController = operatorController;
-    this.offset = offset;
+    this.leftRightOffset = leftRightOffset;
+    this.frontBackOffset = frontBackOffset;
     this.blinkin = blinkin;
     
     double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -70,7 +73,7 @@ public class TargetWithLEDs extends Command {
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     sideToSideController = new PIDController(VisionConstants.translation_kP, VisionConstants.translation_kI, VisionConstants.translation_kD);
-    frontToBackController = new PIDController(VisionConstants.translation_kP, VisionConstants.translation_kI, VisionConstants.translation_kD);
+    frontToBackController = new PIDController(VisionConstants.ytranslation_kP, VisionConstants.ytranslation_kI, VisionConstants.ytranslation_kD);
     rotationController = new PIDController(VisionConstants.rotation_kP, VisionConstants.rotation_kI, VisionConstants.rotation_kD);
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -89,31 +92,41 @@ public class TargetWithLEDs extends Command {
   @Override
   public void execute() {
 
-    //operatorController.setRumble(RumbleType.kBothRumble, 0);
-
     Optional<Pose2d> pose = limelight.frontPoseTargetSpace();
+    
     if (pose.isPresent()) {
+
+      double sideToSideCalculation = sideToSideController.calculate(pose.get().getX(), leftRightOffset);
+      double frontToBackCalculation = frontToBackController.calculate(pose.get().getY(), frontBackOffset);
+      double rotationCalculation = rotationController.calculate(pose.get().getRotation().getRadians(), 0);
+
       SmartDashboard.putNumber("left right translation Pose", pose.get().getX());
       SmartDashboard.putNumber("rotation Pose", pose.get().getRotation().getRadians());
       SmartDashboard.putNumber("front back translation pose", pose.get().getY());
-      SmartDashboard.putNumber("PID front back translation value", frontToBackController.calculate(pose.get().getY(), VisionConstants.targetingFrontBackTranslationOffset));
-      SmartDashboard.putNumber("PID left right translation value", sideToSideController.calculate(pose.get().getX(), offset));
-      SmartDashboard.putNumber("targeting PID rotation", rotationController.calculate(pose.get().getRotation().getRadians(), 0));
+      SmartDashboard.putNumber("PID front back translation value", frontToBackCalculation);
+      SmartDashboard.putNumber("PID left right translation value", sideToSideCalculation);
+      SmartDashboard.putNumber("targeting PID rotation", rotationCalculation);
     
       drivetrain.applyRequest(() ->
         drive
-        .withVelocityX(frontToBackController.calculate(pose.get().getY(), VisionConstants.targetingFrontBackTranslationOffset))
-        .withVelocityY(-sideToSideController.calculate(pose.get().getX(), offset))
-        .withRotationalRate(-rotationController.calculate(pose.get().getRotation().getRadians(), 0))
+        .withVelocityX(frontToBackCalculation)
+        .withVelocityY(-sideToSideCalculation)
+        .withRotationalRate(-rotationCalculation)
       ).execute();
 
-      if(Math.abs(offset - pose.get().getX()) <= VisionConstants.distanceDeadzone) {
+      if(
+        Math.abs(leftRightOffset - pose.get().getX()) <= VisionConstants.xDistanceDeadzone
+          && Math.abs(frontBackOffset - pose.get().getY()) <= VisionConstants.yLeftReefDistanceDeadzone
+          && Math.abs(0 - pose.get().getRotation().getDegrees()) <= VisionConstants.angleDeadzone
+        )
+
+      {
         blinkin.setPattern(LEDPattern.ALIGNED_WITH_REEF);
-        //operatorController.setRumble(RumbleType.kBothRumble, 0.25);
-      } 
+      } else {
+        blinkin.setPattern(LEDPattern.IDLE);
+      }
 
         } else {
-      //operatorController.setRumble(RumbleType.kBothRumble, 0);
       drivetrain.applyRequest(() ->
           driveFieldRelative.withVelocityX(-driverController.getLeftY() * slowDriveSpeed) // Drive forward with negative Y (forward)
           .withVelocityY(-driverController.getLeftX() * slowDriveSpeed) // Drive left with negative X (left)
