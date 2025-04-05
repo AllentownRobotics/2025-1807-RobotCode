@@ -31,7 +31,19 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "ElevatorToL2",
+      "waypointRelativePos": 0.3,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ElevatorToL2"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.41,
     "maxAcceleration": 6.0,
@@ -41,8 +53,8 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 119.16761337957782
+    "velocity": 0.25,
+    "rotation": 124.9920201985587
   },
   "reversed": false,
   "folder": null,
