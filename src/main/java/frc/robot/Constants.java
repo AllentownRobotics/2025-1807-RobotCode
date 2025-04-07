@@ -182,10 +182,10 @@ public final class Constants {
 
   public static class VisionConstants {
 
-    public static final double targetingLeftTranslationOffset = -0.3754 + 0.05;
+    public static final double targetingLeftTranslationOffset = -0.4 + 0.05;
     public static final double targetingRightTranslationOffset = -0.01 - 0.01;
-    public static final double targetingLeftFrontBackTranslationOffset = -0.43; //-.42
-    public static final double targetingRightFrontBackTranslationOffset = -0.3;
+    public static final double targetingLeftFrontBackTranslationOffset = -0.45; //-.42
+    public static final double targetingRightFrontBackTranslationOffset = -0.38;
     
     public static final double rotation_kP = 2.7; //2.4
     public static final double rotation_kI = 0.0;
