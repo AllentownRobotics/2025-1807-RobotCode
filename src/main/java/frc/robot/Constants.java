@@ -101,8 +101,8 @@ public final class Constants {
     // elevator setpoints (inches)
     public static final double homePosition = -2;
     public static final double L1Position = 19;
-    public static final double L2Position = 31;
-    public static final double L3Position = 46;
+    public static final double L2Position = 29;
+    public static final double L3Position = 43;
     public static final double L4Position = 67;
     public static final double positionTolerance = .1;
     public static final double softLimitMinPosition = 0;
@@ -182,10 +182,10 @@ public final class Constants {
 
   public static class VisionConstants {
 
-    public static final double targetingLeftTranslationOffset = -0.3754 + 0.05;
+    public static final double targetingLeftTranslationOffset = -0.4 + 0.05;//-0.3754 + 0.05
     public static final double targetingRightTranslationOffset = -0.01 - 0.01;
-    public static final double targetingLeftFrontBackTranslationOffset = -0.43; //-.42
-    public static final double targetingRightFrontBackTranslationOffset = -0.3;
+    public static final double targetingLeftFrontBackTranslationOffset = -0.44; //-.43
+    public static final double targetingRightFrontBackTranslationOffset = -0.39;//-.3
     
     public static final double rotation_kP = 2.7; //2.4
     public static final double rotation_kI = 0.0;
@@ -204,9 +204,9 @@ public final class Constants {
     public static final double translationTargetingSpeed = 5.41; // meters per second
 
     public static final double xDistanceDeadzone = 0.03;
-    public static final double yLeftReefDistanceDeadzone = 0.06;
-    public static final double yRightReefDistanceDeadzone = 0.1;
-    public static final double angleDeadzone = 1.5;
+    public static final double yDistanceDeadzone = 0.08;
+    //public static final double yRightReefDistanceDeadzone = 0.1;
+    public static final double angleDeadzone = 1;
 
 
     // limelight configs (center of lens) relative to center bottom of the robot (bottom of the wheels)
@@ -215,12 +215,12 @@ public final class Constants {
     // forward, right, and up are in meters
     // roll, pitch, and yaw are in degrees
 
-    public static final double hopperLLForward = -0.0466188298;
+    public static final double hopperLLForward = 0.0466188298;
     public static final double hopperLLRight =  0.2996714606;
     public static final double hopperLLUp = 0.7356746526;
     public static final double hopperLLRoll = 0;
     public static final double hopperLLPitch = -29;
-    public static final double hopperLLYaw = 5;
+    public static final double hopperLLYaw = -4.372; //-5
 
     public static final double frontLLForward = 0.1637538; //0.168
     public static final double frontLLRight = -0.2289857498; //-0.234

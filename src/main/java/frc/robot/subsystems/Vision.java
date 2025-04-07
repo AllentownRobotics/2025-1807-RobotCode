@@ -81,21 +81,21 @@ public class Vision extends SubsystemBase {
                           rotationPoseFront.plus(rotationPoseHopper).div(frontExists + hopperExists)));
     }
 
-    public boolean isNearPoseFrontTargetSpace(Pose2d pose, double ydeadzone) {
+    public boolean isNearPoseFrontTargetSpace(Pose2d pose) {
       
       if(!isTargetInFront()) {
         return false;
       }
 
       Pose2d visionPose = frontPoseTargetSpace().get();
-      double distance = pose.getTranslation().getDistance(visionPose.getTranslation());
+      //double distance = pose.getTranslation().getDistance(visionPose.getTranslation());
       double xdistance = Math.abs(pose.getTranslation().getX() - visionPose.getTranslation().getX());
       double ydistance = Math.abs(pose.getTranslation().getY() - visionPose.getTranslation().getY());
       
       double angle = Math.abs(pose.getRotation().getDegrees() - visionPose.getRotation().getDegrees());
 
       boolean xInRange = (xdistance <= VisionConstants.xDistanceDeadzone);
-      boolean yInRange = (ydistance <= ydeadzone);
+      boolean yInRange = (ydistance <= VisionConstants.yDistanceDeadzone);
       boolean rotInRange = (angle <= VisionConstants.angleDeadzone);
 
       boolean isInRange = xInRange && yInRange && rotInRange;
@@ -109,8 +109,6 @@ public class Vision extends SubsystemBase {
       SmartDashboard.putBoolean("rot in range", rotInRange);
       SmartDashboard.putBoolean("target in range", isInRange);
       return isInRange;
-
-      //return distance <= 0.15 && angle <= 1.5;
     }
 
     // public Optional<Pose2d> backPoseTargetSpace() {

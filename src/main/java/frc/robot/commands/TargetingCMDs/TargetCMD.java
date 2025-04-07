@@ -114,9 +114,6 @@ public class TargetCMD extends Command {
         .withRotationalRate(-rotationCalculation)
       ).execute();
 
-      /*if(Math.abs(offset - pose.get().getX()) <= 0.05) {
-        blinkin.setPattern(LEDPattern.ALIGNED_WITH_REEF);
-      }*/
 
         } else {
       
@@ -128,12 +125,11 @@ public class TargetCMD extends Command {
           .withVelocityX(frontToBackController.calculate(previousPose.getY(), frontBackOffset))
           .withVelocityY(-sideToSideController.calculate(previousPose.getX(), leftRightOffset))
           .withRotationalRate(-rotationController.calculate(previousPose.getRotation().getRadians(), 0))
-            //-rotationController.calculate(pose.get().getRotation().getRadians(), 0))
         ).execute();
 
           }
           else {
-            
+
           }
     }
 

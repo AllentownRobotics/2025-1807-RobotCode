@@ -144,7 +144,7 @@ public class RobotContainer {
             VisionConstants.targetingLeftTranslationOffset, VisionConstants.targetingLeftFrontBackTranslationOffset)
                 .until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
                 VisionConstants.targetingLeftTranslationOffset, VisionConstants.targetingLeftFrontBackTranslationOffset),
-                Rotation2d.fromDegrees(0)), VisionConstants.yLeftReefDistanceDeadzone)));
+                Rotation2d.fromDegrees(0)))).withTimeout(3));
 
         NamedCommands.registerCommand("TargetReefRight", new TargetCMD(
             visionSubsystem, drivetrain,
@@ -152,7 +152,7 @@ public class RobotContainer {
             VisionConstants.targetingRightTranslationOffset, VisionConstants.targetingRightFrontBackTranslationOffset)
                 .until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
                 VisionConstants.targetingRightTranslationOffset, VisionConstants.targetingRightFrontBackTranslationOffset),
-                Rotation2d.fromDegrees(0)), VisionConstants.yRightReefDistanceDeadzone)));
+                Rotation2d.fromDegrees(0)))).withTimeout(3));
 
         NamedCommands.registerCommand("BackUp2Inches",
           drivetrain.applyRequest(() -> driveRobotCentric.withVelocityY(0.0)
@@ -296,7 +296,7 @@ public class RobotContainer {
 
         placerSubsystem.setDefaultCommand(Commands.run(
             () -> placerSubsystem.setFrontMotor(
-                MathUtil.applyDeadband(-operatorController.getRightY() * .25, .1)),
+                MathUtil.applyDeadband(-operatorController.getRightY() * .25, 0)),
                 placerSubsystem)
         );
 

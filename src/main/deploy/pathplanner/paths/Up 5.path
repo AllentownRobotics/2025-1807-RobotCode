@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "ElevatorToL2",
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.85,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

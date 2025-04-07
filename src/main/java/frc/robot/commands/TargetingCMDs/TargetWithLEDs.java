@@ -116,7 +116,7 @@ public class TargetWithLEDs extends Command {
 
       if(
         Math.abs(leftRightOffset - pose.get().getX()) <= VisionConstants.xDistanceDeadzone
-          && Math.abs(frontBackOffset - pose.get().getY()) <= VisionConstants.yLeftReefDistanceDeadzone
+          && Math.abs(frontBackOffset - pose.get().getY()) <= VisionConstants.yDistanceDeadzone
           && Math.abs(0 - pose.get().getRotation().getDegrees()) <= VisionConstants.angleDeadzone
         )
 
