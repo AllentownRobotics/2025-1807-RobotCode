@@ -9,7 +9,6 @@ import java.util.Optional;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.pathplanner.lib.auto.AutoBuilderException;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -24,6 +23,7 @@ import frc.robot.subsystems.Vision;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class TargetCMD extends Command {
+
   Vision limelight;
   double leftRightOffset;
   double frontBackOffset;
@@ -114,9 +114,6 @@ public class TargetCMD extends Command {
         .withRotationalRate(-rotationCalculation)
       ).execute();
 
-      /*if(Math.abs(offset - pose.get().getX()) <= 0.05) {
-        blinkin.setPattern(LEDPattern.ALIGNED_WITH_REEF);
-      }*/
 
         } else {
       

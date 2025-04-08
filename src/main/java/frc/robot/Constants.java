@@ -215,12 +215,12 @@ public final class Constants {
     // forward, right, and up are in meters
     // roll, pitch, and yaw are in degrees
 
-    public static final double hopperLLForward = -0.0466188298;
+    public static final double hopperLLForward = 0.0466188298;
     public static final double hopperLLRight =  0.2996714606;
     public static final double hopperLLUp = 0.7356746526;
     public static final double hopperLLRoll = 0;
     public static final double hopperLLPitch = -29;
-    public static final double hopperLLYaw = 5;
+    public static final double hopperLLYaw = -4.372;
 
     public static final double frontLLForward = 0.1637538; //0.168
     public static final double frontLLRight = -0.2289857498; //-0.234
@@ -229,11 +229,11 @@ public final class Constants {
     public static final double frontLLPitch = 0;
     public static final double frontLLYaw = -42.5;
 
-    public static final double backLLForward = -0.1616859098;
-    public static final double backLLRight = 0.0248326148;
-    public static final double backLLUp = 1.0262344474;
+    public static final double backLLForward = -0.169; //-0.1616859098;
+    public static final double backLLRight = -0.0254; //0.0248326148;
+    public static final double backLLUp = 1.0301; //1.0262344474;
     public static final double backLLRoll = 0;
-    public static final double backLLPitch = 50;
+    public static final double backLLPitch = 47;
     public static final double backLLYaw = -180;
 
     // limelight exposure: 351 (mar)

@@ -30,13 +30,18 @@ public class Vision extends SubsystemBase {
   double leftYTranslationOffset;
   double leftZTranslationOffset;
 
+  double backRotationOffset;
+  double backXTranslationOffset;
+  double backYTranslationOffset;
+  double backZTranslationOffset;
+
   Pose2d frontPose;
   Pose2d hopperPose;
-  //Pose2d backPose;
+  Pose2d backPose;
 
   boolean frontTv;
   boolean hopperTv;
-  //boolean backTv;
+  boolean backTv;
   
   /** Creates a new Vision. */
   public Vision() {
@@ -55,9 +60,9 @@ public class Vision extends SubsystemBase {
       return frontTv || hopperTv;
     }
 
-    // public boolean isTargetInBack() {
-    //   return backTv;
-    // }
+    public boolean isTargetInBack() {
+      return backTv;
+    }
 
     public Optional<Pose2d> frontPoseTargetSpace() {
       if(!isTargetInFront()) {
@@ -87,57 +92,76 @@ public class Vision extends SubsystemBase {
         return false;
       }
 
-      Pose2d visionPose = frontPoseTargetSpace().get();
-      double distance = pose.getTranslation().getDistance(visionPose.getTranslation());
-      double xdistance = Math.abs(pose.getTranslation().getX() - visionPose.getTranslation().getX());
-      double ydistance = Math.abs(pose.getTranslation().getY() - visionPose.getTranslation().getY());
-      
-      double angle = Math.abs(pose.getRotation().getDegrees() - visionPose.getRotation().getDegrees());
+      Pose2d frontVisionPose = frontPoseTargetSpace().get();
 
-      boolean xInRange = (xdistance <= VisionConstants.xDistanceDeadzone);
-      boolean yInRange = (ydistance <= ydeadzone);
-      boolean rotInRange = (angle <= VisionConstants.angleDeadzone);
+      double xdistance = Math.abs(pose.getTranslation().getX() - frontVisionPose.getTranslation().getX());
+      double ydistance = Math.abs(pose.getTranslation().getY() - frontVisionPose.getTranslation().getY());
+      double angle = Math.abs(pose.getRotation().getDegrees() - frontVisionPose.getRotation().getDegrees());
 
-      boolean isInRange = xInRange && yInRange && rotInRange;
+      boolean frontXInRange = (xdistance <= VisionConstants.xDistanceDeadzone);
+      boolean frontYInRange = (ydistance <= ydeadzone);
+      boolean frontRotInRange = (angle <= VisionConstants.angleDeadzone);
+
+      boolean isFrontInRange = frontXInRange && frontYInRange && frontRotInRange;
 
       SmartDashboard.putNumber("x distance from aligned", xdistance);
       SmartDashboard.putNumber("y distance from aligned", ydistance);
       SmartDashboard.putNumber("angular distance from aligned", angle);
 
-      SmartDashboard.putBoolean("x in range", xInRange);
-      SmartDashboard.putBoolean("y in range", yInRange);
-      SmartDashboard.putBoolean("rot in range", rotInRange);
-      SmartDashboard.putBoolean("target in range", isInRange);
-      return isInRange;
+      SmartDashboard.putBoolean("x in range", frontXInRange);
+      SmartDashboard.putBoolean("y in range", frontYInRange);
+      SmartDashboard.putBoolean("rot in range", frontRotInRange);
+      SmartDashboard.putBoolean("target in range", isFrontInRange);
 
-      //return distance <= 0.15 && angle <= 1.5;
+      return isFrontInRange;
     }
 
-    // public Optional<Pose2d> backPoseTargetSpace() {
-    //   if(!isTargetInBack()) {
-    //     return Optional.empty();
-    //   }
+    public Optional<Pose2d> backPoseTargetSpace() {
+      if(!isTargetInBack()) {
+        return Optional.empty();
+      }
 
-    //   int backExists = backTv ? 1 : 0;
+      int backExists = backTv ? 1 : 0;
 
-    //   Pose2d newBackPose = backPose.times(backExists);
+      Pose2d newBackPose = backPose.times(backExists);
 
-    //   Translation2d translationPoseBack = newBackPose.getTranslation();
-    //   Rotation2d rotationPoseBack = newBackPose.getRotation();
+      Translation2d translationPoseBack = newBackPose.getTranslation();
+      Rotation2d rotationPoseBack = newBackPose.getRotation();
 
-    //   return Optional.of(new Pose2d(translationPoseBack.div(backExists),
-    //                       rotationPoseBack.div(backExists)));
-    // }
+      return Optional.of(new Pose2d(translationPoseBack.div(backExists),
+                          rotationPoseBack.div(backExists)));
+    }
 
-    // public boolean isNearPoseBackTargetSpace(Pose2d pose) {
+    public boolean isNearPoseBackTargetSpace(Pose2d backPose) {
 
-    //   if(!isTargetInBack()) {
-    //     return false;
-    //   }
+      if(!isTargetInBack()) {
+        return false;
+      }
 
-    //   Pose2d backVisionPose = backPoseTargetSpace().get();
-    //   double backDistance = pose.getTranslation().getDistance(backVisionPose.getTranslation());
-    // }
+      Pose2d backVisionPose = backPoseTargetSpace().get();
+
+      double xdistance = Math.abs(backPose.getTranslation().getX() - backVisionPose.getTranslation().getX());
+      double ydistance = Math.abs(backPose.getTranslation().getY() - backVisionPose.getTranslation().getY());
+      double angle = Math.abs(backPose.getRotation().getDegrees() - backVisionPose.getRotation().getDegrees());
+
+      boolean backXInRange = (xdistance <= VisionConstants.xDistanceDeadzone);
+      boolean backYInRange = (ydistance <= VisionConstants.yLeftReefDistanceDeadzone);
+      boolean backRotInRange = (angle <= VisionConstants.angleDeadzone);
+
+      boolean isBackInRange = backXInRange && backYInRange && backRotInRange;
+
+      SmartDashboard.putNumber("x distance from aligned", xdistance);
+      SmartDashboard.putNumber("y distance from aligned", ydistance);
+      SmartDashboard.putNumber("angular distance from aligned", angle);
+
+      SmartDashboard.putBoolean("x in range", backXInRange);
+      SmartDashboard.putBoolean("y in range", backYInRange);
+      SmartDashboard.putBoolean("rot in range", backRotInRange);
+      SmartDashboard.putBoolean("target in range", isBackInRange);
+
+      return isBackInRange;
+
+    }
 
       @Override
       public void periodic() {
@@ -145,6 +169,7 @@ public class Vision extends SubsystemBase {
 
         frontTv = frontLimelightTable.getEntry("tv").getInteger(0) > 0;
         hopperTv = hopperLimelightTable.getEntry("tv").getInteger(0) > 0;
+        backTv = backLimelightTable.getEntry("tv").getInteger(0) > 0;
 
         // right side reef values
         rightRotationOffset = frontLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[4];
@@ -163,6 +188,15 @@ public class Vision extends SubsystemBase {
 
         hopperPose = new Pose2d(new Translation2d(leftXTranslationOffset, leftZTranslationOffset),
                                         Rotation2d.fromDegrees(leftRotationOffset));
+
+        //human player station values
+        backRotationOffset = backLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[4];
+        backXTranslationOffset = backLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[0];
+        backYTranslationOffset = backLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[1];
+        backZTranslationOffset = backLimelightTable.getEntry("botpose_targetspace").getDoubleArray(new double[6])[2];
+
+        backPose = new Pose2d(new Translation2d(backXTranslationOffset, backZTranslationOffset),
+                                      Rotation2d.fromDegrees(backRotationOffset));
 
         SmartDashboard.putNumber("right rotation offset", rightRotationOffset);
         SmartDashboard.putNumber("rightXTranslationOffset", rightXTranslationOffset);

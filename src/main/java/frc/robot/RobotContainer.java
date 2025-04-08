@@ -41,6 +41,7 @@ import frc.robot.commands.ElevatorCMDs.ElevatorToL3CMD;
 import frc.robot.commands.ElevatorCMDs.ElevatorToL4CMD;
 import frc.robot.commands.PlacerCMDs.CollectFromHopperCMD;
 import frc.robot.commands.PlacerCMDs.PlaceCMD;
+import frc.robot.commands.TargetingCMDs.TargetBackCMD;
 import frc.robot.commands.TargetingCMDs.TargetCMD;
 import frc.robot.commands.TargetingCMDs.TargetWithLEDs;
 import frc.robot.generated.TunerConstants;
@@ -253,6 +254,10 @@ public class RobotContainer {
             operatorController,
             VisionConstants.targetingRightTranslationOffset,
             VisionConstants.targetingRightFrontBackTranslationOffset)
+        );
+
+        driverController.rightBumper().whileTrue(
+            new TargetBackCMD(visionSubsystem, drivetrain, driverController, 0.12, -0.6)
         );
 
         // reset the field-centric heading on start press
