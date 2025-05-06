@@ -145,7 +145,7 @@ public class RobotContainer {
             VisionConstants.targetingLeftTranslationOffset, VisionConstants.targetingLeftFrontBackTranslationOffset)
                 .until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
                 VisionConstants.targetingLeftTranslationOffset, VisionConstants.targetingLeftFrontBackTranslationOffset),
-                Rotation2d.fromDegrees(0)), VisionConstants.yLeftReefDistanceDeadzone)));
+                Rotation2d.fromDegrees(0)), VisionConstants.yLeftReefDistanceDeadzone)).withTimeout(1));
 
         NamedCommands.registerCommand("TargetReefRight", new TargetCMD(
             visionSubsystem, drivetrain,
@@ -153,7 +153,15 @@ public class RobotContainer {
             VisionConstants.targetingRightTranslationOffset, VisionConstants.targetingRightFrontBackTranslationOffset)
                 .until(() -> visionSubsystem.isNearPoseFrontTargetSpace(new Pose2d(new Translation2d(
                 VisionConstants.targetingRightTranslationOffset, VisionConstants.targetingRightFrontBackTranslationOffset),
-                Rotation2d.fromDegrees(0)), VisionConstants.yRightReefDistanceDeadzone)));
+                Rotation2d.fromDegrees(0)), VisionConstants.yRightReefDistanceDeadzone)).withTimeout(.5));
+
+        NamedCommands.registerCommand("TargetHumanPlayerStation", new TargetBackCMD(
+            visionSubsystem, drivetrain,
+            driverController,
+            VisionConstants.targetingBackTranslationOffset, VisionConstants.targetingBackFrontBackTranslationOffset)
+                .until(() -> visionSubsystem.isNearPoseBackTargetSpace(new Pose2d(new Translation2d(
+                VisionConstants.targetingBackTranslationOffset, VisionConstants.targetingBackFrontBackTranslationOffset),
+                Rotation2d.fromDegrees(0)))).withTimeout(1.5));
 
         NamedCommands.registerCommand("BackUp2Inches",
           drivetrain.applyRequest(() -> driveRobotCentric.withVelocityY(0.0)
@@ -243,7 +251,7 @@ public class RobotContainer {
         driverController.leftTrigger().whileTrue(
             new TargetWithLEDs(visionSubsystem, drivetrain, 
             blinkinSubsystem, driverController,
-            operatorController,
+            operatorController, // op controller does nothing
             VisionConstants.targetingLeftTranslationOffset,
             VisionConstants.targetingLeftFrontBackTranslationOffset)
         );
@@ -251,13 +259,16 @@ public class RobotContainer {
         driverController.rightTrigger().whileTrue(
             new TargetWithLEDs(visionSubsystem, drivetrain,
             blinkinSubsystem, driverController,
-            operatorController,
+            operatorController, // op controller does nothing
             VisionConstants.targetingRightTranslationOffset,
             VisionConstants.targetingRightFrontBackTranslationOffset)
         );
 
         driverController.rightBumper().whileTrue(
-            new TargetBackCMD(visionSubsystem, drivetrain, driverController, 0.12, -0.6)
+            new TargetBackCMD(visionSubsystem, drivetrain,
+            driverController,
+            VisionConstants.targetingBackTranslationOffset,
+            VisionConstants.targetingBackFrontBackTranslationOffset)
         );
 
         // reset the field-centric heading on start press

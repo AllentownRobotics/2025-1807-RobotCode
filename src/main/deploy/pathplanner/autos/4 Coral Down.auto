@@ -56,6 +56,12 @@
         {
           "type": "named",
           "data": {
+            "name": "TargetHumanPlayerStation"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "HopperWaitForCoralCollected"
           }
         },
@@ -118,6 +124,12 @@
         {
           "type": "named",
           "data": {
+            "name": "TargetHumanPlayerStation"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "HopperWaitForCoralCollected"
           }
         },
@@ -153,12 +165,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "PlaceToL4"
@@ -181,6 +187,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TargetHumanPlayerStation"
           }
         },
         {

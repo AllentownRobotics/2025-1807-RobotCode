@@ -16,7 +16,6 @@ import frc.utils.Kraken;
 public class Climb extends SubsystemBase {
   private DigitalInput cageContactLimitSwitch, fullyRetractedLimitSwitch; // fully retracted is for the "all the way out" state
   private Kraken rightClimbMotor, leftClimbMotor;
-  private CANcoder climbCANcoder;
   private boolean wasCageContacted;
   private boolean wasClimbRetracted;
     
@@ -25,7 +24,6 @@ public class Climb extends SubsystemBase {
     //Instantiates objects
     rightClimbMotor = new Kraken(ClimbConstants.rightClimbMotorID);
     leftClimbMotor = new Kraken(ClimbConstants.leftClimbMotorID);
-    climbCANcoder = new CANcoder(ClimbConstants.climbCANCoderID);
     cageContactLimitSwitch = new DigitalInput(ClimbConstants.climbCageSwitchID);
     fullyRetractedLimitSwitch = new DigitalInput(ClimbConstants.climbFullyRetractedLimitSwitchID);
 
@@ -41,9 +39,6 @@ public class Climb extends SubsystemBase {
 
     //Resets encoder values
     leftClimbMotor.resetEncoder();
-
-    //Creates CANcoder
-    leftClimbMotor.addEncoder(climbCANcoder);
 
     //Sets motors to break mode initially
     leftClimbMotor.setBrakeMode();

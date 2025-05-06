@@ -50,7 +50,6 @@ public final class Constants {
   public static class ClimbConstants {
     public static final int leftClimbMotorID = 15;
     public static final int rightClimbMotorID = 16;
-    public static final int climbCANCoderID = 17;
 
     public static final int climbCageSwitchID = 2;
     public static final int climbFullyRetractedLimitSwitchID = 3;
@@ -82,7 +81,7 @@ public final class Constants {
   public static class ElevatorConstants {
     public static final int leftMotorID = 18;
     public static final int rightMotorID = 19;
-    public static final int elevatorCANCoderID = 20;
+    public static final int elevatorCANCoderID = 17;
 
     public static final int lowerLimitSwitchPort = 9;
     public static final int upperLimitSwitchPort = 8;
@@ -102,7 +101,7 @@ public final class Constants {
     public static final double homePosition = -2;
     public static final double L1Position = 19;
     public static final double L2Position = 31;
-    public static final double L3Position = 46;
+    public static final double L3Position = 44;
     public static final double L4Position = 67;
     public static final double positionTolerance = .1;
     public static final double softLimitMinPosition = 0;
@@ -122,7 +121,7 @@ public final class Constants {
     public static final int placerBeamBreakID = 1;
     
     public static final double placerFrontMotorSpeed = 0.2; // .2
-    public static final double placerBackMotorSpeed = 0.12; // .17
+    public static final double placerBackMotorSpeed = 0.1; // .17 //.12
     public static final double placerAlgaeSpeed = 0.4;
     public static final double placerCollectAlgaeSpeed = 0.6;
   }
@@ -183,9 +182,12 @@ public final class Constants {
   public static class VisionConstants {
 
     public static final double targetingLeftTranslationOffset = -0.4 + 0.05;
-    public static final double targetingRightTranslationOffset = -0.01 - 0.01;
-    public static final double targetingLeftFrontBackTranslationOffset = -0.45; //-.42
+    public static final double targetingRightTranslationOffset = -0.01 - 0.01 + 0.01;
+    public static final double targetingBackTranslationOffset = 0.12;
+
+    public static final double targetingLeftFrontBackTranslationOffset = -0.45;
     public static final double targetingRightFrontBackTranslationOffset = -0.38;
+    public static final double targetingBackFrontBackTranslationOffset = -0.6;
     
     public static final double rotation_kP = 2.7; //2.4
     public static final double rotation_kI = 0.0;

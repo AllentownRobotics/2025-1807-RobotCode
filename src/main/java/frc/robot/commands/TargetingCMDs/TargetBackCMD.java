@@ -20,8 +20,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.BlinkinConstants.LEDPattern;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Blinkin;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
 
@@ -61,7 +63,7 @@ public class TargetBackCMD extends Command {
     this.frontBackOffset = frontBackOffset;
     
     MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    MaxAngularRate = RotationsPerSecond.of(1).in(RotationsPerSecond); // 3/4 of a rotation per second max angular velocity
+    MaxAngularRate = 5 * (RotationsPerSecond.of(1).in(RotationsPerSecond)); // 3/4 of a rotation per second max angular velocity
 
     slowDriveSpeed = MaxSpeed * TunerConstants.slowDriveScalingConstant;
     slowAngularRate = MaxAngularRate * TunerConstants.slowDriveScalingConstant;
@@ -121,9 +123,8 @@ public class TargetBackCMD extends Command {
         .withVelocityY(sideToSideCalculation)
         .withRotationalRate(rotationCalculation)
       ).execute();
-
-        } else {
       
+        } else {
           drivetrain.applyRequest(() ->
           driveFieldRelative.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
           .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)

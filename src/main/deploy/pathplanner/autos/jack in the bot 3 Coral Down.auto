@@ -13,19 +13,19 @@
         {
           "type": "named",
           "data": {
-            "name": "TargetReefLeft"
+            "name": "ElevatorToL4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ElevatorToL4"
+            "name": "TargetReefLeft"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.0
           }
         },
         {
@@ -57,12 +57,6 @@
           "type": "named",
           "data": {
             "name": "HopperWaitForCoralCollected"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.2
           }
         },
         {
@@ -131,12 +125,6 @@
           "type": "named",
           "data": {
             "name": "HopperWaitForCoralCollected"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.2
           }
         },
         {

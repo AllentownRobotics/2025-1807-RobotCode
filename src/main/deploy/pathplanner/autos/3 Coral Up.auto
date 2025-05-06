@@ -66,6 +66,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -137,6 +143,12 @@
           "type": "named",
           "data": {
             "name": "HopperWaitForCoralCollected"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
           }
         },
         {
